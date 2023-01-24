@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom";
 interface UpsertBafProps {}
 
 const UpsertBaf: FC<UpsertBafProps> = () => {
-    let {id}= useParams();
+    let {id} = useParams();
 
 
     return(
