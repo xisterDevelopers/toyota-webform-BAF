@@ -14,19 +14,19 @@ const Icon: FC<IconProps> = ({icon}) => {
         icon === 'error' ? '#FFDEDE' :
         icon === 'errorPopUp' ? '#FFDEDE' :
         icon === 'clock' ? '#DEDEDE' :
-        icon === 'warning' ? '#FFA500' :
+        icon === 'warning' ? '#F29E1F' :
         icon === 'done' ? '#D6FFC8' : ''
-    let backgroundErrorPopUp = icon === 'errorPopUp' ? '#FDF0F0' : '#ffffff'
+    let backgroundErrorPopUp = icon === 'errorPopUp' ? 'bg-light-red' : 'bg-white'
 
   return(
       <>
-          <div className="icon-width" style={{border: '1px solid ' + borderColor, backgroundColor: backgroundErrorPopUp}}>
+          <div className={"icon-width " + backgroundErrorPopUp} style={{border: '1px solid ' + borderColor}}>
               {
-                  icon === 'error' ? <IoWarningOutline className="mb-1" style={{color: '#df0000'}} /> :
-                  icon === 'errorPopUp' ? <IoWarningOutline className="mb-1" style={{color: '#df0000'}} /> :
-                  icon === 'clock' ? <FiClock style={{color: 'gray'}}/> :
-                  icon === 'warning' ? <BsExclamationCircle style={{color: '#ffa500'}} /> :
-                  icon === 'done' ? <FiCheck style={{color: '#26BC00'}} /> : ''
+                  icon === 'error' ? <IoWarningOutline className="red mb-1" /> :
+                  icon === 'errorPopUp' ? <IoWarningOutline className="red mb-1" /> :
+                  icon === 'clock' ? <FiClock className="dark-gray" /> :
+                  icon === 'warning' ? <BsExclamationCircle className="orange" /> :
+                  icon === 'done' ? <FiCheck className="green" /> : ''
               }
           </div>
       </>
