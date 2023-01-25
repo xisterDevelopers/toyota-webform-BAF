@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import './UploadFile.css';
 import upload from '../../assets/svg/upload.svg';
+import Button from "../Button/Button";
 
 interface UploadFileProps {
     handleDrop: (event: React.DragEvent<HTMLDivElement>) => void;
@@ -21,15 +22,13 @@ const UploadFile: FC<UploadFileProps> = (uploadFileProps) => {
              onDragStart={uploadFileProps.overrideEventDefaults} onDragLeave={uploadFileProps.overrideEventDefaults}
              onDrop={uploadFileProps.handleDrop} className="UploadFile d-flex justify-center align-center flex-column">
                 <img width="69" height="54" className="" src={upload} alt="upload"/>
-                <span className="mt-3 dark-grey">
+                <span className="mt-3 light-grey">
                   Drag and drop your files here
                 </span>
-                <span className="my-3 dark-grey">
+                <span className="my-3 light-grey">
                   OR
                 </span>
-                <button onClick={handleClick}>
-                    Browse File
-                </button>
+                <Button btnWidth={"150px"} color={"bg-dark-grey"} text={"Browse File"} textColor={"white"} onClick={handleClick} />
                 <input type="file" style={{display: 'none'}}
                        ref={hiddenFileInput}
                        onChange={uploadFileProps.upload}/>
