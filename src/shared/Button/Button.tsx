@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, {FC, MouseEventHandler} from 'react';
 import './Button.css';
 
 interface ButtonProps {
@@ -6,11 +6,12 @@ interface ButtonProps {
     text: string;
     textColor: string;
     btnWidth: string;
+    onClick?: MouseEventHandler<HTMLButtonElement | undefined>;
 }
 
-const Button: FC<ButtonProps> = ({color,text,textColor,btnWidth}) => {
+const Button: FC<ButtonProps> = ({color,text,textColor,btnWidth, onClick}) => {
     return(
-        <button className={color + ' ' + textColor + ' shared-btn'} style={{width: btnWidth}}>{text}</button>
+        <button className={color + ' ' + textColor + ' shared-btn'} style={{width: btnWidth}} onClick={onClick}>{text}</button>
     );
 };
 

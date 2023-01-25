@@ -24,7 +24,7 @@ const Icon: FC<IconProps> = ({icon}) => {
               {
                   icon === 'error' ? <IoWarningOutline className="red mb-1" /> :
                   icon === 'errorPopUp' ? <IoWarningOutline className="red mb-1" /> :
-                  icon === 'clock' ? <FiClock className="dark-gray" /> :
+                  icon === 'clock' ? <FiClock className="dark-grey" /> :
                   icon === 'warning' ? <BsExclamationCircle className="orange" /> :
                   icon === 'done' ? <FiCheck className="green" /> : ''
               }

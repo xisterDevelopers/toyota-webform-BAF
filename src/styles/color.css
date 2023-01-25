@@ -6,15 +6,19 @@
     color: #BB261A;
 }
 
-.dark-gray {
+.dark-grey {
     color: #717171;
 }
 
-.bg-dark-gray {
+.light-grey {
+    color: #949494
+}
+
+.bg-dark-grey {
     background-color: #717171;
 }
 
-.bg-light-gray {
+.bg-light-grey {
     background-color: #F6F6F6;
 }
 
