@@ -13,8 +13,8 @@ function App() {
           <h1 className="font-title black">Welcome on <span className="dark-red">Bank Account Form</span></h1>
               <React.Suspense fallback={""}>
                   <Routes>
-                      <Route path='/upsert-BAF' element={<UpsertBAF />}/>
-                      <Route path='/detail-BAF' element={<DetailBAF />}/>
+                      <Route path='/upsert-BAF/:id?' element={<UpsertBAF />}/>
+                      <Route path='/detail-BAF/:id' element={<DetailBAF />}/>
                       <Route path='*' element={<Navigate to='/upsert-BAF' replace/> }/>
                   </Routes>
               </React.Suspense>
