@@ -6,5 +6,5 @@
     justify-content: center;
     align-items: center;
     font-size: 25px;
-    box-shadow: 10px 10px 20px #c7c7c7;
+    box-shadow: 10px 10px 20px rgba(199, 199, 199, 0.48);
 }

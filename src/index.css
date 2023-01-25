@@ -2,6 +2,7 @@
 @import "./styles/general.css";
 @import "./styles/font.css";
 @import "./styles/color.css";
+@import "./styles/border.css";
 
 @font-face {
   font-family: "Toyota Type";
