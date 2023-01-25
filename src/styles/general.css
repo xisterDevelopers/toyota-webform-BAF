@@ -106,6 +106,10 @@
     padding: 3rem;
 }
 
+.mb-1 {
+    margin-bottom: 0.25rem;
+}
+
 .mb-4 {
     margin-bottom: 1.5rem;
 }
