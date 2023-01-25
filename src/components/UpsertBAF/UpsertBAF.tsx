@@ -3,6 +3,8 @@ import './UpsertBAF.css';
 import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
 
+const MAX_FILE_SIZE: number = 5E+6;
+
 interface UpsertBafProps {}
 
 const UpsertBaf: FC<UpsertBafProps> = () => {
@@ -15,12 +17,30 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
         overrideEventDefaults(event)
-        console.log(event.dataTransfer.files);
+
+        for (let i = 0; i < event.dataTransfer.files.length; i++) {
+            if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
+                console.log(event.dataTransfer.files[i]);
+            } else {
+                //TODO: gestione validazione dimensione massima file
+                console.error('Dimensione massima superata');
+            }
+        }
     }
 
     const upload = (event: React.ChangeEvent<HTMLInputElement>) => {
         overrideEventDefaults(event)
-        console.log(event.target.files);
+
+        if (event.target.files) {
+            for (let i = 0; i < event.target.files.length; i++) {
+                if (event.target.files[i].size < MAX_FILE_SIZE) {
+                    console.log(event.target.files[i]);
+                } else {
+                    //TODO: gestione validazione dimensione massima file
+                    console.error('Dimensione massima superata');
+                }
+            }
+        }
     }
 
     return(
