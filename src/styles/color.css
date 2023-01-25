@@ -18,6 +18,10 @@
     background-color: #717171;
 }
 
+.bg-light-grey {
+    background-color: #F6F6F6;
+}
+
 .white {
     color: #FFFFFF;
 }
@@ -42,6 +46,14 @@
     color: #F29E1F;
 }
 
+.bg-light-orange {
+    background-color: rgba(242, 158, 31, 0.15);
+}
+
 .green {
     color: #26BC00;
+}
+
+.bg-light-green {
+    background-color: #EFFFEA;
 }
