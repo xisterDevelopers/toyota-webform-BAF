@@ -1,7 +1,9 @@
 @import "App.css";
+@import "shared/UploadFile/UploadFile.css";
 @import "./styles/general.css";
 @import "./styles/font.css";
 @import "./styles/color.css";
+@import "./styles/flex.css";
 
 @font-face {
   font-family: "Toyota Type";

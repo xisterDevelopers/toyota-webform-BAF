@@ -1,0 +1,7 @@
+.UploadFile {
+    box-sizing: border-box;
+    background: #F9F9F9;
+    border: 2px dashed #D7D7D7;
+    border-radius: 6px;
+    min-height: 294px;
+}
