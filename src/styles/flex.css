@@ -41,3 +41,6 @@
 .nowrap {
     flex-wrap: nowrap;
 }
+.gap-6 {
+    gap: 6rem;
+}

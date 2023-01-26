@@ -4,6 +4,23 @@
     background: #EFF0F0;
     border: 1px solid #DBDBDB;
     border-radius: 4px;
+    letter-spacing: 1px;
+    padding: 0 1rem;
+}
+
+.custom-input:disabled {
+    background: rgba(239, 240, 240, 0.2);
+    border: 1px solid rgba(219, 219, 219, 0.5);
+    border-radius: 4px;
+    color: #A2A2A2;
+}
+
+input, select {
+    font-family: 'Toyota Type', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 40px;
 }
 
 .custom-date {
@@ -25,7 +42,7 @@
     background-image: url("../assets/svg/selct-arrow.svg");
     background-repeat: no-repeat;
     background-position: right 0.7rem top 50%;
-    background-size: 0.65rem auto;
+    background-size: 0.90rem auto;
 }
 
 .custom-select:focus, .custom-input:focus, .custom-date:focus {
@@ -35,4 +52,66 @@
 
 .input-lg {
     width: 357px;
+}
+
+.input-md {
+    width: 141px;
+}
+
+.input-sm {
+    width: 97px;
+}
+
+.input-fill {
+    width: 100%
+}
+
+input[type="radio"] + .custom-radio
+{
+    background-image: url("../assets/svg/no_checked_radio.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+input[type="radio"]:checked + .custom-radio
+{
+    background-image: url("../assets/svg/checked_radio.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+input[type="checkbox"] + .custom-checkbox
+{
+    background-image: url("../assets/svg/no_checked_checkbox.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    height: 100%;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked + .custom-checkbox
+{
+    background-image: url("../assets/svg/checked_checkbox.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    height: 100%;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
 }
