@@ -1,11 +1,17 @@
 import React, { FC } from 'react';
 import './SupplierIdentificationUpsert.css';
 
-interface SupplierIdentificationUpsert {}
+interface SupplierIdentificationUpsertProps {}
 
-const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsert> = () => (
+const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = () => (
   <div className="SupplierIdentificationUpsert">
-    SupplierIdentificationUpsert Component
+    <h1 className="section-A-font-title">A. Supplier identification</h1>
+      <form action="">
+          <div className="inputGroup">
+              <label htmlFor="supplierName" className="font-input-label">Supplier Name</label>
+              <input type="text" id="supplierName" className="custom-input" />
+          </div>
+      </form>
   </div>
 );
 

@@ -16,7 +16,7 @@ export interface SupplierIdentificationUpsertModel {
     establishmentCountry?: CountryModel;
     governmentInstitution?: boolean;
     companySize?: string;
-    phoneNumberPrefix?: string;
+    idd?: string;
     phoneNumber?: number;
     cca2?: string;
     vatNumber?: number;
