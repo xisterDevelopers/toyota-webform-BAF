@@ -9,3 +9,15 @@
 input.custom-input::-webkit-calendar-picker-indicator {
     color: #DF0000;
 }
+
+.custom-select {
+    appearance: none;
+    background-image: url("./src/assets/svg/selct-arrow.svg");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.65rem auto;
+}
+.custom-select:focus {
+    outline: none;
+    box-shadow: 0 0 5px #c8c8c8
+}
