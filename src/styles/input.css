@@ -23,8 +23,6 @@ input.custom-input::-webkit-calendar-picker-indicator {
     box-shadow: 0 0 5px #c8c8c8
 }
 
-.inputGroup {
-    display: flex;
-    flex-direction: column;
-    max-width: 357px;
+.input-lg {
+    width: 357px;
 }

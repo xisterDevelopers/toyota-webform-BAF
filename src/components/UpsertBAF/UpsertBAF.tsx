@@ -47,7 +47,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
     return(
         <div className="UpsertBAF">
             <SupplierIdentificationUpsert />
-            <UploadFile handleDrop={handleDrop} upload={upload} overrideEventDefaults={overrideEventDefaults} />
+            {/*<UploadFile handleDrop={handleDrop} upload={upload} overrideEventDefaults={overrideEventDefaults} />*/}
         </div>
     );
 }
