@@ -19,7 +19,7 @@ export interface SupplierIdentificationUpsertModel {
     idd?: string;
     phoneNumber?: number;
     cca2?: string;
-    vatNumber?: number;
+    vatNumber?: string;
     taxResidenceCountry?: CountryModel;
     taxID?: number;
     vatRegime?: string;
