@@ -160,3 +160,7 @@
 .mb-5 {
     margin-bottom: 3rem;
 }
+
+.txt-nowrap {
+    white-space: nowrap;
+}

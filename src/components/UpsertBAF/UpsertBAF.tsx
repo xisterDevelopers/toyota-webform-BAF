@@ -1,14 +1,17 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import './UpsertBAF.css';
 import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
+import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
+import {SupplierBankDetailsUpsertModel} from "../../models/supplierBankDetailsUpsertModel";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 interface UpsertBafProps {}
 
 const UpsertBaf: FC<UpsertBafProps> = () => {
+    const [bankDetails, setBankDetails] = useState('')
     let {id} = useParams();
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -44,10 +47,27 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
         }
     }
 
+    let bankUpsertModel: SupplierBankDetailsUpsertModel = {
+        bankName: '',
+        bankAccountCurrency: '',
+        effectiveDate: new Date(),
+        bankAccountHolderName: '',
+        nameIsDifferentFromBankAccountName: false,
+        reasonName: '',
+        factoryCompany: false,
+        reasonFactory: '',
+        bankAccountNumber: '',
+        ibanNumber: '',
+        swiftCode: '',
+        sortCode: ''
+    }
+
+
     return(
         <div className="UpsertBAF">
-            <SupplierBankDetailsUpsert />
-            <UploadFile handleDrop={handleDrop} upload={upload} overrideEventDefaults={overrideEventDefaults} />
+            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} />
+            {/*<SupplierIdentificationUpsert />*/}
+            {/*<UploadFile handleDrop={handleDrop} upload={upload} overrideEventDefaults={overrideEventDefaults} />*/}
         </div>
     );
 }

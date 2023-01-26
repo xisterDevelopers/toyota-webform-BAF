@@ -4,9 +4,9 @@ export interface SupplierBankDetailsUpsertModel {
     effectiveDate?: Date;
     bankAccountHolderName?: string;
     nameIsDifferentFromBankAccountName?: boolean;
-    reasonName: string;
+    reasonName?: string;
     factoryCompany?: boolean;
-    reasonFactory: string;
+    reasonFactory?: string;
     bankAccountNumber: string;
     ibanNumber: string;
     swiftCode: string;
