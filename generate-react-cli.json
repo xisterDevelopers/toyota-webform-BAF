@@ -17,6 +17,13 @@
       "withTest": false,
       "withStory": false,
       "withLazy": false
+    },
+    "upsert": {
+      "path": "src/components/UpsertBAF",
+      "withStyle": true,
+      "withTest": false,
+      "withStory": false,
+      "withLazy": false
     }
   }
 }
