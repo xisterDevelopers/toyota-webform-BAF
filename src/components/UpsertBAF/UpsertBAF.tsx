@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import './UpsertBAF.css';
 import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
+import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -45,6 +46,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
 
     return(
         <div className="UpsertBAF">
+            <SupplierBankDetailsUpsert />
             <UploadFile handleDrop={handleDrop} upload={upload} overrideEventDefaults={overrideEventDefaults} />
         </div>
     );
