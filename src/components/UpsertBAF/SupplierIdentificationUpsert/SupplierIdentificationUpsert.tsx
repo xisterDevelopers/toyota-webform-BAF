@@ -1,12 +1,33 @@
-import React, { FC } from 'react';
+import React, {FC, useEffect, useLayoutEffect, useState} from 'react';
 import './SupplierIdentificationUpsert.css';
 import {SupplierIdentificationUpsertModel} from "../../../models/supplierIdentificationUpsert.model";
+import CountryService from "../../../api/country.service";
+import {CountryModel} from "../../../models/country.model";
 
 interface SupplierIdentificationUpsertProps {
     model?: SupplierIdentificationUpsertModel;
 }
 
-const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = (supplierIdentificationUpsertProps) => {
+const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({model}) => {
+
+    let countries: CountryModel[] = [{
+        cca2: "IT",
+        idd: "+39",
+        name: "Italy"
+    }];
+
+  useLayoutEffect(() => {
+      CountryService.getAll().then(response => {
+          response.data.map((country: { cca2: any; idd: { root: any; }; name: { common: any; }; }) => countries.push({
+              cca2: country.cca2,
+              idd: country.idd.root,
+              name: country.name.common
+          }));
+      });
+  }, []);
+
+
+
   return (
       <div className="SupplierIdentificationUpsert">
           <h1 className="section-A-font-title mb-5">A. Supplier identification</h1>
@@ -59,7 +80,14 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = (sup
               <div className="d-flex">
                   <div className="d-flex flex-column">
                       <label htmlFor="country" className="font-input-label">Country</label>
-                      <select id="country" className="custom-input custom-select input-lg" />
+                          <select id="country" className="custom-input custom-select input-lg">
+                              {
+                                  countries.map((country,i) =>
+                                      (
+                                          <option key={i}>{country.name}</option>
+                                      ))
+                              }
+                          </select>
                   </div>
               </div>
               <div className="d-flex py-3">
