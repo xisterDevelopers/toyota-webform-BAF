@@ -61,13 +61,15 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <label htmlFor="accountHolderName" className="font-input-label">Supplier name is different from bank account holder name?</label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
-                                <input type="radio" id="yesAccount" name="accountHolderName"
+                                <input type="radio" id="yesAccount" name="accountHolderName" hidden={true}
                                        onChange={() => setIsAccountDiffHolderName( outputDetails.nameIsDifferentFromBankAccountName = true)}/>
+                                <label htmlFor="yesAccount" className="custom-radio"></label>
                                 <label htmlFor="yesAccount">Yes</label>
                             </div>
                             <div className="d-flex gap-2">
-                                <input type="radio" id="noAccount" name="accountHolderName"
+                                <input type="radio" id="noAccount" name="accountHolderName" hidden={true}
                                        onChange={() => setIsAccountDiffHolderName(outputDetails.nameIsDifferentFromBankAccountName = false)}/>
+                                <label htmlFor="noAccount" className="custom-radio"></label>
                                 <label htmlFor="noAccount">No</label>
                             </div>
                         </div>
@@ -85,13 +87,15 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <label htmlFor="factoryCompany" className="font-input-label">Factory company?</label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
-                                <input type="radio" id="yesFactory" name="factoryCompany"
+                                <input type="radio" id="yesFactory" name="factoryCompany" hidden={true}
                                        onChange={() => setIsFactoryCompany(outputDetails.factoryCompany = true)}/>
+                                <label htmlFor="yesFactory" className="custom-radio"></label>
                                 <label htmlFor="yesFactory">Yes</label>
                             </div>
                             <div className="d-flex gap-2">
-                                <input type="radio" id="noFactory" name="factoryCompany"
+                                <input type="radio" id="noFactory" name="factoryCompany" hidden={true}
                                        onChange={() => setIsFactoryCompany(outputDetails.factoryCompany = false)}/>
+                                <label htmlFor="noFactory" className="custom-radio"></label>
                                 <label htmlFor="noFactory">No</label>
                             </div>
                         </div>
