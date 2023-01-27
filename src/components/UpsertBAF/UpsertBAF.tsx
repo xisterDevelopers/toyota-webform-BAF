@@ -12,6 +12,8 @@ import Button from "../../shared/Button/Button";
 import {FiTrash2} from "react-icons/fi";
 import UploadCard from "../../shared/UploadCard/UploadCard";
 import {CurrencyModel} from "../../models/currency.model";
+import {UploadedFileModel} from "../../models/uploadedFile.model";
+import successIcon from "../../assets/svg/success_icon.svg";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -20,7 +22,8 @@ interface UpsertBafProps {}
 const UpsertBaf: FC<UpsertBafProps> = () => {
     const [bankDetails, setBankDetails] = useState('');
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
-    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ })
+    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ });
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ])
 
     let {id} = useParams();
 
@@ -59,7 +62,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
 
         for (let i = 0; i < event.dataTransfer.files.length; i++) {
             if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
-                console.log(event.dataTransfer.files[i]);
+                setUploadedFiles([...uploadedFiles, { name: event.dataTransfer.files[i].name, type: "" }]);
             } else {
                 //TODO: gestione validazione dimensione massima file
                 console.error('Dimensione massima superata');
@@ -73,13 +76,17 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
         if (event.target.files) {
             for (let i = 0; i < event.target.files.length; i++) {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
-                    console.log(event.target.files[i]);
+                    setUploadedFiles([...uploadedFiles,{ name: event.target.files[i].name, type: "" }]);
                 } else {
                     //TODO: gestione validazione dimensione massima file
                     console.error('Dimensione massima superata');
                 }
             }
         }
+    }
+
+    const updateSelectTypologyStatus = (files: UploadedFileModel[]) => {
+        setUploadedFiles(files);
     }
 
     let bankUpsertModel: SupplierBankDetailsUpsertModel = {
@@ -120,7 +127,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
             <div className="info-container mb-5">
                 <h2 className="mb-5">C. Caricamento Allegati</h2>
                 <h3>È obbligatorio ricevere da <strong>tutti</strong> i candidati fornitori:</h3>
-                <ul>
+                <ul className="custom-ul">
                     <li className="mb-3"><strong>Richiesta di inserimento nell’albo su carta intestata del fornitore</strong> contenente i dati da inserire in anagrafica. L’allegato dovrà contemplare anche le seguenti info: numero di telefono ed e-mail del soggetto firmatario del contratto che sia dotato del potere di firma</li>
                     <li className="mb-3"><strong>Copia della visura della Camera di Commercio</strong> in corso di validità con data entro i 180 giorni dall’emissione (per i fornitori stranieri un documento equivalente) e del documento di identità del titolare/rappresentante legale dell’azienda</li>
                     <li className="mb-3"><strong>Copie delle eventuali certificazioni ISO possedute</strong> (a titolo esemplificativo: ISO 9001, ISO 14001, ISO 45001, SA8000), brevetti, codice di condotta del fornitore;</li>
@@ -131,7 +138,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
                     <li className="mb-3">Qualora l’attività del fornitore comporti il trattamento dei dati personali di TMI, l’<strong>esito della valutazione effettuata in merito al rispetto dei requisiti richiesti dalle policy TMI</strong> in tema di sicurezza nella gestione dei dati personali</li>
                 </ul>
                 <h3 className="mt-6 mb-5">Documentazione integrativa</h3>
-                <ul>
+                <ul className="custom-ul">
                     <p>Il candidato, che viene configurato nella tipologia rischio alto, dovrà fornire:</p>
                     <li className="mb-3">Apposita <strong>“autocertificazione impresa rischio alto”</strong> compilata in tutti i suoi campi e firmata dal legale rappresentante del soggetto richiedente (per lo standard di checklist si rimanda all’allegato n° 1 alla presente procedura) a cui si dovranno allegare i seguenti documenti:</li>
                     <li className="mb-3"><strong>Curriculum</strong> con evidenza dei lavori svolti negli ultimi tre anni;</li>
@@ -155,7 +162,8 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
             </div>
 
             {/*Card Upload*/}
-            <UploadCard />
+            <UploadCard uploadedFiles={ uploadedFiles.map(uploadFile => { return { name: uploadFile.name, type: "" } }) }
+                        typologySelectedEvent={updateSelectTypologyStatus} />
 
             <div className="d-flex gap-3 justify-end">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" />

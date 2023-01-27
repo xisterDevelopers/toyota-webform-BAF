@@ -119,3 +119,11 @@ input[type="checkbox"]:checked + .custom-checkbox
     padding: 0 0 0 0;
     cursor: pointer;
 }
+
+ul.custom-ul {
+    list-style-image: url("../assets/svg/simple_dot.svg");
+}
+
+ul.custom-ul > li {
+    padding-left: 0.5rem;
+}

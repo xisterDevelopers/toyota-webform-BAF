@@ -224,3 +224,7 @@
 .txt-nowrap {
     white-space: nowrap;
 }
+
+.ml-4 {
+    margin-left: 1.5rem;
+}
