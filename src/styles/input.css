@@ -50,6 +50,10 @@ input, select {
     box-shadow: 0 0 5px #c8c8c8
 }
 
+.input-xlg {
+    width: 610px;
+}
+
 .input-lg {
     width: 357px;
 }
