@@ -1,21 +1,53 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useLayoutEffect, useState} from 'react';
 import './UpsertBAF.css';
 import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
 import {SupplierBankDetailsUpsertModel} from "../../models/supplierBankDetailsUpsertModel";
+import {CountryModel} from "../../models/country.model";
+import CountryService from "../../api/country.service";
+import {SupplierIdentificationUpsertModel} from "../../models/supplierIdentificationUpsert.model";
 import Button from "../../shared/Button/Button";
 import {FiTrash2} from "react-icons/fi";
 import UploadCard from "../../shared/UploadCard/UploadCard";
+import {CurrencyModel} from "../../models/currency.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 interface UpsertBafProps {}
 
 const UpsertBaf: FC<UpsertBafProps> = () => {
-    const [bankDetails, setBankDetails] = useState('')
+    const [bankDetails, setBankDetails] = useState('');
+    const [countries, setCountries] = useState<CountryModel[]>([ ]);
+    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ })
+
     let {id} = useParams();
+
+    useLayoutEffect(() => {
+        CountryService.getAll().then(response => {
+            const sortedCountries = response.data.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
+                const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
+
+                return {
+                    name: country.name.common,
+                    cca2: country.cca2,
+                    idd: country.idd.suffixes?.map((suffix: string) => {
+                        return country.idd.root + suffix;
+                    } ),
+                    currency: currencyKey ? country.currencies[currencyKey] : null
+                } as CountryModel;
+            }) as CountryModel[];
+            setCountries(sortedCountries);
+
+            setSupplierIdentification({
+                country: sortedCountries?.at(0)?.name,
+                idd: sortedCountries?.at(0)?.idd.at(0),
+                cca2: sortedCountries?.at(0)?.cca2,
+                establishment: true
+            })
+        });
+    }, []);
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -67,6 +99,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
 
     const onConsole = () => {
         console.log(bankUpsertModel)
+        console.log(supplierIdentification)
     }
 
     return(
@@ -80,9 +113,9 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
                     To mitigate there risks and to protect your interests, as well as the interests of Toyota,
                     creation or update of bank account will be processed based on the completed, authorised and verified information on this form only.</p>
             </div>
-            <SupplierIdentificationUpsert />
+            <SupplierIdentificationUpsert countries={countries} model={supplierIdentification} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} />
+            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
                 <h2 className="mb-5">C. Caricamento Allegati</h2>
