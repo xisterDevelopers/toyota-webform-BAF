@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useState} from 'react';
 import './UpsertBAF.css';
 import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
@@ -14,6 +14,7 @@ const MAX_FILE_SIZE: number = 5E+6;
 interface UpsertBafProps {}
 
 const UpsertBaf: FC<UpsertBafProps> = () => {
+    const [bankDetails, setBankDetails] = useState('')
     let {id} = useParams();
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +68,6 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
     const onConsole = () => {
         console.log(bankUpsertModel)
     }
-
 
     return(
         <div className="UpsertBAF">

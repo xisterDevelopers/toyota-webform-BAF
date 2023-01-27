@@ -25,6 +25,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     return(
         <div>
             <h2 className="mb-5">B. Supplier bank details</h2>
+
             <form className="d-flex flex-column gap-3" >
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
