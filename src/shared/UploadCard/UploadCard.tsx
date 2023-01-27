@@ -19,8 +19,8 @@ const UploadCard: FC<UploadCardProps> = () => (
         </div>
         <div className="d-flex mt-3">
             <div className="d-flex flex-column">
-                <select id="upload" className="custom-input custom-select input-xlg light-grey" placeholder="Seleziona tipologia file">
-                    <option value="" disabled selected>Seleziona tipologia di file</option>
+                <select id="upload" className="custom-input custom-select input-xlg light-grey" placeholder="Seleziona tipologia file" defaultValue={"0"}>
+                    <option value="0" disabled>Seleziona tipologia di file</option>
                 </select>
             </div>
         </div>

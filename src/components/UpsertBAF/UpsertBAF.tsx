@@ -40,7 +40,8 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
             setSupplierIdentification({
                 country: sortedCountries?.at(0)?.name,
                 idd: sortedCountries?.at(0)?.idd.at(0),
-                cca2: sortedCountries?.at(0)?.cca2
+                cca2: sortedCountries?.at(0)?.cca2,
+                establishment: true
             })
         });
     }, []);
@@ -95,6 +96,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
 
     const onConsole = () => {
         console.log(bankUpsertModel)
+        console.log(supplierIdentification)
     }
 
     return(

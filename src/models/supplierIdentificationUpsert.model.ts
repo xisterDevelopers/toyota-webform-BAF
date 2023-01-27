@@ -17,11 +17,11 @@ export interface SupplierIdentificationUpsertModel {
     governmentInstitution?: boolean;
     companySize?: string;
     idd?: string;
-    phoneNumber?: number;
+    phoneNumber?: string;
     cca2?: string;
     vatNumber?: string;
     taxResidenceCountry?: CountryModel;
-    taxID?: number;
+    taxID?: string;
     vatRegime?: string;
-    registrationNumber?: number;
+    registrationNumber?: string;
 }
