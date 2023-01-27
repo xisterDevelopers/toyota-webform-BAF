@@ -38,7 +38,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
     return (
       <div className="SupplierIdentificationUpsert">
-          <h1 className="section-A-font-title mb-5">A. Supplier identification</h1>
+          <h2 className="section-A-font-title mb-5">A. Supplier identification</h2>
           <form className="d-flex flex-column gap-4">
               <div className="d-flex">
                   <div className="d-flex flex-column">
