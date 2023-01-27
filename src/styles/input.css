@@ -1,0 +1,129 @@
+.custom-input {
+    box-sizing: border-box;
+    height: 46px;
+    background: #EFF0F0;
+    border: 1px solid #DBDBDB;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    padding: 0 1rem;
+}
+
+.custom-input:disabled {
+    background: rgba(239, 240, 240, 0.2);
+    border: 1px solid rgba(219, 219, 219, 0.5);
+    border-radius: 4px;
+    color: #A2A2A2;
+}
+
+input, select {
+    font-family: 'Toyota Type', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 40px;
+}
+
+.custom-date {
+    appearance: none;
+    background-image: url("../assets/svg/calendar.svg");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.90rem auto;
+}
+
+.custom-date[type="date"]::-webkit-inner-spin-button,
+.custom-date[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+.custom-select {
+    appearance: none;
+    background-image: url("../assets/svg/selct-arrow.svg");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.90rem auto;
+}
+
+.custom-select:focus, .custom-input:focus, .custom-date:focus {
+    outline: none;
+    box-shadow: 0 0 5px #c8c8c8
+}
+
+.input-xlg {
+    width: 610px;
+}
+
+.input-lg {
+    width: 357px;
+}
+
+.input-md {
+    width: 141px;
+}
+
+.input-sm {
+    width: 97px;
+}
+
+.input-fill {
+    width: 100%
+}
+
+input[type="radio"] + .custom-radio
+{
+    background-image: url("../assets/svg/no_checked_radio.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+input[type="radio"]:checked + .custom-radio
+{
+    background-image: url("../assets/svg/checked_radio.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+input[type="checkbox"] + .custom-checkbox
+{
+    background-image: url("../assets/svg/no_checked_checkbox.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    height: 100%;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked + .custom-checkbox
+{
+    background-image: url("../assets/svg/checked_checkbox.svg");
+    background-repeat: no-repeat;
+    background-position: right 50% top 50%;
+    background-size: 100%;
+    width: 20px;
+    height: 100%;
+    display:inline-block;
+    padding: 0 0 0 0;
+    cursor: pointer;
+}
+
+ul.custom-ul {
+    list-style-image: url("../assets/svg/simple_dot.svg");
+}
+
+ul.custom-ul > li {
+    padding-left: 0.5rem;
+}

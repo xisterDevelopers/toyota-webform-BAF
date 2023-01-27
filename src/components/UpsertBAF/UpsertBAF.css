@@ -1,0 +1,19 @@
+.UpsertBaf {}
+
+.info-container {
+    max-width: 713px;
+
+}
+
+.info-upload-container {
+    max-width: 500px;
+}
+
+.break-line {
+    height: 0px;
+    border: 2px solid #D7D7D7;
+}
+
+li {
+    list-style-type: none;
+}
