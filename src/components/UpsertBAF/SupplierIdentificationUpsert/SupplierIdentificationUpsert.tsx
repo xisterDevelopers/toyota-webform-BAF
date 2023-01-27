@@ -5,28 +5,23 @@ import CountryService from "../../../api/country.service";
 import {CountryModel} from "../../../models/country.model";
 
 interface SupplierIdentificationUpsertProps {
-    model?: SupplierIdentificationUpsertModel;
+    model: SupplierIdentificationUpsertModel;
+    countries: CountryModel[];
 }
 
-const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({model}) => {
+const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({model, countries}) => {
 
-    let countries: CountryModel[] = [{
-        cca2: "IT",
-        idd: "+39",
-        name: "Italy"
-    }];
-
-  useLayoutEffect(() => {
-      CountryService.getAll().then(response => {
-          response.data.map((country: { cca2: any; idd: { root: any; }; name: { common: any; }; }) => countries.push({
-              cca2: country.cca2,
-              idd: country.idd.root,
-              name: country.name.common
-          }));
-      });
-  }, []);
-
-
+    const [cca2, setCca2] = useState(model.cca2);
+    const [idd, setIdd] = useState(model.idd);
+    const [country, setCountry] = useState(model.country);
+    const [supplierName, setSupplierName] = useState(model.supplierName);
+    const [establishment, setEstablishment] = useState(model.establishment);
+    const [personName, setPersonName] = useState(model.personName);
+    const [address, setAddress] = useState(model.address);
+    const [city, setCity] = useState(model.city);
+    const [companySize, setCompanySize] = useState(model.companySize);
+    const [emailAddress, setEmailAddress] = useState(model.emailAddress);
+    const [establishmentAddress, setEstablishmentAddress] = useState(model.establishmentAddress);
 
   return (
       <div className="SupplierIdentificationUpsert">
@@ -35,7 +30,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               <div className="d-flex">
                   <div className="d-flex flex-column">
                       <label htmlFor="supplierName" className="font-input-label">Supplier Name</label>
-                      <input type="text" id="supplierName" className="custom-input input-lg" />
+                      <input type="text" id="supplierName" className="custom-input input-lg"/>
                   </div>
               </div>
               <div className="d-flex gap-5">
@@ -80,9 +75,15 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               <div className="d-flex">
                   <div className="d-flex flex-column">
                       <label htmlFor="country" className="font-input-label">Country</label>
-                          <select id="country" className="custom-input custom-select input-lg">
+                          <select id="country" className="custom-input custom-select input-lg"
+                                  value={model.country}
+                                  onChange={(event) => {
+                                      setCca2(model.cca2 = countries?.find(c => c.name === event.target.value)?.cca2);
+                                      setIdd(model.idd = countries?.find(c => c.name === event.target.value)?.idd.at(0));
+                                      setCountry(model.country = event.target.value);
+                                  }}>
                               {
-                                  countries.map((country,i) =>
+                                  countries?.map((country,i) =>
                                       (
                                           <option key={i}>{country.name}</option>
                                       ))
@@ -117,7 +118,18 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column">
                       <label htmlFor="phoneNumber" className="font-input-label">Phone Number</label>
                       <div className="d-flex input-lg gap-2">
-                          <select id="companySize" className="custom-input custom-select input-sm" />
+                          <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd}
+                                  onChange={(event => setIdd(model.idd = event.target.value))}>
+                              {
+                                  countries?.filter(c => c.name === model.country).map(country =>
+                                      (
+                                          country.idd.map((suffix, i) =>
+                                              (
+                                                  <option key={i}>{suffix}</option>
+                                              ))
+                                      ))
+                              }
+                          </select>
                           <input type="tell" id="phoneNumber" className="custom-input input-fill" />
                       </div>
                   </div>
@@ -126,7 +138,15 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column">
                       <label htmlFor="vatNumber" className="font-input-label">Vat Number</label>
                       <div className="d-flex input-lg gap-2">
-                          <select id="vatPrefix" className="custom-input custom-select input-sm" />
+                          <select id="vatPrefix" className="custom-input custom-select input-sm" value={model.cca2}
+                                  onChange={(event => setCca2(model.cca2 = event.target.value))}>
+                              {
+                                  countries?.filter(c => c.name === model.country).map((country,i) =>
+                                      (
+                                          <option key={i}>{country.cca2}</option>
+                                      ))
+                              }
+                          </select>
                           <input type="text" id="vatNumber" className="custom-input input-fill" />
                       </div>
                   </div>

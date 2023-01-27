@@ -1,19 +1,19 @@
 import {CountryModel} from "./country.model";
 
 export interface SupplierIdentificationUpsertModel {
-    supplierName: string;
-    personName: string;
+    supplierName?: string;
+    personName?: string;
     personSurname?: string;
     emailAddress?: string;
     address?: string;
     city?: string;
     postalCode?: string;
-    country?: CountryModel;
-    establishment: boolean;
+    country?: string;
+    establishment?: boolean;
     establishmentAddress?: string;
     establishmentCity?: string;
     establishmentPostalCode?: string;
-    establishmentCountry?: CountryModel;
+    establishmentCountry?: string;
     governmentInstitution?: boolean;
     companySize?: string;
     idd?: string;

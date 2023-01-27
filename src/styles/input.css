@@ -23,8 +23,18 @@ input, select {
     line-height: 40px;
 }
 
-input.custom-input::-webkit-calendar-picker-indicator {
-    color: #DF0000;
+.custom-date {
+    appearance: none;
+    background-image: url("../assets/svg/calendar.svg");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.90rem auto;
+}
+
+.custom-date[type="date"]::-webkit-inner-spin-button,
+.custom-date[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
 }
 
 .custom-select {
@@ -35,7 +45,7 @@ input.custom-input::-webkit-calendar-picker-indicator {
     background-size: 0.90rem auto;
 }
 
-.custom-select:focus, .custom-input:focus {
+.custom-select:focus, .custom-input:focus, .custom-date:focus {
     outline: none;
     box-shadow: 0 0 5px #c8c8c8
 }
