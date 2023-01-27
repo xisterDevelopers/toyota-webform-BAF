@@ -11,6 +11,7 @@ import {SupplierIdentificationUpsertModel} from "../../models/supplierIdentifica
 import Button from "../../shared/Button/Button";
 import {FiTrash2} from "react-icons/fi";
 import UploadCard from "../../shared/UploadCard/UploadCard";
+import {CurrencyModel} from "../../models/currency.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -26,13 +27,15 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
     useLayoutEffect(() => {
         CountryService.getAll().then(response => {
             const sortedCountries = response.data.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
+                const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
+
                 return {
                     name: country.name.common,
                     cca2: country.cca2,
                     idd: country.idd.suffixes?.map((suffix: string) => {
                         return country.idd.root + suffix;
                     } ),
-                    currency: "€"
+                    currency: currencyKey ? country.currencies[currencyKey] : null
                 } as CountryModel;
             }) as CountryModel[];
             setCountries(sortedCountries);
@@ -112,7 +115,7 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
             </div>
             <SupplierIdentificationUpsert countries={countries} model={supplierIdentification} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} />
+            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
                 <h2 className="mb-5">C. Caricamento Allegati</h2>

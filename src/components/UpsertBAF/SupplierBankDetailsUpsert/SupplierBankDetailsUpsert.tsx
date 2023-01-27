@@ -1,12 +1,15 @@
 import React, {FC, useState} from 'react';
 import './SupplierBankDetailsUpsert.css';
 import {SupplierBankDetailsUpsertModel} from "../../../models/supplierBankDetailsUpsertModel";
+import {CurrencyModel} from "../../../models/currency.model";
+import {CountryModel} from "../../../models/country.model";
 
 interface SupplierBankDetailsUpsertProps {
     outputDetails: SupplierBankDetailsUpsertModel;
+    countries: CountryModel[]
 }
 
-const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails}) => {
+const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails, countries}) => {
     const [bankName, setBankName] = useState(outputDetails.bankName);
     const [currency, setCurrency] = useState(outputDetails.bankAccountCurrency);
     const [date, setDate] = useState('');
@@ -39,7 +42,13 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <label className="font-input-label">Bank account currency</label>
                         <select className="custom-select custom-input input-lg"
                                 value={currency} onChange={(event) => setCurrency(outputDetails.bankAccountCurrency = event.target.value)} >
-
+                            {
+                                countries.filter(country => country.currency !== null)
+                                    .sort((a, b) => a.currency.name > b.currency.name ? 1 : -1)
+                                    .map((country, index) => (
+                                        <option key={index}>{country.currency.name} ({country.currency.symbol})</option>
+                                    ))
+                            }
                         </select>
                     </div>
                 </div>
