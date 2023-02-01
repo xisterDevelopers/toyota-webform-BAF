@@ -149,9 +149,9 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd}
                                   onChange={(event => setIdd(model.idd = event.target.value))}>
                               {
-                                  countries?.filter(c => c.name === model.country).map(country =>
+                                  countries?.map(country =>
                                       (
-                                          country.idd.map((suffix, i) =>
+                                          country?.idd?.map((suffix, i) =>
                                               (
                                                   <option key={i}>{suffix}</option>
                                               ))
@@ -170,9 +170,9 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <select id="vatPrefix" className="custom-input custom-select input-sm" value={model.cca2}
                                   onChange={(event => setCca2(model.cca2 = event.target.value))}>
                               {
-                                  countries?.filter(c => c.name === model.country).map((country,i) =>
+                                  countries?.map((country,i) =>
                                       (
-                                          <option key={i}>{country.cca2}</option>
+                                          <option key={i}>{country?.cca2}</option>
                                       ))
                               }
                           </select>

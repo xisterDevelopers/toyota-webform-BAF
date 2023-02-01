@@ -7,3 +7,8 @@
     font-weight: 400;
     cursor: pointer;
 }
+
+.shared-btn:disabled {
+    background-color: #717171;
+    cursor: default;
+}

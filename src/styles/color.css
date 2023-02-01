@@ -11,7 +11,11 @@
 }
 
 .light-grey {
-    color: #949494
+    color: #949494;
+}
+
+.ultra-light-grey {
+    color: #F6F6F6;
 }
 
 .bg-dark-grey {

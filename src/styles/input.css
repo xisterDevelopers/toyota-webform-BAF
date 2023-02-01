@@ -120,10 +120,17 @@ input[type="checkbox"]:checked + .custom-checkbox
     cursor: pointer;
 }
 
-ul.custom-ul {
-    list-style-image: url("../assets/svg/simple_dot.svg");
+.custom-li {
+    align-self: start;
+    margin-right: 0.5rem;
 }
 
-ul.custom-ul > li {
-    padding-left: 0.5rem;
+.success_dot {
+    margin-top: 1rem;
+    margin-left: 0.9rem;
+}
+
+.dot {
+    margin-top: 1.4rem;
+    margin-left: 1.5rem;
 }

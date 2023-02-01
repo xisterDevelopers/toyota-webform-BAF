@@ -4,6 +4,10 @@
     line-height: 46px;
 }
 
+.font-p-little {
+    font-size: 14px;
+}
+
 .font-w-light {
     font-weight: 400;
 }
@@ -18,4 +22,8 @@
     font-weight: 600;
     font-size: 28px;
     line-height: 40px;
+}
+
+h3 {
+    font-size: 1.4rem;
 }

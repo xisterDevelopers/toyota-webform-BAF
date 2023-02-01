@@ -228,3 +228,38 @@
 .ml-4 {
     margin-left: 1.5rem;
 }
+
+.ml-3 {
+    margin-left: 1rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.my-5 {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.ml-5 {
+    margin-left: 3rem;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.pop-up {
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+    width: 323px;
+}
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+.w-100 {
+    width: 100%;
+}
