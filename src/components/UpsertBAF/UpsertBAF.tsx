@@ -158,6 +158,23 @@ const UpsertBaf: React.FunctionComponent = () => {
         });
     }
 
+    const deleteToUploadFile = (fileName: string) => {
+        const fileIndex = toUploadFiles.findIndex(file => file.name === fileName);
+        toUploadFiles.splice(fileIndex);
+
+        setToUploadFiles([...toUploadFiles]);
+
+        setShowModal(toUploadFiles.length > 0);
+        document.body.style.overflowY = toUploadFiles.length > 0 ? "hidden" : "scroll"
+    }
+
+    const deleteUploadedFile = (fileName: string) => {
+        const fileIndex = uploadedFiles.findIndex(file => file.name === fileName);
+        uploadedFiles.splice(fileIndex);
+
+        setUploadedFiles([...uploadedFiles]);
+    }
+
     const onConsole = () => {
         console.log(bankUpsertModel)
         console.log(supplierIdentification)
@@ -179,7 +196,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                                             typologySelectedEvent={updateToUploadFileTypology}
                                             selectedTypology={uploadedFile.type}
                                             status="modal" spacing=" p-3 mx-3"
-                                            updateTypology={() => { }}/>
+                                            updateTypology={() => { }}
+                                            deleteFile={deleteToUploadFile}/>
                             )
                         })
                     }
@@ -271,7 +289,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                                     typologySelectedEvent={setToUpdateFile}
                                     selectedTypology={uploadedFile.type}
                                     status="form" spacing=" p-3 mt-5 mb-5"
-                                    updateTypology={updateFileTypology}/>
+                                    updateTypology={updateFileTypology}
+                                    deleteFile={deleteUploadedFile}/>
                     )
                 })
             }

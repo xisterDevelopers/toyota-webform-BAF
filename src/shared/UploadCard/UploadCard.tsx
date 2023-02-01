@@ -13,9 +13,10 @@ interface UploadCardProps {
     spacing: string
     typologySelectedEvent: (uploadedFiles: UploadedFileModel) => void;
     updateTypology: () => void;
+    deleteFile: (uploadedFileName: string) => void;
 }
 
-const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology}) => {
+const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
 
     const [type, setType] = useState<string>(uploadedFile.type);
     const types = [...db.requiredFileTypes, ...db.integrativeFiles];
@@ -31,7 +32,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                     <p className="dark-grey">{uploadedFile.name}</p>
                 </div>
                 <div className="d-flex align-center gap-3 dark-grey">
-                    <FiTrash2 />
+                    <FiTrash2 onClick={() => deleteFile(uploadedFile.name)} cursor="pointer" />
                 </div>
             </div>
             <div className="d-flex mt-3">
