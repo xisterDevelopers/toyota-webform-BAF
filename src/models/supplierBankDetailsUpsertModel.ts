@@ -1,5 +1,5 @@
 export interface SupplierBankDetailsUpsertModel {
-    bankName: string;
+    bankName?: string;
     bankAccountCurrency?: string;
     effectiveDate?: Date;
     bankAccountHolderName?: string;
@@ -7,8 +7,8 @@ export interface SupplierBankDetailsUpsertModel {
     reasonName?: string;
     factoryCompany?: boolean;
     reasonFactory?: string;
-    bankAccountNumber: string;
-    ibanNumber: string;
-    swiftCode: string;
-    sortCode: string;
+    bankAccountNumber?: string;
+    ibanNumber?: string;
+    swiftCode?: string;
+    sortCode?: string;
 }

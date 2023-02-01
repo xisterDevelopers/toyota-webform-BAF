@@ -34,14 +34,14 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Bank name<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
-                               value={bankName} onChange={(event) => setBankName(outputDetails.bankName = event.target.value)} />
+                               value={bankName} onChange={(event) => outputDetails.bankName = event.target.value} />
                     </div>
                 </div>
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Bank account currency</label>
                         <select className="custom-select custom-input input-lg"
-                                value={currency} onChange={(event) => setCurrency(outputDetails.bankAccountCurrency = event.target.value)} >
+                                value={currency} onChange={(event) => outputDetails.bankAccountCurrency = event.target.value} >
                             {
                                 Array.from(new Set(countries.filter(country => country.currency !== null)
                                     .sort((a, b) => a.currency.name > b.currency.name ? 1 : -1)
@@ -66,7 +66,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Bank account holder name</label>
                         <input type="text" className="custom-input input-lg"
-                               value={bankAccountHolderName} onChange={(event) => setBankAccountHolderName(outputDetails.bankAccountHolderName = event.target.value)} />
+                               value={bankAccountHolderName} onChange={(event) => outputDetails.bankAccountHolderName = event.target.value} />
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -75,7 +75,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
                                 <input type="radio" id="yesAccount" name="accountHolderName" hidden={true}
-                                       onChange={() => setIsAccountDiffHolderName( outputDetails.nameIsDifferentFromBankAccountName = true)}/>
+                                       onChange={() =>  setIsAccountDiffHolderName(outputDetails.nameIsDifferentFromBankAccountName = true)}/>
                                 <label htmlFor="yesAccount" className="custom-radio"></label>
                                 <label htmlFor="yesAccount">Yes</label>
                             </div>
@@ -92,7 +92,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg" disabled={!isAccountDiffHolderName}
-                               value={reasonHolderName} onChange={(event) => setReasonHolderName(outputDetails.reasonName = event.target.value)}/>
+                               value={reasonHolderName} onChange={(event) => outputDetails.reasonName = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -118,31 +118,31 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg" disabled={!isFactoryCompany}
-                               value={reasonFactoryCompany} onChange={(event) => setReasonFactoryCompany(outputDetails.reasonFactory = event.target.value)}/>
+                               value={reasonFactoryCompany} onChange={(event) => outputDetails.reasonFactory = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Bank account number<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
-                               value={bankAccountNumber} onChange={(event) => setBankAccountNumber(outputDetails.bankAccountNumber = event.target.value)}/>
+                               value={bankAccountNumber} onChange={(event) => outputDetails.bankAccountNumber = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">IBAN number<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
-                               value={iban} onChange={(event) => setIban(outputDetails.ibanNumber = event.target.value)}/>
+                               value={iban} onChange={(event) => outputDetails.ibanNumber = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">
                         <label className="font-input-label">SWIFT code<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
-                               value={swift} onChange={(event) => setSwift(outputDetails.swiftCode = event.target.value)}/>
+                               value={swift} onChange={(event) => outputDetails.swiftCode = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">
                         <label className="d-flex font-input-label txt-nowrap">SORT code (UK) / FIK (Denmark) / GIRO (Sweden)<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
-                               value={sortCode} onChange={(event) => setSortCode(outputDetails.sortCode = event.target.value)}/>
+                               value={sortCode} onChange={(event) => outputDetails.sortCode = event.target.value}/>
                     </div>
                 </div>
             </form>

@@ -26,6 +26,7 @@ const MAX_FILE_SIZE: number = 5E+6;
 const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
     const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ });
+    const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsUpsertModel>({ });
     const [toUpdateFile, setToUpdateFile] = useState<UploadedFileModel>({ name: "", type: "" })
     const [toUploadFiles, setToUploadFiles] = useState<UploadedFileModel[]>([ ]);
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
@@ -123,21 +124,6 @@ const UpsertBaf: React.FunctionComponent = () => {
         setUploadedFiles([...uploadedFiles, ...toUploadFiles]);
         setToUploadFiles([]);
         setShowModal(false);
-    }
-
-    let bankUpsertModel: SupplierBankDetailsUpsertModel = {
-        bankName: '',
-        bankAccountCurrency: '',
-        effectiveDate: new Date(),
-        bankAccountHolderName: '',
-        nameIsDifferentFromBankAccountName: false,
-        reasonName: '',
-        factoryCompany: false,
-        reasonFactory: '',
-        bankAccountNumber: '',
-        ibanNumber: '',
-        swiftCode: '',
-        sortCode: ''
     }
 
     const updateFileTypology = () => {
