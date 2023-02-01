@@ -28,6 +28,9 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
     const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
     const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesHighRisk, setIntegrativeFilesHighRisk] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
 
@@ -60,6 +63,9 @@ const UpsertBaf: React.FunctionComponent = () => {
         setRequiredFileTypes(db.requiredFileTypes);
         setAcceptanceFiles(db.acceptanceFiles);
         setIntegrativeFiles(db.integrativeFiles);
+        setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
+        setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
+        setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
     }, []);
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -257,7 +263,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                         )
                     })
                 }
-                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio alto</strong></h3>
+                <h3 className="ml-4">Documentazione integrativa</h3>
                 {
                     integrativeFiles.map((integrativeFile, i) => {
                         return (
@@ -272,8 +278,71 @@ const UpsertBaf: React.FunctionComponent = () => {
                         )
                     })
                 }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio alto</strong></h3>
+                <div className="d-flex flex-row">
+                    <div className="ml-4 my-3">
+                        <strong>Autocertificazione rischio:</strong>
+                        <p className="m-0">
+                            “Autocertificazione impresa rischio alto” compilata in tutti i suoi campi e firmata dal legale
+                            rappresentante del soggetto richiedente a cui si dovranno allegare i seguenti documenti:
+                        </p>
+                    </div>
+                </div>
+                {
+                    integrativeFilesHighRisk.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio basso</strong></h3>
+                <div className="d-flex flex-row">
+                    <div className="ml-4 my-3">
+                        <strong>Autocertificazione rischio:</strong>
+                        <p className="m-0">
+                            “Autocertificazione impresa rischio basso” compilata in tutti i suoi campi e firmata dal legale
+                            rappresentante del soggetto richiedente a cui si dovranno allegare i seguenti documenti:
+                        </p>
+                    </div>
+                </div>
+                {
+                    integrativeFilesLowRisk.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione facoltativa per fornitori <strong>rischio alto e basso</strong></h3>
+                {
+                    integrativeFilesHighLowRisk.map((requiredFileType, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{requiredFileType.type}:</strong>
+                                    <p className="m-0">{requiredFileType.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
             </div>
-            <div style={{marginTop: "20rem"}}>
+            <div className="mt-5 w-100 inline-flex">
                 <UploadFile handleDrop={handleDrop} upload={handleUpload} overrideEventDefaults={overrideEventDefaults} />
             </div>
             <div className="mt-6 info-upload-container">

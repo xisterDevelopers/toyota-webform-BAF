@@ -245,3 +245,11 @@
 .ml-5 {
     margin-left: 3rem;
 }
+
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+.w-100 {
+    width: 100%;
+}

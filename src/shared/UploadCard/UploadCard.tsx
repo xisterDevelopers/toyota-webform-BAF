@@ -19,7 +19,13 @@ interface UploadCardProps {
 const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
 
     const [type, setType] = useState<string>(uploadedFile.type);
-    const types = [...db.requiredFileTypes, ...db.integrativeFiles];
+    const types = [
+        ...db.requiredFileTypes,
+        ...db.integrativeFiles,
+        ...db.integrativeFilesHighRisk,
+        ...db.integrativeFilesLowRisk,
+        ...db.integrativeFilesHighLowRisk
+    ];
     const [showButtons, setShowButtons] = useState<boolean>(false);
 
     let selectRef: HTMLSelectElement | null = null;
