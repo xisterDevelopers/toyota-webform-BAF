@@ -32,6 +32,9 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
     const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
     const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesHighRisk, setIntegrativeFilesHighRisk] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
@@ -67,6 +70,9 @@ const UpsertBaf: React.FunctionComponent = () => {
         setRequiredFileTypes(db.requiredFileTypes);
         setAcceptanceFiles(db.acceptanceFiles);
         setIntegrativeFiles(db.integrativeFiles);
+        setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
+        setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
+        setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
     }, []);
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -145,25 +151,41 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
 
     const updateToUploadFileTypology = (updatedFile: UploadedFileModel) => {
-        uploadedFiles.map(file => {
+        toUploadFiles.map(file => {
             if (file.name === updatedFile.name) {
                 file.type = updatedFile.type;
             }
         });
 
-        setUploadedFiles([...uploadedFiles]);
+        setToUploadFiles([...toUploadFiles]);
         checkValidation();
     }
 
     const checkValidation = () => {
+        setCheckDisable(false);
+
         toUploadFiles.map(file => {
             if (file.type === "") {
                 setCheckDisable(true);
-                return;
             }
-        })
+        });
+    }
 
-        setCheckDisable(false);
+    const deleteToUploadFile = (fileName: string) => {
+        const fileIndex = toUploadFiles.findIndex(file => file.name === fileName);
+        toUploadFiles.splice(fileIndex);
+
+        setToUploadFiles([...toUploadFiles]);
+
+        setShowModal(toUploadFiles.length > 0);
+        document.body.style.overflowY = toUploadFiles.length > 0 ? "hidden" : "scroll"
+    }
+
+    const deleteUploadedFile = (fileName: string) => {
+        const fileIndex = uploadedFiles.findIndex(file => file.name === fileName);
+        uploadedFiles.splice(fileIndex);
+
+        setUploadedFiles([...uploadedFiles]);
     }
 
     const onConsole = () => {
@@ -201,22 +223,25 @@ const UpsertBaf: React.FunctionComponent = () => {
                     </div>
                     : ''
             }
-            <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"} btnWidth={"151px"} btnDisabled={checkDisable}
-                         onClose={() => {
-                            setShowModal(false);
-                            setToUploadFiles([]);
-                        }} onUpload={upload}>
-                {
-                    toUploadFiles.map((uploadedFile, index) => {
-                        return (
-                            <UploadCard key={index} uploadedFile={uploadedFile}
-                                        typologySelectedEvent={updateToUploadFileTypology}
-                                        selectedTypology={uploadedFile.type}
-                                        status="modal"
-                                        updateTypology={() => { }}/>
-                        )
-                    })
-                }
+            <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"}
+                         btnWidth={"151px"} btnDisabled={checkDisable} onClose={() => {
+                                                                            setShowModal(false);
+                                                                            setToUploadFiles([]);
+                                                                        }} onUpload={upload}>
+                <div className="d-flex flex-column gap-5">
+                    {
+                        toUploadFiles.map((uploadedFile, index) => {
+                            return (
+                                <UploadCard key={index} uploadedFile={uploadedFile}
+                                            typologySelectedEvent={updateToUploadFileTypology}
+                                            selectedTypology={uploadedFile.type}
+                                            status="modal" spacing=" p-3 mx-3"
+                                            updateTypology={() => { }}
+                                            deleteFile={deleteToUploadFile}/>
+                            )
+                        })
+                    }
+                </div>
             </CustomModal>
             <div className="info-container mb-5 pb-5 pt-3">
                 <p><strong>1 Person companies/small companies* - One signature and one call back required</strong></p>
@@ -286,7 +311,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                         )
                     })
                 }
-                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio alto</strong></h3>
+                <h3 className="ml-4">Documentazione integrativa</h3>
                 {
                     integrativeFiles.map((integrativeFile, i) => {
                         return (
@@ -301,8 +326,71 @@ const UpsertBaf: React.FunctionComponent = () => {
                         )
                     })
                 }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio alto</strong></h3>
+                <div className="d-flex flex-row">
+                    <div className="ml-4 my-3">
+                        <strong>Autocertificazione rischio:</strong>
+                        <p className="m-0">
+                            “Autocertificazione impresa rischio alto” compilata in tutti i suoi campi e firmata dal legale
+                            rappresentante del soggetto richiedente a cui si dovranno allegare i seguenti documenti:
+                        </p>
+                    </div>
+                </div>
+                {
+                    integrativeFilesHighRisk.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio basso</strong></h3>
+                <div className="d-flex flex-row">
+                    <div className="ml-4 my-3">
+                        <strong>Autocertificazione rischio:</strong>
+                        <p className="m-0">
+                            “Autocertificazione impresa rischio basso” compilata in tutti i suoi campi e firmata dal legale
+                            rappresentante del soggetto richiedente a cui si dovranno allegare i seguenti documenti:
+                        </p>
+                    </div>
+                </div>
+                {
+                    integrativeFilesLowRisk.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione facoltativa per fornitori <strong>rischio alto e basso</strong></h3>
+                {
+                    integrativeFilesHighLowRisk.map((requiredFileType, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{requiredFileType.type}:</strong>
+                                    <p className="m-0">{requiredFileType.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
             </div>
-            <div style={{marginTop: "20rem"}}>
+            <div className="mt-5 w-100 inline-flex">
                 <UploadFile handleDrop={handleDrop} upload={handleUpload} overrideEventDefaults={overrideEventDefaults} />
             </div>
             <div className="mt-6 info-upload-container">
@@ -317,8 +405,9 @@ const UpsertBaf: React.FunctionComponent = () => {
                         <UploadCard key={index} uploadedFile={uploadedFile}
                                     typologySelectedEvent={setToUpdateFile}
                                     selectedTypology={uploadedFile.type}
-                                    status="form"
-                                    updateTypology={updateFileTypology}/>
+                                    status="form" spacing=" p-3 mt-5 mb-5"
+                                    updateTypology={updateFileTypology}
+                                    deleteFile={deleteUploadedFile}/>
                     )
                 })
             }

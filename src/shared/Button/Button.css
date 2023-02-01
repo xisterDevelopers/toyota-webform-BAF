@@ -10,4 +10,5 @@
 
 .shared-btn:disabled {
     background-color: #717171;
+    cursor: default;
 }

@@ -10,27 +10,35 @@ interface UploadCardProps {
     uploadedFile: UploadedFileModel;
     selectedTypology: string;
     status: string;
+    spacing: string
     typologySelectedEvent: (uploadedFiles: UploadedFileModel) => void;
     updateTypology: () => void;
+    deleteFile: (uploadedFileName: string) => void;
 }
 
-const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status ,  typologySelectedEvent, updateTypology}) => {
+const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
 
     const [type, setType] = useState<string>(uploadedFile.type);
-    const types = [...db.requiredFileTypes, ...db.integrativeFiles];
+    const types = [
+        ...db.requiredFileTypes,
+        ...db.integrativeFiles,
+        ...db.integrativeFilesHighRisk,
+        ...db.integrativeFilesLowRisk,
+        ...db.integrativeFilesHighLowRisk
+    ];
     const [showButtons, setShowButtons] = useState<boolean>(false);
 
     let selectRef: HTMLSelectElement | null = null;
 
     return (
-        <div className={(type === "" ? "upload-container": "selected-type-upload-container") + " p-3 mt-5 mb-5"}>
+        <div className={(type === "" ? "upload-container": "selected-type-upload-container") + spacing}>
             <div className="d-flex justify-between">
                 <div className="d-flex gap-4 align-center">
                     <div className="document-icon"></div>
                     <p className="dark-grey">{uploadedFile.name}</p>
                 </div>
                 <div className="d-flex align-center gap-3 dark-grey">
-                    <FiTrash2 />
+                    <FiTrash2 onClick={() => deleteFile(uploadedFile.name)} cursor="pointer" />
                 </div>
             </div>
             <div className="d-flex mt-3">

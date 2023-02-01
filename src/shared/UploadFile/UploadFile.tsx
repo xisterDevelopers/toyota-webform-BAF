@@ -20,7 +20,7 @@ const UploadFile: FC<UploadFileProps> = (uploadFileProps) => {
     return(
         <div onDragOver={uploadFileProps.overrideEventDefaults} onDragEnter={uploadFileProps.overrideEventDefaults}
              onDragStart={uploadFileProps.overrideEventDefaults} onDragLeave={uploadFileProps.overrideEventDefaults}
-             onDrop={uploadFileProps.handleDrop} className="UploadFile d-flex justify-center align-center flex-column">
+             onDrop={uploadFileProps.handleDrop} className="UploadFile d-flex justify-center align-center flex-column w-100">
                 <img width="69" height="54" className="" src={upload} alt="upload"/>
                 <span className="mt-3 light-grey">
                   Drag and drop your files here

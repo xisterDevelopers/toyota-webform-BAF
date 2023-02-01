@@ -3,15 +3,15 @@
 }
 
 .info-container {
-    max-width: 729px;
+    max-width: 45%
 }
 
 .info-upload-container {
-    max-width: 500px;
+    max-width: 30%;
 }
 
 .break-line {
-    height: 0px;
+    height: 0;
     border: 2px solid #D7D7D7;
 }
 

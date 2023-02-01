@@ -256,3 +256,10 @@
     right: 50px;
     width: 323px;
 }
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+.w-100 {
+    width: 100%;
+}

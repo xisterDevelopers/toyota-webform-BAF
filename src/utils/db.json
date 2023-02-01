@@ -33,5 +33,47 @@
         "type": "Certificazioni",
         "info": "Copie delle eventuali certificazioni ISO possedute (a titolo esemplificativo: ISO 9001, ISO 14001, ISO 45001, SA8000), brevetti, codice di condotta del fornitore"
       }
-    ]
+    ],
+  "integrativeFilesHighRisk":  [
+    {
+      "type": "Curriculum lavorativo",
+      "info": "curriculum con evidenza dei lavori svolti negli ultimi tre anni;"
+    },
+    {
+      "type": "Attestati formazione dipendenti",
+      "info": "copia degli attestati di formazione dei dipendenti impiegati in TMI;"
+    },
+    {
+      "type": "Attestati DPI",
+      "info": "copia degli attestati di avvenuta consegna del documento DPI – dispositivi di protezione individuale;"
+    },
+    {
+      "type": "DURC",
+      "info": "copia del documento unico di regolarità contributiva (DURC) in corso di validità e successivi aggiornamenti;"
+    },
+    {
+      "type": "DUVRI",
+      "info": "copia del documento unico per la valutazione rischi da interferenze (DUVRI) firmato"
+    }
+  ],
+  "integrativeFilesLowRisk":  [
+    {
+      "type": "DUVRI",
+      "info": "copia del documento unico per la valutazione rischi da interferenze (DUVRI) firmato"
+    }
+  ],
+  "integrativeFilesHighLowRisk":  [
+    {
+      "type": "Certificato OHSAS 18001/ISO45001",
+      "info": "copia della Politica Salute e Sicurezza e del certificato OHSAS 18001/ISO 45001 in corso di validità (da allegare solo in caso di organizzazione certificata OHSAS 18001/ISO 45001);"
+    },
+    {
+      "type": "Organizzazione e gestione sicurezza",
+      "info": "copia del modello di organizzazione e gestione della sicurezza conforme ai requisiti del D. Lgs. 81/2008;"
+    },
+    {
+      "type": "Riduzione premio INAIL",
+      "info": "evidenza che nell’ultimo biennio si è ottenuta una riduzione del premio infortunistico dall’INAIL."
+    }
+  ]
 }
