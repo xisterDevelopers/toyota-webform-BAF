@@ -1,8 +1,9 @@
-.UpsertBaf {}
+.UpsertBaf {
+    overflow-y: scroll;
+}
 
 .info-container {
-    max-width: 713px;
-
+    max-width: 729px;
 }
 
 .info-upload-container {

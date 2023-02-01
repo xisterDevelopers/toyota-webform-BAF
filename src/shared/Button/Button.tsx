@@ -6,12 +6,13 @@ interface ButtonProps {
     text: string;
     textColor: string;
     btnWidth: string;
+    disabled: boolean;
     onClick?: MouseEventHandler<HTMLButtonElement | undefined>;
 }
 
-const Button: FC<ButtonProps> = ({color,text,textColor,btnWidth, onClick}) => {
+const Button: FC<ButtonProps> = ({color,text,textColor,btnWidth, disabled, onClick}) => {
     return(
-        <button className={color + ' ' + textColor + ' shared-btn'} style={{width: btnWidth}} onClick={onClick}>{text}</button>
+        <button className={color + ' ' + textColor + ' shared-btn'} style={{width: btnWidth}} onClick={onClick} disabled={disabled}>{text}</button>
     );
 };
 

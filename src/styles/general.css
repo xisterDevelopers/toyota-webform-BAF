@@ -228,3 +228,20 @@
 .ml-4 {
     margin-left: 1.5rem;
 }
+
+.ml-3 {
+    margin-left: 1rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.my-5 {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.ml-5 {
+    margin-left: 3rem;
+}

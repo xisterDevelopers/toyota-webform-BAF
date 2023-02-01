@@ -1,6 +1,7 @@
 import React from 'react';
 import {Navigate, Route, Routes } from 'react-router-dom';
 import logo from '../src/assets/svg/toyota-logo.svg';
+import CustomModal from "./shared/Modal/CustomModal";
 
 const UpsertBAF = React.lazy(() => import('./components/UpsertBAF/UpsertBAF'));
 const DetailBAF = React.lazy(() => import('./components/DetailBAF/DetailBAF'));

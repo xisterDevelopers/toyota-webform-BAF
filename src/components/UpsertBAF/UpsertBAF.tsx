@@ -1,6 +1,6 @@
-import React, {FC, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import './UpsertBAF.css';
-import {useParams} from "react-router-dom";
+// import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
@@ -9,47 +9,57 @@ import {CountryModel} from "../../models/country.model";
 import CountryService from "../../api/country.service";
 import {SupplierIdentificationUpsertModel} from "../../models/supplierIdentificationUpsert.model";
 import Button from "../../shared/Button/Button";
-import {FiTrash2} from "react-icons/fi";
 import UploadCard from "../../shared/UploadCard/UploadCard";
-import {CurrencyModel} from "../../models/currency.model";
 import {UploadedFileModel} from "../../models/uploadedFile.model";
-import successIcon from "../../assets/svg/success_icon.svg";
+import dot from "../../assets/svg/simple_dot.svg";
+import success_dot from "../../assets/svg/success_icon.svg";
+import {FileTypeModel} from "../../models/fileType.model";
+import db from "../../utils/db.json";
+import CustomModal from "../../shared/Modal/CustomModal";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
-interface UpsertBafProps {}
-
-const UpsertBaf: FC<UpsertBafProps> = () => {
-    const [bankDetails, setBankDetails] = useState('');
+const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
     const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ });
-    const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ])
+    const [toUpdateFile, setToUpdateFile] = useState<UploadedFileModel>({ name: "", type: "" })
+    const [toUploadFiles, setToUploadFiles] = useState<UploadedFileModel[]>([ ]);
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
+    const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
+    const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [checkDisable, setCheckDisable] = useState<boolean>(true);
 
-    let {id} = useParams();
+    // let {id} = useParams();
 
     useLayoutEffect(() => {
-        CountryService.getAll().then(response => {
-            const sortedCountries = response.data.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
-                const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
+        const countries = CountryService.getAll();
+        const sortedCountries = countries.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
+            const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
 
-                return {
-                    name: country.name.common,
-                    cca2: country.cca2,
-                    idd: country.idd.suffixes?.map((suffix: string) => {
-                        return country.idd.root + suffix;
-                    } ),
-                    currency: currencyKey ? country.currencies[currencyKey] : null
-                } as CountryModel;
-            }) as CountryModel[];
-            setCountries(sortedCountries);
+            return {
+                name: country.name.common,
+                cca2: country.cca2,
+                idd: country.idd.suffixes?.map((suffix: string) => {
+                    return country.idd.root + suffix;
+                } ),
+                currency: currencyKey ? country.currencies[currencyKey] : null
+            } as CountryModel;
+        }) as CountryModel[];
 
-            setSupplierIdentification({
-                country: sortedCountries?.at(0)?.name,
-                idd: sortedCountries?.at(0)?.idd.at(0),
-                cca2: sortedCountries?.at(0)?.cca2,
-                establishment: true
-            })
-        });
+        setCountries(sortedCountries);
+
+        setSupplierIdentification({
+            country: sortedCountries?.at(0)?.name,
+            idd: sortedCountries?.at(0)?.idd.at(0),
+            cca2: sortedCountries?.at(0)?.cca2,
+            establishment: true
+        })
+
+        setRequiredFileTypes(db.requiredFileTypes);
+        setAcceptanceFiles(db.acceptanceFiles);
+        setIntegrativeFiles(db.integrativeFiles);
     }, []);
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -58,35 +68,48 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
     };
 
     const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        overrideEventDefaults(event)
+        overrideEventDefaults(event);
 
         for (let i = 0; i < event.dataTransfer.files.length; i++) {
             if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
-                setUploadedFiles([...uploadedFiles, { name: event.dataTransfer.files[i].name, type: "" }]);
+                toUploadFiles.push({ name: event.dataTransfer.files[i].name, type: "" });
             } else {
                 //TODO: gestione validazione dimensione massima file
                 console.error('Dimensione massima superata');
             }
         }
+
+        setToUploadFiles([...toUploadFiles]);
+
+        setShowModal(true);
+        checkValidation();
     }
 
-    const upload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        overrideEventDefaults(event)
+    const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        overrideEventDefaults(event);
 
         if (event.target.files) {
             for (let i = 0; i < event.target.files.length; i++) {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
-                    setUploadedFiles([...uploadedFiles,{ name: event.target.files[i].name, type: "" }]);
+                   toUploadFiles.push({ name: event.target.files[i].name, type: "" });
                 } else {
                     //TODO: gestione validazione dimensione massima file
                     console.error('Dimensione massima superata');
                 }
             }
+
+            setToUploadFiles([...toUploadFiles]);
         }
+
+        setShowModal(true);
+        checkValidation();
     }
 
-    const updateSelectTypologyStatus = (files: UploadedFileModel[]) => {
-        setUploadedFiles(files);
+    const upload = () => {
+        // upload a file manager
+        setUploadedFiles([...uploadedFiles, ...toUploadFiles]);
+        setToUploadFiles([]);
+        setShowModal(false);
     }
 
     let bankUpsertModel: SupplierBankDetailsUpsertModel = {
@@ -104,13 +127,63 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
         sortCode: ''
     }
 
+    const updateFileTypology = () => {
+        uploadedFiles.map(file => {
+            if (file.name === toUpdateFile.name) {
+                file.type = toUpdateFile.type;
+            }
+        });
+
+        setUploadedFiles([...uploadedFiles]);
+    }
+
+    const updateToUploadFileTypology = (updatedFile: UploadedFileModel) => {
+        uploadedFiles.map(file => {
+            if (file.name === updatedFile.name) {
+                file.type = updatedFile.type;
+            }
+        });
+
+        setUploadedFiles([...uploadedFiles]);
+        checkValidation();
+    }
+
+    const checkValidation = () => {
+        toUploadFiles.map(file => {
+            if (file.type === "") {
+                setCheckDisable(true);
+                return;
+            }
+        })
+
+        setCheckDisable(false);
+    }
+
     const onConsole = () => {
         console.log(bankUpsertModel)
         console.log(supplierIdentification)
+        console.log(uploadedFiles)
     }
 
     return(
         <div className="UpsertBAF">
+            <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"} btnWidth={"151px"} btnDisabled={checkDisable}
+                         onClose={() => {
+                            setShowModal(false);
+                            setToUploadFiles([]);
+                        }} onUpload={upload}>
+                {
+                    toUploadFiles.map((uploadedFile, index) => {
+                        return (
+                            <UploadCard key={index} uploadedFile={uploadedFile}
+                                        typologySelectedEvent={updateToUploadFileTypology}
+                                        selectedTypology={uploadedFile.type}
+                                        status="modal"
+                                        updateTypology={() => { }}/>
+                        )
+                    })
+                }
+            </CustomModal>
             <div className="info-container mb-5 pb-5 pt-3">
                 <p><strong>1 Person companies/small companies* - One signature and one call back required</strong></p>
                 <p>*1 person companies/small companies - only one person within the company of management level</p>
@@ -126,48 +199,85 @@ const UpsertBaf: FC<UpsertBafProps> = () => {
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
                 <h2 className="mb-5">C. Caricamento Allegati</h2>
-                <h3>È obbligatorio ricevere da <strong>tutti</strong> i candidati fornitori:</h3>
-                <ul className="custom-ul">
-                    <li className="mb-3"><strong>Richiesta di inserimento nell’albo su carta intestata del fornitore</strong> contenente i dati da inserire in anagrafica. L’allegato dovrà contemplare anche le seguenti info: numero di telefono ed e-mail del soggetto firmatario del contratto che sia dotato del potere di firma</li>
-                    <li className="mb-3"><strong>Copia della visura della Camera di Commercio</strong> in corso di validità con data entro i 180 giorni dall’emissione (per i fornitori stranieri un documento equivalente) e del documento di identità del titolare/rappresentante legale dell’azienda</li>
-                    <li className="mb-3"><strong>Copie delle eventuali certificazioni ISO possedute</strong> (a titolo esemplificativo: ISO 9001, ISO 14001, ISO 45001, SA8000), brevetti, codice di condotta del fornitore;</li>
-
-                    <p><strong>CASI PARTICOLARI:</strong></p>
-
-                    <li className="mb-3">Per fornitori con potenziale impatto significativo sul business e/o sulla compliance, <strong>curriculum descrittivo</strong> delle esperienze maturate nell’ambito del servizio per cui il fornitore è candidato;</li>
-                    <li className="mb-3">Qualora l’attività del fornitore comporti il trattamento dei dati personali di TMI, l’<strong>esito della valutazione effettuata in merito al rispetto dei requisiti richiesti dalle policy TMI</strong> in tema di sicurezza nella gestione dei dati personali</li>
-                </ul>
-                <h3 className="mt-6 mb-5">Documentazione integrativa</h3>
-                <ul className="custom-ul">
-                    <p>Il candidato, che viene configurato nella tipologia rischio alto, dovrà fornire:</p>
-                    <li className="mb-3">Apposita <strong>“autocertificazione impresa rischio alto”</strong> compilata in tutti i suoi campi e firmata dal legale rappresentante del soggetto richiedente (per lo standard di checklist si rimanda all’allegato n° 1 alla presente procedura) a cui si dovranno allegare i seguenti documenti:</li>
-                    <li className="mb-3"><strong>Curriculum</strong> con evidenza dei lavori svolti negli ultimi tre anni;</li>
-                    <li className="mb-3">Copia degli <strong>attestati di formazione dei dipendenti impiegati in TMI</strong>;</li>
-                    <li className="mb-3">Copia degli <strong>attestati di avvenuta consegna del documento DPI</strong> – dispositivi di protezione individuale;</li>
-                    <li className="mb-3">Copia del <strong>documento unico di regolarità contributiva (DURC</strong>) in corso di validità e successivi aggiornamenti;</li>
-                    <li className="mb-3">Copia del <strong>documento unico per la valutazione rischi da interferenze (DUVRI)</strong> firmato.</li>
-
-                    <p>N.B.: in caso di definizione di un accordo contrattuale, è responsabilità del reparto Legal & Compliance valutare la necessità di un supporto del Servizio di Prevenzione e Protezione per la stesura di DUVRI ad hoc, che dovrà essere un allegato contrattuale.</p>
-                    <p>Documentazione facoltativa:</p>
-
-                    <li className="mb-3">Copia della <strong>Politica Salute e Sicurezza</strong> e del <strong>certificato OHSAS 18001/ISO 45001</strong> in corso di validità (da allegare solo in caso di organizzazione certificata OHSAS 18001/ISO 45001);</li>
-                    <li className="mb-3">Copia del <strong>modello di organizzazione e gestione della sicurezza</strong> conforme ai requisiti del D. Lgs. 81/2008;</li>
-                    <li className="mb-3">Evidenza che nell’ultimo biennio si è ottenuta una <strong>riduzione del premio infortunistico dall’INAIL</strong>.</li>
-                </ul>
+                <h3 className="ml-4">Documentazione obbligatoria</h3>
+                {
+                    requiredFileTypes.map((requiredFileType, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{requiredFileType.type}:</strong>
+                                    <p className="m-0">{requiredFileType.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                {
+                    acceptanceFiles.map((acceptanceFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(acceptanceFile.accepted ? "success_dot" : "dot") + " custom-li"}
+                                     src={acceptanceFile.accepted ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{acceptanceFile.type}:</strong>
+                                    <p className="m-0">{acceptanceFile.info} <a href="#" className="black">{acceptanceFile.link}</a></p>
+                                    <div className="d-flex flex-row mt-2">
+                                        <label htmlFor={acceptanceFile.type} className="d-flex font-input-label">
+                                            <input type="checkbox" id={acceptanceFile.type} hidden defaultChecked={acceptanceFile.accepted} onChange={event => {
+                                                acceptanceFile.accepted = event.target.checked;
+                                                setAcceptanceFiles([...acceptanceFiles]);
+                                            }}/>
+                                            <label htmlFor={acceptanceFile.type} className="font-input-label custom-checkbox mr-3"></label>
+                                            Dichiaro di aver preso visione del documento
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio alto</strong></h3>
+                {
+                    integrativeFiles.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
             </div>
-            <UploadFile handleDrop={handleDrop} upload={upload} overrideEventDefaults={overrideEventDefaults} />
+            <div style={{marginTop: "20rem"}}>
+                <UploadFile handleDrop={handleDrop} upload={handleUpload} overrideEventDefaults={overrideEventDefaults} />
+            </div>
             <div className="mt-6 info-upload-container">
                 <h2 className="font-w-light">Uploaded Files</h2>
                 <p>Dopo aver caricato i file seleziona la categoria di appertenenza per ciascuno di essi. Solo una volta che avrai correttamente associato la categoria i file saranno inseriti nel database.</p>
             </div>
 
             {/*Card Upload*/}
-            <UploadCard uploadedFiles={ uploadedFiles.map(uploadFile => { return { name: uploadFile.name, type: "" } }) }
-                        typologySelectedEvent={updateSelectTypologyStatus} />
+            {
+                uploadedFiles.map((uploadedFile, index) => {
+                    return (
+                        <UploadCard key={index} uploadedFile={uploadedFile}
+                                    typologySelectedEvent={setToUpdateFile}
+                                    selectedTypology={uploadedFile.type}
+                                    status="form"
+                                    updateTypology={updateFileTypology}/>
+                    )
+                })
+            }
 
             <div className="d-flex gap-3 justify-end">
-                <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" />
-                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={onConsole}/>
+                <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false} />
+                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={onConsole} disabled={false} />
             </div>
         </div>
     );

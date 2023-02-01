@@ -1,0 +1,37 @@
+.Modal {}
+
+.modal-footer {
+    display: flex;
+    justify-content: end;
+}
+
+.modal {
+    position: fixed;
+    max-width: 769px;
+    max-height: 742px;
+    padding: 3rem;
+    left: 25%;
+    top: 7%;
+
+    background: #FFFFFF;
+    border-radius: 12px;
+
+    filter: drop-shadow(256px 208px 132px rgba(0, 0, 0, 0.01))
+            drop-shadow(144px 117px 111px rgba(0, 0, 0, 0.05))
+            drop-shadow(64px 52px 83px rgba(0, 0, 0, 0.09))
+            drop-shadow(16px 13px 45px rgba(0, 0, 0, 0.1))
+            drop-shadow(0px 0px 0px rgba(0, 0, 0, 0.1));
+
+
+}
+
+.overlay {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+}

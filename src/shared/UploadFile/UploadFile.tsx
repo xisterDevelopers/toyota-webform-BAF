@@ -28,7 +28,7 @@ const UploadFile: FC<UploadFileProps> = (uploadFileProps) => {
                 <span className="my-3 light-grey">
                   OR
                 </span>
-                <Button btnWidth={"150px"} color={"bg-dark-grey"} text={"Browse File"} textColor={"white"} onClick={handleClick} />
+                <Button btnWidth={"150px"} color={"bg-dark-grey"} text={"Browse File"} textColor={"white"} onClick={handleClick} disabled={false} />
                 <input type="file" multiple={true} style={{display: 'none'}}
                        ref={hiddenFileInput}
                        onChange={uploadFileProps.upload}/>

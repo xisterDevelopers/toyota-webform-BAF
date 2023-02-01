@@ -1,11 +1,11 @@
-import httpCommon from "./http-common";
+import db from "../utils/db.json";
 
 const getAll = () => {
-    return httpCommon.get("/countries");
+    return db.countries;
 };
 
 const get = (cca2: any) => {
-    return httpCommon.get(`/countries?cca2=${cca2}`);
+    return db.countries.filter(c => c.cca2 === cca2);
 };
 
 const CountryService = {

@@ -43,11 +43,14 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <select className="custom-select custom-input input-lg"
                                 value={currency} onChange={(event) => setCurrency(outputDetails.bankAccountCurrency = event.target.value)} >
                             {
-                                countries.filter(country => country.currency !== null)
+                                Array.from(new Set(countries.filter(country => country.currency !== null)
                                     .sort((a, b) => a.currency.name > b.currency.name ? 1 : -1)
-                                    .map((country, index) => (
-                                        <option key={index}>{country.currency.name} ({country.currency.symbol})</option>
-                                    ))
+                                    .map(country => country.currency.name)
+                                )).map((currency, index) => {
+                                    return (
+                                        <option key={index}>{currency}</option>
+                                    )
+                                })
                             }
                         </select>
                     </div>
