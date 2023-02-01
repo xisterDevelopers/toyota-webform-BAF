@@ -1,6 +1,5 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 import './UpsertBAF.css';
-// import {useParams} from "react-router-dom";
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
@@ -16,6 +15,11 @@ import success_dot from "../../assets/svg/success_icon.svg";
 import {FileTypeModel} from "../../models/fileType.model";
 import db from "../../utils/db.json";
 import CustomModal from "../../shared/Modal/CustomModal";
+import {useParams} from "react-router-dom";
+import {useGlobalContext} from "../../utils/AppContext";
+import Banner from "../../shared/Banner/Banner";
+import Icon from "../../shared/Icon/Icon";
+import {IoMdClose} from 'react-icons/io';
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -30,8 +34,11 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
+    const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
 
-    // let {id} = useParams();
+    const {formState, setFormState} = useGlobalContext();
+
+    let {id} = useParams();
 
     useLayoutEffect(() => {
         const countries = CountryService.getAll();
@@ -163,10 +170,37 @@ const UpsertBaf: React.FunctionComponent = () => {
         console.log(bankUpsertModel)
         console.log(supplierIdentification)
         console.log(uploadedFiles)
+        console.log(id)
+        console.log(formState)
+    }
+
+    const popUpHandler = () => {
+        setIsPopUpShow(!isPopUpShow);
     }
 
     return(
         <div className="UpsertBAF">
+            {
+                formState === 'Supplier Pending - ERROR' ?
+                    <div className='d-flex flex-column gap-2 pop-up'>
+                        {
+                            isPopUpShow ?
+                                <div className='px-4 bg-white border-light-grey border-shadow-light radius-m'>
+                                    <div className='d-flex justify-between align-center dark-grey'>
+                                        <h4 className='red'>Attention!</h4>
+                                        <IoMdClose style={{fontSize: '24px', cursor: "pointer"}} onClick={popUpHandler} />
+                                    </div>
+                                    <p className='font-p-little mb-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                                </div> : ''
+                        }
+                        <div className='d-flex justify-end'>
+                            <div className='pointer' onClick={popUpHandler}>
+                                <Icon icon='errorPopUp' />
+                            </div>
+                        </div>
+                    </div>
+                    : ''
+            }
             <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"} btnWidth={"151px"} btnDisabled={checkDisable}
                          onClose={() => {
                             setShowModal(false);
@@ -193,6 +227,20 @@ const UpsertBaf: React.FunctionComponent = () => {
                     To mitigate there risks and to protect your interests, as well as the interests of Toyota,
                     creation or update of bank account will be processed based on the completed, authorised and verified information on this form only.</p>
             </div>
+            {
+                formState === 'Supplier Pending - ERROR' ?
+                    <Banner
+                        stroke='border-red'
+                        fill='bg-light-red'
+                        content={
+                            <p>
+                                <strong>Attenzione! </strong>
+                                Si sono verificati degli errori.
+                            </p>
+                        }
+                        icon='error' />
+                    : ''
+            }
             <SupplierIdentificationUpsert countries={countries} model={supplierIdentification} />
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} countries={countries} />

@@ -245,3 +245,14 @@
 .ml-5 {
     margin-left: 3rem;
 }
+
+.pointer {
+    cursor: pointer;
+}
+
+.pop-up {
+    position: fixed;
+    bottom: 20px;
+    right: 50px;
+    width: 323px;
+}

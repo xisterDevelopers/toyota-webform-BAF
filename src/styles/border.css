@@ -6,10 +6,22 @@
     border: 1px solid #717171;
 }
 
+.border-light-grey {
+    border: 2px solid #dfdfdf;
+}
+
 .border-orange {
     border: 1px solid #F29E1F;
 }
 
 .border-green {
     border: 1px solid #26BC00;
+}
+
+.border-shadow-light {
+    box-shadow: 10px 10px 30px #dfdfdf;
+}
+
+.radius-m {
+    border-radius: 10px;
 }

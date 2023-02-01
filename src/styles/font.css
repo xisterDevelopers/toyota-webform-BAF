@@ -4,6 +4,10 @@
     line-height: 46px;
 }
 
+.font-p-little {
+    font-size: 14px;
+}
+
 .font-w-light {
     font-weight: 400;
 }
