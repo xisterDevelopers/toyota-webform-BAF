@@ -20,6 +20,7 @@ import {useGlobalContext} from "../../utils/AppContext";
 import Banner from "../../shared/Banner/Banner";
 import Icon from "../../shared/Icon/Icon";
 import {IoMdClose} from 'react-icons/io';
+import FormService from "../../api/form.service";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -61,12 +62,21 @@ const UpsertBaf: React.FunctionComponent = () => {
 
         setCountries(sortedCountries);
 
-        setSupplierIdentification({
-            country: sortedCountries?.at(0)?.name,
-            idd: sortedCountries?.at(0)?.idd.at(0),
-            cca2: sortedCountries?.at(0)?.cca2,
-            establishment: true
-        })
+        if (id !== undefined) {
+            const form = FormService.getById(Number(id));
+            if(form) {
+                setSupplierIdentification(form.identification);
+                setBankUpsertModel(form.bankDetails);
+            }
+        } else {
+            setSupplierIdentification({
+                country: sortedCountries?.at(0)?.name,
+                idd: sortedCountries?.at(0)?.idd.at(0),
+                cca2: sortedCountries?.at(0)?.cca2,
+                establishment: true
+            })
+        }
+
 
         setRequiredFileTypes(db.requiredFileTypes);
         setAcceptanceFiles(db.acceptanceFiles);
@@ -175,11 +185,9 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
 
     const onConsole = () => {
-        console.log(bankUpsertModel)
         console.log(supplierIdentification)
+        console.log(bankUpsertModel)
         console.log(uploadedFiles)
-        console.log(id)
-        console.log(formState)
     }
 
     const popUpHandler = () => {

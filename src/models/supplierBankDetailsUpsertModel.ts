@@ -1,7 +1,7 @@
 export interface SupplierBankDetailsUpsertModel {
     bankName?: string;
     bankAccountCurrency?: string;
-    effectiveDate?: Date;
+    effectiveDate?: string;
     bankAccountHolderName?: string;
     nameIsDifferentFromBankAccountName?: boolean;
     reasonName?: string;

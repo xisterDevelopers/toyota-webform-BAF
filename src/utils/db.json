@@ -75,5 +75,57 @@
       "type": "Riduzione premio INAIL",
       "info": "evidenza che nell’ultimo biennio si è ottenuta una riduzione del premio infortunistico dall’INAIL."
     }
+  ],
+  "formMockup" : [
+    {
+      "id": 1,
+      "identification" : {
+        "supplierName": "AS ROMA S.r.l.",
+        "personName": "Flavia",
+        "personSurname": "Fontanelli",
+        "emailAddress": "fatture.asroma@asroma.it",
+        "address": "Piazzale Dino Viola, 1",
+        "city": "Roma",
+        "postalCode": "00153",
+        "country": "Italia",
+        "establishment": true,
+        "establishmentAddress": "Via Giovanni da Castel Bolognese, 81",
+        "establishmentCity": "Roma",
+        "establishmentPostalCode": "00153",
+        "establishmentCountry": "Italia",
+        "governmentInstitution": true,
+        "companySize": "medium",
+        "idd": "+39",
+        "phoneNumber": "3336754876",
+        "cca2": "IT",
+        "vatNumber": "01180281006",
+        "taxResidenceCountry": {
+          "name" : "Italy",
+          "cca2": "IT",
+          "idd": ["+39"],
+          "currency": {
+            "name": "Euro",
+            "symbol": "€"
+          }
+        },
+        "taxID": "03294210582",
+        "vatRegime": "Debit/Non deferred",
+        "registrationNumber": "674538782"
+      },
+      "bankDetails":{
+        "bankName": "Blu Banca Spa",
+        "bankAccountCurrency": "Euro",
+        "effectiveDate": "2012-04-04",
+        "bankAccountHolderName": "AS ROMA S.r.l",
+        "nameIsDifferentFromBankAccountName": false,
+        "reasonName": "",
+        "factoryCompany": true,
+        "reasonFactory": "Reason test",
+        "bankAccountNumber": "0560000714",
+        "ibanNumber": "IT73R0344103212CC0560000714",
+        "swiftCode": "SVTUIT21",
+        "sortCode": "12-34-56"
+      }
+    }
   ]
 }
