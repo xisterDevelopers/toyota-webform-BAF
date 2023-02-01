@@ -138,25 +138,24 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
 
     const updateToUploadFileTypology = (updatedFile: UploadedFileModel) => {
-        uploadedFiles.map(file => {
+        toUploadFiles.map(file => {
             if (file.name === updatedFile.name) {
                 file.type = updatedFile.type;
             }
         });
 
-        setUploadedFiles([...uploadedFiles]);
+        setToUploadFiles([...toUploadFiles]);
         checkValidation();
     }
 
     const checkValidation = () => {
+        setCheckDisable(false);
+
         toUploadFiles.map(file => {
             if (file.type === "") {
                 setCheckDisable(true);
-                return;
             }
-        })
-
-        setCheckDisable(false);
+        });
     }
 
     const onConsole = () => {
@@ -167,22 +166,24 @@ const UpsertBaf: React.FunctionComponent = () => {
 
     return(
         <div className="UpsertBAF">
-            <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"} btnWidth={"151px"} btnDisabled={checkDisable}
-                         onClose={() => {
-                            setShowModal(false);
-                            setToUploadFiles([]);
-                        }} onUpload={upload}>
-                {
-                    toUploadFiles.map((uploadedFile, index) => {
-                        return (
-                            <UploadCard key={index} uploadedFile={uploadedFile}
-                                        typologySelectedEvent={updateToUploadFileTypology}
-                                        selectedTypology={uploadedFile.type}
-                                        status="modal"
-                                        updateTypology={() => { }}/>
-                        )
-                    })
-                }
+            <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"}
+                         btnWidth={"151px"} btnDisabled={checkDisable} onClose={() => {
+                                                                            setShowModal(false);
+                                                                            setToUploadFiles([]);
+                                                                        }} onUpload={upload}>
+                <div className="d-flex flex-column gap-5">
+                    {
+                        toUploadFiles.map((uploadedFile, index) => {
+                            return (
+                                <UploadCard key={index} uploadedFile={uploadedFile}
+                                            typologySelectedEvent={updateToUploadFileTypology}
+                                            selectedTypology={uploadedFile.type}
+                                            status="modal" spacing=" p-3 mx-3"
+                                            updateTypology={() => { }}/>
+                            )
+                        })
+                    }
+                </div>
             </CustomModal>
             <div className="info-container mb-5 pb-5 pt-3">
                 <p><strong>1 Person companies/small companies* - One signature and one call back required</strong></p>
@@ -269,7 +270,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                         <UploadCard key={index} uploadedFile={uploadedFile}
                                     typologySelectedEvent={setToUpdateFile}
                                     selectedTypology={uploadedFile.type}
-                                    status="form"
+                                    status="form" spacing=" p-3 mt-5 mb-5"
                                     updateTypology={updateFileTypology}/>
                     )
                 })
