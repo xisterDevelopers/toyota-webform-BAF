@@ -197,7 +197,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     return(
         <div className="UpsertBAF">
             {
-                formState === 'Supplier Pending - ERROR' ?
+                formState === 'supplier pending - ERROR' ?
                     <div className='d-flex flex-column gap-2 pop-up'>
                         {
                             isPopUpShow ?
@@ -247,7 +247,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                     creation or update of bank account will be processed based on the completed, authorised and verified information on this form only.</p>
             </div>
             {
-                formState === 'Supplier Pending - ERROR' ?
+                formState === 'supplier pending - ERROR' ?
                     <Banner
                         stroke='border-red'
                         fill='bg-light-red'
