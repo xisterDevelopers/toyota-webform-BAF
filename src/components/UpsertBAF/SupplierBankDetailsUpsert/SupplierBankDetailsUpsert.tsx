@@ -23,11 +23,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const [swift, setSwift] = useState(outputDetails.swiftCode);
     const [sortCode, setSortCode] = useState(outputDetails.sortCode);
 
-    // outputDetails.effectiveDate = new Date(date).toString();
-    const test = () => {
-        console.log("model: " + outputDetails.effectiveDate)
-        console.log("state: " + date)
-    }
 
     useLayoutEffect(() => {
         if(outputDetails.factoryCompany !== undefined) {
@@ -81,7 +76,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         }} />
                     </div>
                 </div>
-                <p onClick={test}>test</p>
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Bank account holder name</label>
