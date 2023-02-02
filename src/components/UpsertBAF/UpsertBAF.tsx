@@ -21,6 +21,7 @@ import Banner from "../../shared/Banner/Banner";
 import Icon from "../../shared/Icon/Icon";
 import {IoMdClose} from 'react-icons/io';
 import FormService from "../../api/form.service";
+import UploadFileService from "../../api/uploadFile.service";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -64,9 +65,13 @@ const UpsertBaf: React.FunctionComponent = () => {
 
         if (id !== undefined) {
             const form = FormService.getById(Number(id));
+            const uploadedFile = UploadFileService.getAll();
             if(form) {
                 setSupplierIdentification(form.identification);
                 setBankUpsertModel(form.bankDetails);
+            }
+            if(uploadedFile.length > 0 && form?.id === Number(id)) {
+                setUploadedFiles(uploadedFile)
             }
         } else {
             setSupplierIdentification({
