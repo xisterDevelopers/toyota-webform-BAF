@@ -110,7 +110,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
                             <UploadFile handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
                         </div>
                         <div className="d-flex justify-end my-5">
-                            <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} />
+                            <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => setFormState('Check pending')} />
                         </div>
                         <hr className="break-line mb-5 mt-6" />
                     </div> : ''

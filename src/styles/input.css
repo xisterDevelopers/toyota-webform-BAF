@@ -33,7 +33,8 @@ input, select {
 
 .custom-date[type="date"]::-webkit-inner-spin-button,
 .custom-date[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
+    filter: opacity(0);
+    cursor: pointer;
     -webkit-appearance: none;
 }
 

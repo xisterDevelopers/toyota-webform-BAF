@@ -23,7 +23,18 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const [swift, setSwift] = useState(outputDetails.swiftCode);
     const [sortCode, setSortCode] = useState(outputDetails.sortCode);
 
-    // outputDetails.effectiveDate = new Date(date).toString();
+
+    useLayoutEffect(() => {
+        if(outputDetails.factoryCompany !== undefined) {
+            setIsFactoryCompany(outputDetails.factoryCompany)
+        }
+        if(outputDetails.nameIsDifferentFromBankAccountName !== undefined) {
+            setIsAccountDiffHolderName(outputDetails.nameIsDifferentFromBankAccountName)
+        }
+        if(outputDetails.effectiveDate !== undefined) {
+            setDate(outputDetails.effectiveDate)
+        }
+    }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate])
 
     return(
         <div>
@@ -59,7 +70,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Effective date</label>
                         <input type="date" className="custom-input custom-date input-lg"
-                               defaultValue={date} onChange={(event) => outputDetails.effectiveDate = event.target.value} />
+                               defaultValue={date} onChange={(event) => {
+                                    setDate(event.target.value)
+                                    outputDetails.effectiveDate = event.target.value
+                        }} />
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -74,14 +88,20 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <label htmlFor="accountHolderName" className="font-input-label">Supplier name is different from bank account holder name?</label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
-                                <input type="radio" id="yesAccount" name="accountHolderName" hidden={true}
-                                       onChange={() =>  setIsAccountDiffHolderName(outputDetails.nameIsDifferentFromBankAccountName = true)}/>
+                                <input type="radio" id="yesAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === true}
+                                       onChange={() =>  {
+                                           setIsAccountDiffHolderName(true)
+                                           outputDetails.nameIsDifferentFromBankAccountName = true
+                                       }}/>
                                 <label htmlFor="yesAccount" className="custom-radio"></label>
                                 <label htmlFor="yesAccount">Yes</label>
                             </div>
                             <div className="d-flex gap-2">
-                                <input type="radio" id="noAccount" name="accountHolderName" hidden={true}
-                                       onChange={() => setIsAccountDiffHolderName(outputDetails.nameIsDifferentFromBankAccountName = false)}/>
+                                <input type="radio" id="noAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === false}
+                                       onChange={() => {
+                                           setIsAccountDiffHolderName(false)
+                                           outputDetails.nameIsDifferentFromBankAccountName = false
+                                       }}/>
                                 <label htmlFor="noAccount" className="custom-radio"></label>
                                 <label htmlFor="noAccount">No</label>
                             </div>
@@ -91,7 +111,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg" disabled={!isAccountDiffHolderName}
+                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.nameIsDifferentFromBankAccountName}
                                defaultValue={outputDetails.reasonName} onChange={(event) => outputDetails.reasonName = event.target.value}/>
                     </div>
                 </div>
@@ -100,14 +120,20 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <label htmlFor="factoryCompany" className="font-input-label">Factory company?</label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
-                                <input type="radio" id="yesFactory" name="factoryCompany" hidden={true}
-                                       onChange={() => setIsFactoryCompany(outputDetails.factoryCompany = true)}/>
+                                <input type="radio" id="yesFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === true}
+                                       onChange={() => {
+                                           setIsFactoryCompany(true)
+                                           outputDetails.factoryCompany = true
+                                       }}/>
                                 <label htmlFor="yesFactory" className="custom-radio"></label>
                                 <label htmlFor="yesFactory">Yes</label>
                             </div>
                             <div className="d-flex gap-2">
-                                <input type="radio" id="noFactory" name="factoryCompany" hidden={true}
-                                       onChange={() => setIsFactoryCompany(outputDetails.factoryCompany = false)}/>
+                                <input type="radio" id="noFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === false}
+                                       onChange={() => {
+                                           setIsFactoryCompany(false)
+                                           outputDetails.factoryCompany = false
+                                       }}/>
                                 <label htmlFor="noFactory" className="custom-radio"></label>
                                 <label htmlFor="noFactory">No</label>
                             </div>
@@ -117,7 +143,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg" disabled={!isFactoryCompany}
+                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.factoryCompany}
                                defaultValue={outputDetails.reasonFactory} onChange={(event) => outputDetails.reasonFactory = event.target.value}/>
                     </div>
                 </div>

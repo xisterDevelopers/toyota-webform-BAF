@@ -87,12 +87,12 @@
         "address": "Piazzale Dino Viola, 1",
         "city": "Roma",
         "postalCode": "00153",
-        "country": "Italia",
+        "country": "Italy",
         "establishment": true,
         "establishmentAddress": "Via Giovanni da Castel Bolognese, 81",
         "establishmentCity": "Roma",
         "establishmentPostalCode": "00153",
-        "establishmentCountry": "Italia",
+        "establishmentCountry": "Italy",
         "governmentInstitution": true,
         "companySize": "medium",
         "idd": "+39",
@@ -108,7 +108,7 @@
             "symbol": "€"
           }
         },
-        "taxID": "03294210582",
+        "taxID": "01180281006",
         "vatRegime": "Debit/Non deferred",
         "registrationNumber": "674538782"
       },
@@ -117,8 +117,8 @@
         "bankAccountCurrency": "Euro",
         "effectiveDate": "2012-04-04",
         "bankAccountHolderName": "AS ROMA S.r.l",
-        "nameIsDifferentFromBankAccountName": false,
-        "reasonName": "",
+        "nameIsDifferentFromBankAccountName": true,
+        "reasonName": "Name Test",
         "factoryCompany": true,
         "reasonFactory": "Reason test",
         "bankAccountNumber": "0560000714",
@@ -126,6 +126,16 @@
         "swiftCode": "SVTUIT21",
         "sortCode": "12-34-56"
       }
+    }
+  ],
+  "uploadedFiles": [
+    {
+      "name": "RichiestaInserimento.pdf",
+      "type": "Richiesta"
+    },
+    {
+      "name": "VisuraCamerale.pdf",
+      "type": "Visura camerale"
     }
   ]
 }
