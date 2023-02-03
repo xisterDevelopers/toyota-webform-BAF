@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useLayoutEffect, useState} from 'react';
+import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierIdentificationUpsert.css';
 import {SupplierIdentificationUpsertModel} from "../../../models/supplierIdentificationUpsert.model";
 import CountryService from "../../../api/country.service";
@@ -14,7 +14,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
     const {isFormValid, setIsFormValid} = useGlobalContext();
 
-    const [sameTaxID, setSameTaxID] = useState(true);
+    const [sameTaxID, setSameTaxID] = useState(false);
     const [cca2, setCca2] = useState(model.cca2);
     const [idd, setIdd] = useState(model.idd);
     const [country, setCountry] = useState(model.country);
@@ -43,6 +43,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [isValidZipCode, setIsValidZipCode] = useState(true);
     const [isEstablishmentZipCodeValid, setIsEstablishmentZipCodeValid] = useState(true);
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useLayoutEffect(() => {
         if(model.vatRegime) {
@@ -64,13 +65,23 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         if(model.country !== undefined) {
             setCountry(model.country)
         }
-        if(model.vatNumber !== model.taxID) {
-            setSameTaxID(true)
-        } else {
-            model.taxID = ""
-            setSameTaxID(false)
+        if(model.taxID !== undefined && model.vatNumber !== undefined) {
+            if(model.vatNumber !== model.taxID && !isLoaded ) {
+                setSameTaxID(true)
+                setIsLoaded(true)
+                console.log("entered")
+            }
+            if (model.vatNumber === model.taxID && !isLoaded) {
+                model.taxID = ""
+                setSameTaxID(false)
+                setIsLoaded(true)
+                console.log("entered 2nd")
+            }
         }
-    }, [model.vatRegime, model.establishment, model.governmentInstitution, model.companySize, model.country])
+
+
+    }, [model.vatRegime, model.establishment, model.governmentInstitution,
+        model.companySize, model.country, model.taxID, model,vatNumber])
 
     const zipCodeValidator = (valueToSet: string) => {
         if(model.postalCode !== undefined) {
