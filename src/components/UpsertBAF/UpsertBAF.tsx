@@ -414,7 +414,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false} />
                 <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')
-                    navigate(`/detail-BAF/${id}`)
+                    navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
                 } disabled={false} />
             </div>

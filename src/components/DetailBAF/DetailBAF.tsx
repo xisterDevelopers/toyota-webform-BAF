@@ -52,6 +52,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
             setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
             setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
         }
+
+        window.scrollTo(0, 0);
     }, [])
 
     const preventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +94,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     }
 
     return(
-        <div className="DetailBAF ml-5">
+        <div className="DetailBAF">
             {
                 formState === 'waiting for supplier pec' ?
                     <div>

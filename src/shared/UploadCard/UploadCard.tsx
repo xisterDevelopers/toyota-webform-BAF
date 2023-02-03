@@ -44,7 +44,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                 <div id="selectButtonsContainer" className="d-flex flex-row w-100">
                     <select id="upload" className="custom-input custom-select input-xlg w-100 light-grey"
                             placeholder="Seleziona tipologia file"
-                            value={selectedTypology} ref={ref => selectRef = ref}
+                            defaultValue={selectedTypology} ref={ref => selectRef = ref}
                             onChange={event => {
                                 setType(event.target.value);
                                 typologySelectedEvent({
