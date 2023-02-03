@@ -208,12 +208,14 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
-                             defaultValue={model.establishmentAddress} onChange={event => model.establishmentAddress = event.target.value}/>
+                             defaultValue={model.establishmentAddress} disabled={establishment}
+                             onChange={event => model.establishmentAddress = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="city" className="font-input-label">City</label>
                       <input type="text" id="city" className="custom-input input-lg"
-                             defaultValue={model.establishmentCity} onChange={event => model.establishmentCity = event.target.value}/>
+                             defaultValue={model.establishmentCity} disabled={establishment}
+                             onChange={event => model.establishmentCity = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="postalCode" className="font-input-label">
@@ -222,14 +224,15 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </label>
                       <input type="text" id="postalCode" className={"custom-input input-md " + (isEstablishmentZipCodeValid ? "" : "red")}
                              onBlur={() => zipCodeValidator("establishmentZipCode")}
-                             defaultValue={model.establishmentPostalCode} onChange={event => model.establishmentPostalCode = event.target.value}/>
+                             defaultValue={model.establishmentPostalCode} disabled={establishment}
+                             onChange={event => model.establishmentPostalCode = event.target.value}/>
                   </div>
               </div>
               <div className="d-flex">
                   <div className="d-flex flex-column">
                       <label htmlFor="country" className="font-input-label">Country</label>
                           <select id="country" className="custom-input custom-select input-lg"
-                                  value={model.establishmentCountry}
+                                  value={model.establishmentCountry} disabled={establishment}
                                   onChange={(event) => {
                                       setEstablishmentCountry(model.establishmentCountry = event.target.value);
                                   }}>
