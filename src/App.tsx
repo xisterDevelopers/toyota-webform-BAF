@@ -8,7 +8,7 @@ const UpsertBAF = React.lazy(() => import('./components/UpsertBAF/UpsertBAF'));
 const DetailBAF = React.lazy(() => import('./components/DetailBAF/DetailBAF'));
 
 function App() {
-    const [formState, setFormState] = useState<string>('Supplier Pending - ERROR');
+    const [formState, setFormState] = useState<string>('supplier pending');
     const [isFormValid, setIsFormValid] = useState<boolean>(true);
 
   return (
