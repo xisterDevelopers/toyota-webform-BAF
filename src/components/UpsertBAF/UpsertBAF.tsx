@@ -172,9 +172,8 @@ const UpsertBaf: React.FunctionComponent = () => {
         });
     }
 
-    const deleteToUploadFile = (fileName: string) => {
-        const fileIndex = toUploadFiles.findIndex(file => file.name === fileName);
-        toUploadFiles.splice(fileIndex);
+    const deleteToUploadFile = (index: number) => {
+        toUploadFiles.splice(index, 1);
 
         setToUploadFiles([...toUploadFiles]);
 
@@ -182,9 +181,8 @@ const UpsertBaf: React.FunctionComponent = () => {
         document.body.style.overflowY = toUploadFiles.length > 0 ? "hidden" : "scroll"
     }
 
-    const deleteUploadedFile = (fileName: string) => {
-        const fileIndex = uploadedFiles.findIndex(file => file.name === fileName);
-        uploadedFiles.splice(fileIndex);
+    const deleteUploadedFile = (index: number) => {
+        uploadedFiles.splice(index, 1);
 
         setUploadedFiles([...uploadedFiles]);
     }
@@ -236,7 +234,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                                             selectedTypology={uploadedFile.type}
                                             status="modal" spacing=" p-3 mx-3"
                                             updateTypology={() => { }}
-                                            deleteFile={deleteToUploadFile}/>
+                                            deleteFile={() => deleteToUploadFile(index)}/>
                             )
                         })
                     }
@@ -406,7 +404,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                                     selectedTypology={uploadedFile.type}
                                     status="form" spacing=" p-3 mt-5 mb-5"
                                     updateTypology={updateFileTypology}
-                                    deleteFile={deleteUploadedFile}/>
+                                    deleteFile={() => deleteUploadedFile(index)}/>
                     )
                 })
             }

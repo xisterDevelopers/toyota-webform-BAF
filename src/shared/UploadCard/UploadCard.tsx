@@ -1,7 +1,6 @@
 import React, {FC, ReactNode, useState} from 'react';
 import './UploadCard.css';
 import {FiTrash2} from "react-icons/fi";
-import successIcon from "../../assets/svg/success_icon.svg";
 import {UploadedFileModel} from "../../models/uploadedFile.model";
 import db from "../../utils/db.json";
 import Button from "../Button/Button";
@@ -10,10 +9,10 @@ interface UploadCardProps {
     uploadedFile: UploadedFileModel;
     selectedTypology: string;
     status: string;
-    spacing: string
+    spacing: string;
     typologySelectedEvent: (uploadedFiles: UploadedFileModel) => void;
     updateTypology: () => void;
-    deleteFile: (uploadedFileName: string) => void;
+    deleteFile: () => void;
 }
 
 const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
@@ -38,13 +37,14 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                     <p className="dark-grey">{uploadedFile.name}</p>
                 </div>
                 <div className="d-flex align-center gap-3 dark-grey">
-                    <FiTrash2 onClick={() => deleteFile(uploadedFile.name)} cursor="pointer" />
+                    <FiTrash2 onClick={() => deleteFile()} cursor="pointer" />
                 </div>
             </div>
             <div className="d-flex mt-3">
                 <div className="d-flex flex-row">
                     <select id="upload" className="custom-input custom-select input-xlg light-grey"
-                            placeholder="Seleziona tipologia file" defaultValue={uploadedFile.type} ref={ref => selectRef = ref}
+                            placeholder="Seleziona tipologia file"
+                            value={selectedTypology} ref={ref => selectRef = ref}
                             onChange={event => {
                                 setType(event.target.value);
                                 typologySelectedEvent({
