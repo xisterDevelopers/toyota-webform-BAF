@@ -13,7 +13,6 @@ interface SupplierIdentificationUpsertProps {
 const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({model, countries}) => {
 
     const {isFormValid, setIsFormValid} = useGlobalContext();
-
     const [sameTaxID, setSameTaxID] = useState(false);
     const [cca2, setCca2] = useState(model.cca2);
     const [idd, setIdd] = useState(model.idd);
@@ -69,19 +68,15 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
             if(model.vatNumber !== model.taxID && !isLoaded ) {
                 setSameTaxID(true)
                 setIsLoaded(true)
-                console.log("entered")
             }
             if (model.vatNumber === model.taxID && !isLoaded) {
                 model.taxID = ""
                 setSameTaxID(false)
                 setIsLoaded(true)
-                console.log("entered 2nd")
             }
         }
-
-
     }, [model.vatRegime, model.establishment, model.governmentInstitution,
-        model.companySize, model.country, model.taxID, model,vatNumber])
+        model.companySize, model.country, model.taxID, model,vatNumber, isLoaded])
 
     const zipCodeValidator = (valueToSet: string) => {
         if(model.postalCode !== undefined) {
@@ -121,9 +116,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                 setIsValidPhoneNumber(true)
             }
         }
-
     }
-
 
     return (
       <div className="SupplierIdentificationUpsert">
