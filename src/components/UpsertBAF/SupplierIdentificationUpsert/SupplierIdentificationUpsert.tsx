@@ -43,6 +43,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [isEstablishmentZipCodeValid, setIsEstablishmentZipCodeValid] = useState(true);
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isVatNumberValid, setIsVatNumberValid] = useState(true);
 
     useLayoutEffect(() => {
         if(model.vatRegime) {
@@ -118,6 +119,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         }
     }
 
+    const vatNumberValidator = () => {
+        if (model.vatNumber !== undefined) {
+            const matchedVat = /^[A-Za-z0-9]*$/.test(model.vatNumber);
+            setIsVatNumberValid(matchedVat);
+        }
+    }
+
     return (
       <div className="SupplierIdentificationUpsert">
           <h2 className="section-A-font-title mb-5">A. Supplier identification</h2>
@@ -129,7 +137,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               defaultValue={model.supplierName} onChange={event => model.supplierName = event.target.value}/>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="personNameContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="personName" className="font-input-label">Person Name<span className="red">*</span></label>
                       <input type="text" id="personName" className="custom-input input-lg"
@@ -151,7 +159,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                              defaultValue={model.emailAddress} onChange={event => model.emailAddress = event.target.value}/>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="addressContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
@@ -204,7 +212,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </label>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="estAddressContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
@@ -310,9 +318,12 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </div>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="vatContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
-                      <label htmlFor="vatNumber" className="font-input-label">Vat Number</label>
+                      <label htmlFor="vatNumber" className="font-input-label">
+                          Vat Number
+                          {isVatNumberValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                      </label>
                       <div className="d-flex input-lg gap-2">
                           <select id="vatPrefix" className="custom-input custom-select input-sm" value={model.cca2}
                                   onChange={(event => setCca2(model.cca2 = event.target.value))}>
@@ -323,7 +334,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                       ))
                               }
                           </select>
-                          <input type="text" id="vatNumber" className="custom-input input-fill"
+                          <input type="text" id="vatNumber" className={"custom-input input-fill " + (isVatNumberValid ? "" : "red")} onBlur={vatNumberValidator}
                                  defaultValue={model.vatNumber} onChange={event => model.vatNumber = event.target.value}/>
                       </div>
                   </div>
@@ -349,7 +360,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               </div>
               <div id="vatRegime" className="d-flex flex-column">
                   <label htmlFor="vatRegime" className="font-input-label mb-2">Vat regime</label>
-                  <div className="d-flex gap-6">
+                  <div id="vatRegimeContainer" className="d-flex gap-6">
                       <div className="d-flex gap-2">
                           <input type="radio" id="encaissement_deferred" name="vatRegime" value="Encaissement/Deferred" hidden
                                  checked={vatRegimeBool === true} onChange={(event) => {

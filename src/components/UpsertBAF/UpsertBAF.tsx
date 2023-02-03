@@ -15,7 +15,7 @@ import success_dot from "../../assets/svg/success_icon.svg";
 import {FileTypeModel} from "../../models/fileType.model";
 import db from "../../utils/db.json";
 import CustomModal from "../../shared/Modal/CustomModal";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useGlobalContext} from "../../utils/AppContext";
 import Banner from "../../shared/Banner/Banner";
 import Icon from "../../shared/Icon/Icon";
@@ -44,6 +44,7 @@ const UpsertBaf: React.FunctionComponent = () => {
 
     const {formState, setFormState} = useGlobalContext();
 
+    let navigate = useNavigate()
     let {id} = useParams();
 
     useLayoutEffect(() => {
@@ -411,7 +412,11 @@ const UpsertBaf: React.FunctionComponent = () => {
 
             <div className="d-flex gap-3 justify-end">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false} />
-                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={onConsole} disabled={false} />
+                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
+                    setFormState('waiting for supplier pec')
+                    navigate(`/detail-BAF/${id}`)
+                }
+                } disabled={false} />
             </div>
         </div>
     );

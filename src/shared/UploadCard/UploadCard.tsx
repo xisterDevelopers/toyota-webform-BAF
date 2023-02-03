@@ -41,8 +41,8 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                 </div>
             </div>
             <div className="d-flex mt-3">
-                <div className="d-flex flex-row">
-                    <select id="upload" className="custom-input custom-select input-xlg light-grey"
+                <div id="selectButtonsContainer" className="d-flex flex-row w-100">
+                    <select id="upload" className="custom-input custom-select input-xlg w-100 light-grey"
                             placeholder="Seleziona tipologia file"
                             value={selectedTypology} ref={ref => selectRef = ref}
                             onChange={event => {
@@ -64,7 +64,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                     </select>
                     {
                         showButtons ? (
-                            <div className="d-flex flex-row gap-3 ml-5">
+                            <div id="buttonsContainer" className="d-flex gap-3 ml-5">
                                 <Button color={"bg-light-grey"} text={"Annulla"} textColor={"dark-grey"} btnWidth={"151px"}
                                         disabled={false} onClick={() => {
                                             if (selectRef) {

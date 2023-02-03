@@ -94,7 +94,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     return(
         <div className="DetailBAF ml-5">
             {
-                formState === 'wating for supplier pec' ?
+                formState === 'waiting for supplier pec' ?
                     <div>
                         <p className="mt-5 mb-4"><strong>Se hai bisogno di comunicare modifiche rispetto ai tuoi dati personali procedi modificando i campi nella form.</strong></p>
                         <Button color="bg-red" text="Edit form" textColor="white" btnWidth="151px" disabled={false} onClick={() => {

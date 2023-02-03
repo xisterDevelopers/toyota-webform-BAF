@@ -52,7 +52,7 @@ input, select {
 }
 
 .input-xlg {
-    width: 610px;
+    max-width: 610px;
 }
 
 .input-lg {
