@@ -103,7 +103,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         }} />
                         <p className="my-5">oppure:</p>
                         <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
-                            <div>
+                            <div className="d-flex flex-column">
                                 <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>
                                 <p>Segui i seguenti passaggi:</p>
                                 <ul>
