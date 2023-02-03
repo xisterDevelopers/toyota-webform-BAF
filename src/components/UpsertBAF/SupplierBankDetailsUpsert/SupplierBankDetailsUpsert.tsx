@@ -3,6 +3,8 @@ import './SupplierBankDetailsUpsert.css';
 import {SupplierBankDetailsUpsertModel} from "../../../models/supplierBankDetailsUpsertModel";
 import {CurrencyModel} from "../../../models/currency.model";
 import {CountryModel} from "../../../models/country.model";
+import bicValidator from 'bic-validator';
+const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
     outputDetails: SupplierBankDetailsUpsertModel;
@@ -22,6 +24,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const [iban, setIban] = useState(outputDetails.ibanNumber);
     const [swift, setSwift] = useState(outputDetails.swiftCode);
     const [sortCode, setSortCode] = useState(outputDetails.sortCode);
+    const [ibanIsValid, setIbanIsValid] = useState(true);
+    const [swiftIsValid, setSwiftIsValid] = useState(true);
 
 
     useLayoutEffect(() => {
@@ -36,6 +40,17 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         }
     }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate])
 
+    const ibanValidator = () => {
+        let validation = IBAN.isValid(outputDetails.ibanNumber);
+        setIbanIsValid(validation);
+    }
+
+    const swiftValidator = () => {
+        if(outputDetails.swiftCode !== undefined) {
+            let validation = bicValidator.isValid(outputDetails.swiftCode)
+            setSwiftIsValid(validation)
+        }
+    }
     return(
         <div>
             <h2 className="mb-5">B. Supplier bank details</h2>
@@ -156,13 +171,19 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 </div>
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">
-                        <label className="font-input-label">IBAN number<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg"
+                        <label className="font-input-label">
+                            IBAN number<span className="red">*</span>
+                            {ibanIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                        </label>
+                        <input type="text" className={"custom-input input-lg " + (ibanIsValid ? "" : "red")} onBlur={ibanValidator}
                                defaultValue={outputDetails.ibanNumber} onChange={(event) => outputDetails.ibanNumber = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">
-                        <label className="font-input-label">SWIFT code<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg"
+                        <label className="font-input-label">
+                            SWIFT code<span className="red">*</span>
+                            {swiftIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                        </label>
+                        <input type="text" className={"custom-input input-lg " + (swiftIsValid ? "" : "red")} onBlur={swiftValidator}
                                defaultValue={outputDetails.swiftCode} onChange={(event) => outputDetails.swiftCode = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">

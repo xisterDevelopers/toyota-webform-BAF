@@ -8,10 +8,11 @@ const UpsertBAF = React.lazy(() => import('./components/UpsertBAF/UpsertBAF'));
 const DetailBAF = React.lazy(() => import('./components/DetailBAF/DetailBAF'));
 
 function App() {
-    const [formState, setFormState] = useState<string>('wating for supplier pec')
+    const [formState, setFormState] = useState<string>('wating for supplier pec');
+    const [isFormValid, setIsFormValid] = useState<boolean>(true);
 
   return (
-  <AppContext.Provider value={{formState, setFormState}}>
+  <AppContext.Provider value={{formState, setFormState, isFormValid, setIsFormValid}}>
     <div className="App px-5 py-4">
       <header className="App-header">
           <img className="mb-5" src={logo} alt="logo" />
