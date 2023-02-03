@@ -169,7 +169,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                defaultValue={outputDetails.bankAccountNumber} onChange={(event) => outputDetails.bankAccountNumber = event.target.value}/>
                     </div>
                 </div>
-                <div className="d-flex gap-5">
+                <div id="bankContainer" className="d-flex gap-5">
                     <div className="d-flex flex-column">
                         <label className="font-input-label">
                             IBAN number<span className="red">*</span>

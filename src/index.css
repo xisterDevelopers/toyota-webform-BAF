@@ -6,6 +6,7 @@
 @import "./styles/border.css";
 @import "./styles/flex.css";
 @import "./styles/input.css";
+@import "./styles/media.css";
 
 @font-face {
   font-family: "Toyota Type";

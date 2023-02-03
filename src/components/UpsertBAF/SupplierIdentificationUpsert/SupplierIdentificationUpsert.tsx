@@ -137,7 +137,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               defaultValue={model.supplierName} onChange={event => model.supplierName = event.target.value}/>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="personNameContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="personName" className="font-input-label">Person Name<span className="red">*</span></label>
                       <input type="text" id="personName" className="custom-input input-lg"
@@ -159,7 +159,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                              defaultValue={model.emailAddress} onChange={event => model.emailAddress = event.target.value}/>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="addressContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
@@ -212,16 +212,18 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </label>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="estAddressContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
-                             defaultValue={model.establishmentAddress} onChange={event => model.establishmentAddress = event.target.value}/>
+                             defaultValue={model.establishmentAddress} disabled={establishment}
+                             onChange={event => model.establishmentAddress = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="city" className="font-input-label">City</label>
                       <input type="text" id="city" className="custom-input input-lg"
-                             defaultValue={model.establishmentCity} onChange={event => model.establishmentCity = event.target.value}/>
+                             defaultValue={model.establishmentCity} disabled={establishment}
+                             onChange={event => model.establishmentCity = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="postalCode" className="font-input-label">
@@ -230,14 +232,15 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </label>
                       <input type="text" id="postalCode" className={"custom-input input-md " + (isEstablishmentZipCodeValid ? "" : "red")}
                              onBlur={() => zipCodeValidator("establishmentZipCode")}
-                             defaultValue={model.establishmentPostalCode} onChange={event => model.establishmentPostalCode = event.target.value}/>
+                             defaultValue={model.establishmentPostalCode} disabled={establishment}
+                             onChange={event => model.establishmentPostalCode = event.target.value}/>
                   </div>
               </div>
               <div className="d-flex">
                   <div className="d-flex flex-column">
                       <label htmlFor="country" className="font-input-label">Country</label>
                           <select id="country" className="custom-input custom-select input-lg"
-                                  value={model.establishmentCountry}
+                                  value={model.establishmentCountry} disabled={establishment}
                                   onChange={(event) => {
                                       setEstablishmentCountry(model.establishmentCountry = event.target.value);
                                   }}>
@@ -315,7 +318,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </div>
                   </div>
               </div>
-              <div className="d-flex gap-5">
+              <div id="vatContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="vatNumber" className="font-input-label">
                           Vat Number
@@ -357,7 +360,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               </div>
               <div id="vatRegime" className="d-flex flex-column">
                   <label htmlFor="vatRegime" className="font-input-label mb-2">Vat regime</label>
-                  <div className="d-flex gap-6">
+                  <div id="vatRegimeContainer" className="d-flex gap-6">
                       <div className="d-flex gap-2">
                           <input type="radio" id="encaissement_deferred" name="vatRegime" value="Encaissement/Deferred" hidden
                                  checked={vatRegimeBool === true} onChange={(event) => {

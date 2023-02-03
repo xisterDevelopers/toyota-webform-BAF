@@ -15,7 +15,7 @@ import success_dot from "../../assets/svg/success_icon.svg";
 import {FileTypeModel} from "../../models/fileType.model";
 import db from "../../utils/db.json";
 import CustomModal from "../../shared/Modal/CustomModal";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useGlobalContext} from "../../utils/AppContext";
 import Banner from "../../shared/Banner/Banner";
 import Icon from "../../shared/Icon/Icon";
@@ -44,6 +44,7 @@ const UpsertBaf: React.FunctionComponent = () => {
 
     const {formState, setFormState} = useGlobalContext();
 
+    let navigate = useNavigate()
     let {id} = useParams();
 
     useLayoutEffect(() => {
@@ -172,9 +173,8 @@ const UpsertBaf: React.FunctionComponent = () => {
         });
     }
 
-    const deleteToUploadFile = (fileName: string) => {
-        const fileIndex = toUploadFiles.findIndex(file => file.name === fileName);
-        toUploadFiles.splice(fileIndex);
+    const deleteToUploadFile = (index: number) => {
+        toUploadFiles.splice(index, 1);
 
         setToUploadFiles([...toUploadFiles]);
 
@@ -182,9 +182,8 @@ const UpsertBaf: React.FunctionComponent = () => {
         document.body.style.overflowY = toUploadFiles.length > 0 ? "hidden" : "scroll"
     }
 
-    const deleteUploadedFile = (fileName: string) => {
-        const fileIndex = uploadedFiles.findIndex(file => file.name === fileName);
-        uploadedFiles.splice(fileIndex);
+    const deleteUploadedFile = (index: number) => {
+        uploadedFiles.splice(index, 1);
 
         setUploadedFiles([...uploadedFiles]);
     }
@@ -236,7 +235,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                                             selectedTypology={uploadedFile.type}
                                             status="modal" spacing=" p-3 mx-3"
                                             updateTypology={() => { }}
-                                            deleteFile={deleteToUploadFile}/>
+                                            deleteFile={() => deleteToUploadFile(index)}/>
                             )
                         })
                     }
@@ -406,14 +405,18 @@ const UpsertBaf: React.FunctionComponent = () => {
                                     selectedTypology={uploadedFile.type}
                                     status="form" spacing=" p-3 mt-5 mb-5"
                                     updateTypology={updateFileTypology}
-                                    deleteFile={deleteUploadedFile}/>
+                                    deleteFile={() => deleteUploadedFile(index)}/>
                     )
                 })
             }
 
             <div className="d-flex gap-3 justify-end">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false} />
-                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={onConsole} disabled={false} />
+                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
+                    setFormState('waiting for supplier pec')
+                    navigate(`/detail-BAF/${id}`)
+                }
+                } disabled={false} />
             </div>
         </div>
     );

@@ -1,0 +1,47 @@
+@media only screen and (max-width: 850px) {
+    #personNameContainer, #vatContainer {
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 1020px) {
+    #addressContainer, #estAddressContainer {
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    #vatRegimeContainer {
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 1250px) {
+    #bankContainer {
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    #selectButtonsContainer {
+        gap: 1.5rem;
+        flex-direction: column;
+        margin-left: 0;
+    }
+    #buttonsContainer {
+        margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #buttonsContainer {
+        gap: 1.5rem;
+        flex-direction: column;
+        margin-left: 0;
+    }
+
+}

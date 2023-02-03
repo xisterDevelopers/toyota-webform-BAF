@@ -272,6 +272,15 @@
     width: 25%;
 }
 
+.w-20 {
+    width: 20%;
+}
+
+
 .w-50 {
     width: 50%;
+}
+
+.word-wrap {
+    word-wrap: break-word;
 }

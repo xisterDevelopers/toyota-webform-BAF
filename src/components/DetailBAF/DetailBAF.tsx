@@ -9,8 +9,13 @@ import SupplierIdentificationDetail from "./SupplierIdentificationDetail/Supplie
 import SupplierBankDetailsDetail from "./SupplierBankDetailsDetail/SupplierBankDetailsDetail";
 import {SupplierIdentificationDetailModel} from "../../models/supplierIdentificationDetail.model";
 import formService from "../../api/form.service";
+import uploadFileService from "../../api/uploadFile.service";
 import {SupplierBankDetailsDetailModel} from "../../models/supplierBankDetailsDetail.model";
 import {useGlobalContext} from "../../utils/AppContext";
+import success_dot from "../../assets/svg/success_icon.svg";
+import dot from "../../assets/svg/simple_dot.svg";
+import {FileTypeModel} from "../../models/fileType.model";
+import db from "../../utils/db.json";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -24,13 +29,28 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [uploadFiles, setUploadFiles] = useState<UploadedFileModel[]>([ ]);
     const [supplierIdentificationDetail, setSupplierIdentificationDetail] = useState<SupplierIdentificationDetailModel>({ });
     const [bankDetailsDetail, setBankDetailsDetail] = useState<SupplierBankDetailsDetailModel>({ });
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
+    const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
+    const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesHighRisk, setIntegrativeFilesHighRisk] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
+    const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
 
     useLayoutEffect(() => {
         const form = formService.getById(Number(id));
+        const files = formService.getById(Number(id));
 
         if (form !== undefined) {
             setSupplierIdentificationDetail(form.identification);
             setBankDetailsDetail(form.bankDetails);
+            setUploadedFiles(uploadFileService.getAll);
+            setRequiredFileTypes(db.requiredFileTypes);
+            setAcceptanceFiles(db.acceptanceFiles);
+            setIntegrativeFiles(db.integrativeFiles);
+            setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
+            setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
+            setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
         }
     }, [])
 
@@ -74,7 +94,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     return(
         <div className="DetailBAF ml-5">
             {
-                formState === 'wating for supplier pec' ?
+                formState === 'waiting for supplier pec' ?
                     <div>
                         <p className="mt-5 mb-4"><strong>Se hai bisogno di comunicare modifiche rispetto ai tuoi dati personali procedi modificando i campi nella form.</strong></p>
                         <Button color="bg-red" text="Edit form" textColor="white" btnWidth="151px" disabled={false} onClick={() => {
@@ -83,7 +103,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         }} />
                         <p className="my-5">oppure:</p>
                         <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
-                            <div>
+                            <div className="d-flex flex-column">
                                 <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>
                                 <p>Segui i seguenti passaggi:</p>
                                 <ul>
@@ -139,6 +159,126 @@ const DetailBaf: FC<DetailBafProps> = () => {
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsDetail model={bankDetailsDetail} />
             <hr className="break-line mb-5 mt-6" />
+            <div className=" info-container mb-5">
+                <h2 className="mb-5">C. Caricamento Allegati</h2>
+                <h3 className="ml-4">Documentazione obbligatoria</h3>
+                {
+                    requiredFileTypes.map((requiredFileType, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{requiredFileType.type}:</strong>
+                                    <p className="m-0">{requiredFileType.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                {
+                    acceptanceFiles.map((acceptanceFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(acceptanceFile.accepted ? "success_dot" : "dot") + " custom-li"}
+                                     src={acceptanceFile.accepted ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{acceptanceFile.type}:</strong>
+                                    <p className="m-0">{acceptanceFile.info} <a href="#" className="black">{acceptanceFile.link}</a></p>
+                                    <div className="d-flex flex-row mt-2">
+                                        <label htmlFor={acceptanceFile.type} className="d-flex font-input-label">
+                                            <input type="checkbox" id={acceptanceFile.type} hidden defaultChecked={acceptanceFile.accepted} onChange={event => {
+                                                acceptanceFile.accepted = event.target.checked;
+                                                setAcceptanceFiles([...acceptanceFiles]);
+                                            }}/>
+                                            <label htmlFor={acceptanceFile.type} className="font-input-label custom-checkbox mr-3"></label>
+                                            Dichiaro di aver preso visione del documento
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione integrativa</h3>
+                {
+                    integrativeFiles.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio alto</strong></h3>
+                <div className="d-flex flex-row">
+                    <div className="ml-4 my-3">
+                        <strong>Autocertificazione rischio:</strong>
+                        <p className="m-0">
+                            “Autocertificazione impresa rischio alto” compilata in tutti i suoi campi e firmata dal legale
+                            rappresentante del soggetto richiedente a cui si dovranno allegare i seguenti documenti:
+                        </p>
+                    </div>
+                </div>
+                {
+                    integrativeFilesHighRisk.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione integrativa obbligatoria per fornitori <strong>rischio basso</strong></h3>
+                <div className="d-flex flex-row">
+                    <div className="ml-4 my-3">
+                        <strong>Autocertificazione rischio:</strong>
+                        <p className="m-0">
+                            “Autocertificazione impresa rischio basso” compilata in tutti i suoi campi e firmata dal legale
+                            rappresentante del soggetto richiedente a cui si dovranno allegare i seguenti documenti:
+                        </p>
+                    </div>
+                </div>
+                {
+                    integrativeFilesLowRisk.map((integrativeFile, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{integrativeFile.type}:</strong>
+                                    <p className="m-0">{integrativeFile.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                <h3 className="ml-4">Documentazione facoltativa per fornitori <strong>rischio alto e basso</strong></h3>
+                {
+                    integrativeFilesHighLowRisk.map((requiredFileType, i) => {
+                        return (
+                            <div key={i} className="custom-ul d-flex flex-row">
+                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <div className="my-3">
+                                    <strong>{requiredFileType.type}:</strong>
+                                    <p className="m-0">{requiredFileType.info}</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </div>
         </div>
     );
 };
