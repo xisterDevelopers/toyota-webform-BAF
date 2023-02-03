@@ -4,8 +4,8 @@ const getAll = () => {
     return db.uploadedFiles;
 };
 
-const FormService = {
+const UploadFileService = {
     getAll
 };
 
-export default FormService;
+export default UploadFileService;

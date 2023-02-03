@@ -102,7 +102,7 @@ const SupplierIdentificationDetail: FC<SupplierIdentificationDetailProps> = ({mo
             <div className="d-flex gap-5">
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Vat number</strong></p>
-                    <p>{model.cca2}{model.vatNumber}</p>
+                    <p className="word-wrap">{model.cca2}{model.vatNumber}</p>
                 </div>
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Tax residence country</strong></p>

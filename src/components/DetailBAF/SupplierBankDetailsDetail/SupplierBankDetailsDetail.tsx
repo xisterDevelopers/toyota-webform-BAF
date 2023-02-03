@@ -68,7 +68,7 @@ const SupplierBankDetailsDetail: FC<SupplierBankDetailsDetailProps> = ({model}) 
           <div className="d-flex gap-5">
               <div className="d-flex flex-column w-25">
                   <p className="m-0"><strong>IBAN number</strong></p>
-                  <p>{model.ibanNumber}</p>
+                  <p className="word-wrap">{model.ibanNumber}</p>
               </div>
               <div className="d-flex flex-column w-25">
                   <p className="m-0"><strong>SWIFT code</strong></p>
