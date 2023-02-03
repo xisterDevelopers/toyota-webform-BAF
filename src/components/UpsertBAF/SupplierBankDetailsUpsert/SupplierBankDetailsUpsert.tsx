@@ -187,7 +187,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                defaultValue={outputDetails.swiftCode} onChange={(event) => outputDetails.swiftCode = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">
-                        <label className="d-flex font-input-label txt-nowrap">SORT code (UK) / FIK (Denmark) / GIRO (Sweden)<span className="red">*</span></label>
+                        <label id="sortCodeLabel" className="d-flex font-input-label txt-nowrap">SORT code (UK) / FIK (Denmark) / GIRO (Sweden)<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
                                defaultValue={outputDetails.sortCode} onChange={(event) => outputDetails.sortCode = event.target.value}/>
                     </div>

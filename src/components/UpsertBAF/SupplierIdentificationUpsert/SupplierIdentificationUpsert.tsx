@@ -207,7 +207,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                          setEstablishment(!establishment)
                                          model.establishment = !establishment
                                  }}/>
-                          <label htmlFor="establishment" className="font-input-label custom-checkbox mr-3"></label>
+                          <label id="establishmentCheckbox" htmlFor="establishment" className="font-input-label custom-checkbox mr-3"></label>
                           Establishment (legal registration address if different from above)
                       </label>
                   </div>

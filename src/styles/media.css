@@ -43,5 +43,17 @@
         flex-direction: column;
         margin-left: 0;
     }
+}
 
+@media only screen and (max-width: 500px) {
+    .input-lg {
+        width: 250px;
+    }
+    #sortCodeLabel {
+        font-size: 12px;
+    }
+    #establishmentCheckbox {
+        width: 50px;
+        background-size: 20px;
+    }
 }

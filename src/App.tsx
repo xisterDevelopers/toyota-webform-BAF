@@ -13,7 +13,7 @@ function App() {
 
   return (
   <AppContext.Provider value={{formState, setFormState, isFormValid, setIsFormValid}}>
-    <div className="App px-5 py-4">
+    <div className="App app-wrapper">
       <header className="App-header">
           <img className="mb-5" src={logo} alt="logo" />
           <h1 className="font-title black">Welcome on <span className="dark-red">Bank Account Form</span></h1>

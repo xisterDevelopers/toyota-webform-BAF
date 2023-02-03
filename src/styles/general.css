@@ -284,3 +284,7 @@
 .word-wrap {
     word-wrap: break-word;
 }
+
+.app-wrapper {
+    margin: 41px 76px;
+}
