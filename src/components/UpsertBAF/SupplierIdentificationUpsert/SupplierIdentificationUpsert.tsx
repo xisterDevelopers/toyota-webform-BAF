@@ -43,6 +43,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [isEstablishmentZipCodeValid, setIsEstablishmentZipCodeValid] = useState(true);
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isVatNumberValid, setIsVatNumberValid] = useState(true);
 
     useLayoutEffect(() => {
         if(model.vatRegime) {
@@ -115,6 +116,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
             } else {
                 setIsValidPhoneNumber(true)
             }
+        }
+    }
+
+    const vatNumberValidator = () => {
+        if (model.vatNumber !== undefined) {
+            const matchedVat = /^[A-Za-z0-9]*$/.test(model.vatNumber);
+            setIsVatNumberValid(matchedVat);
         }
     }
 
@@ -309,7 +317,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               </div>
               <div className="d-flex gap-5">
                   <div className="d-flex flex-column">
-                      <label htmlFor="vatNumber" className="font-input-label">Vat Number</label>
+                      <label htmlFor="vatNumber" className="font-input-label">
+                          Vat Number
+                          {isVatNumberValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                      </label>
                       <div className="d-flex input-lg gap-2">
                           <select id="vatPrefix" className="custom-input custom-select input-sm" value={model.cca2}
                                   onChange={(event => setCca2(model.cca2 = event.target.value))}>
@@ -320,7 +331,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                       ))
                               }
                           </select>
-                          <input type="text" id="vatNumber" className="custom-input input-fill"
+                          <input type="text" id="vatNumber" className={"custom-input input-fill " + (isVatNumberValid ? "" : "red")} onBlur={vatNumberValidator}
                                  defaultValue={model.vatNumber} onChange={event => model.vatNumber = event.target.value}/>
                       </div>
                   </div>
