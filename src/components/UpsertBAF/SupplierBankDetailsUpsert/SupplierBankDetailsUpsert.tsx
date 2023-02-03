@@ -3,7 +3,7 @@ import './SupplierBankDetailsUpsert.css';
 import {SupplierBankDetailsUpsertModel} from "../../../models/supplierBankDetailsUpsertModel";
 import {CurrencyModel} from "../../../models/currency.model";
 import {CountryModel} from "../../../models/country.model";
-
+import bicValidator from 'bic-validator';
 const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
@@ -25,6 +25,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const [swift, setSwift] = useState(outputDetails.swiftCode);
     const [sortCode, setSortCode] = useState(outputDetails.sortCode);
     const [ibanIsValid, setIbanIsValid] = useState(true);
+    const [swiftIsValid, setSwiftIsValid] = useState(true);
 
 
     useLayoutEffect(() => {
@@ -42,6 +43,13 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const ibanValidator = () => {
         let validation = IBAN.isValid(outputDetails.ibanNumber);
         setIbanIsValid(validation);
+    }
+
+    const swiftValidator = () => {
+        if(outputDetails.swiftCode !== undefined) {
+            let validation = bicValidator.isValid(outputDetails.swiftCode)
+            setSwiftIsValid(validation)
+        }
     }
     return(
         <div>
@@ -171,8 +179,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                defaultValue={outputDetails.ibanNumber} onChange={(event) => outputDetails.ibanNumber = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">
-                        <label className="font-input-label">SWIFT code<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg"
+                        <label className="font-input-label">
+                            SWIFT code<span className="red">*</span>
+                            {swiftIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                        </label>
+                        <input type="text" className={"custom-input input-lg " + (swiftIsValid ? "" : "red")} onBlur={swiftValidator}
                                defaultValue={outputDetails.swiftCode} onChange={(event) => outputDetails.swiftCode = event.target.value}/>
                     </div>
                     <div className="d-flex flex-column">
