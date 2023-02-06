@@ -10,9 +10,9 @@ export type GlobalContent = {
 export const AppContext = createContext<GlobalContent>({
     formState: 'supplier pending',
     setFormState: () => {},
-    isFormValidIdentification: true,
+    isFormValidIdentification: false,
     setIsFormValidIdentification:() => {},
-    isFormValidBank: true,
+    isFormValidBank: false,
     setIsFormValidBank:() => {}
 })
 export const useGlobalContext = () => useContext(AppContext)
