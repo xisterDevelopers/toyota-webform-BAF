@@ -48,6 +48,10 @@ const UpsertBaf: React.FunctionComponent = () => {
     let {id} = useParams();
 
     useLayoutEffect(() => {
+        if (formState === 'Check pending' || formState === 'registered') {
+            navigate(id ? `/detail-BAF/${id}` : `/error`);
+        }
+
         const countries = CountryService.getAll();
         const sortedCountries = countries.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
             const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;

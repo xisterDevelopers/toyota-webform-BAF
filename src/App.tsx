@@ -8,7 +8,7 @@ const UpsertBAF = React.lazy(() => import('./components/UpsertBAF/UpsertBAF'));
 const DetailBAF = React.lazy(() => import('./components/DetailBAF/DetailBAF'));
 
 function App() {
-    const [formState, setFormState] = useState<string>('supplier pending');
+    const [formState, setFormState] = useState<string>('Check pending');
     const [isFormValid, setIsFormValid] = useState<boolean>(true);
 
   return (
@@ -21,6 +21,7 @@ function App() {
                   <Routes>
                       <Route path='/upsert-BAF/:id?' element={formState !== 'Revised' ? <UpsertBAF /> : <ErrorPage />}/>
                       <Route path='/detail-BAF/:id' element={formState !== 'Revised' ? <DetailBAF /> : <ErrorPage />}/>
+                      <Route path='/error' element={<ErrorPage />}/>
                       <Route path='*' element={formState !== 'Revised' ? <Navigate to='/upsert-BAF' replace/> : <ErrorPage /> }/>
                   </Routes>
               </React.Suspense>

@@ -38,6 +38,12 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
 
     useLayoutEffect(() => {
+        if (formState === 'supplier pending' ||
+            formState === 'waiting for supplier pec' ||
+            formState === 'Supplier Pending - ERROR') {
+            navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
+        }
+
         const form = formService.getById(Number(id));
         const files = formService.getById(Number(id));
 
