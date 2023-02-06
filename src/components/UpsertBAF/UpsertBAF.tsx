@@ -188,12 +188,6 @@ const UpsertBaf: React.FunctionComponent = () => {
         setUploadedFiles([...uploadedFiles]);
     }
 
-    const onConsole = () => {
-        console.log(supplierIdentification)
-        console.log(bankUpsertModel)
-        console.log(uploadedFiles)
-    }
-
     const popUpHandler = () => {
         setIsPopUpShow(!isPopUpShow);
     }
@@ -420,6 +414,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                 <Button color="bg-red"
                         text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')
+                    console.log(supplierIdentification)
+                    console.log(bankUpsertModel)
                     navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
                 } disabled={!isFormValidIdentification || !isFormValidBank} />

@@ -13,23 +13,22 @@ interface SupplierBankDetailsUpsertProps {
 }
 
 const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails, countries}) => {
-    const [bankName, setBankName] = useState(outputDetails.bankName);
+    // const [bankName, setBankName] = useState(outputDetails.bankName);
     const [currency, setCurrency] = useState(outputDetails.bankAccountCurrency);
     const [date, setDate] = useState<string>(outputDetails.effectiveDate ?? '');
-    const [bankAccountHolderName, setBankAccountHolderName] = useState(outputDetails.bankAccountHolderName);
+    // const [bankAccountHolderName, setBankAccountHolderName] = useState(outputDetails.bankAccountHolderName);
     const [isAccountDiffHolderName, setIsAccountDiffHolderName] = useState(outputDetails.nameIsDifferentFromBankAccountName);
-    const [reasonHolderName, setReasonHolderName] = useState(outputDetails.reasonName);
+    // const [reasonHolderName, setReasonHolderName] = useState(outputDetails.reasonName);
     const [isFactoryCompany, setIsFactoryCompany] = useState(outputDetails.factoryCompany);
-    const [reasonFactoryCompany, setReasonFactoryCompany] = useState(outputDetails.reasonFactory);
-    const [bankAccountNumber, setBankAccountNumber] = useState(outputDetails.bankAccountNumber);
-    const [iban, setIban] = useState(outputDetails.ibanNumber);
-    const [swift, setSwift] = useState(outputDetails.swiftCode);
-    const [sortCode, setSortCode] = useState(outputDetails.sortCode);
+    // const [reasonFactoryCompany, setReasonFactoryCompany] = useState(outputDetails.reasonFactory);
+    // const [bankAccountNumber, setBankAccountNumber] = useState(outputDetails.bankAccountNumber);
+    // const [iban, setIban] = useState(outputDetails.ibanNumber);
+    // const [swift, setSwift] = useState(outputDetails.swiftCode);
+    // const [sortCode, setSortCode] = useState(outputDetails.sortCode);
     const [ibanIsValid, setIbanIsValid] = useState(true);
     const [swiftIsValid, setSwiftIsValid] = useState(true);
 
-    const [ibanIsValidForm, setIbanIsValidForm] = useState(false);
-    const [swiftIsValidForm, setSwiftIsValidForm] = useState(false);
+    const [validationError, setValidationError] = useState({iban : false, swift: false})
 
     const {setIsFormValidBank} = useGlobalContext()
 
@@ -47,15 +46,15 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate])
 
     const bankFormValidator = () => {
-        const booleanArray = [ibanIsValidForm,swiftIsValidForm];
+        const booleanArray = [validationError.iban,validationError.swift];
         setIsFormValidBank(booleanArray.every(bool => bool));
     }
 
     const ibanValidator = (isActuallyValid : boolean) => {
         let validation = IBAN.isValid(outputDetails.ibanNumber);
         if (isActuallyValid) {
-            setIbanIsValidForm(validation)
-            console.log(ibanIsValidForm)
+            validationError.iban = validation;
+            setValidationError({...validationError})
         } else {
             setIbanIsValid(validation);
         }
@@ -66,17 +65,18 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         if(outputDetails.swiftCode !== undefined) {
             let validation = bicValidator.isValid(outputDetails.swiftCode)
             if (isActuallyValid) {
-                setSwiftIsValidForm(validation)
+                validationError.swift = validation;
+                setValidationError({...validationError})
             } else {
                 setSwiftIsValid(validation)
             }
 
         }
     }
+
     return(
         <div>
             <h2 className="mb-5">B. Supplier bank details</h2>
-
             <form className="d-flex flex-column gap-3" >
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column">

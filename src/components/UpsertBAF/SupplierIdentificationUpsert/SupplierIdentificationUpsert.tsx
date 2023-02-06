@@ -17,26 +17,26 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [cca2, setCca2] = useState(model.cca2);
     const [idd, setIdd] = useState(model.idd);
     const [country, setCountry] = useState(model.country);
-    const [supplierName, setSupplierName] = useState(model.supplierName);
+    // const [supplierName, setSupplierName] = useState(model.supplierName);
     const [establishment, setEstablishment] = useState(model.establishment);
-    const [personName, setPersonName] = useState(model.personName);
-    const [address, setAddress] = useState(model.address);
-    const [city, setCity] = useState(model.city);
+    // const [personName, setPersonName] = useState(model.personName);
+    // const [address, setAddress] = useState(model.address);
+    // const [city, setCity] = useState(model.city);
     const [companySize, setCompanySize] = useState(model.companySize);
-    const [emailAddress, setEmailAddress] = useState(model.emailAddress);
-    const [establishmentAddress, setEstablishmentAddress] = useState(model.establishmentAddress);
-    const [establishmentCity, setEstablishmentCity] = useState(model.establishmentCity);
+    // const [emailAddress, setEmailAddress] = useState(model.emailAddress);
+    // const [establishmentAddress, setEstablishmentAddress] = useState(model.establishmentAddress);
+    // const [establishmentCity, setEstablishmentCity] = useState(model.establishmentCity);
     const [establishmentCountry, setEstablishmentCountry] = useState(model.establishmentCountry);
-    const [establishmentPostalCode, setEstablishmentPostalCode] = useState(model.establishmentPostalCode);
+    // const [establishmentPostalCode, setEstablishmentPostalCode] = useState(model.establishmentPostalCode);
     const [governmentInstitution, setGovernmentInstitution] = useState(model.governmentInstitution);
-    const [personSurname, setPersonSurname] = useState(model.personSurname);
-    const [phoneNumber, setPhoneNumber] = useState(model.phoneNumber);
-    const [registrationNumber, setRegistrationNumber] = useState(model.registrationNumber);
-    const [taxID, setTaxID] = useState(model.taxID);
-    const [taxResidenceCountry, setTaxResidenceCountry] = useState(model.taxResidenceCountry);
+    // const [personSurname, setPersonSurname] = useState(model.personSurname);
+    // const [phoneNumber, setPhoneNumber] = useState(model.phoneNumber);
+    // const [registrationNumber, setRegistrationNumber] = useState(model.registrationNumber);
+    // const [taxID, setTaxID] = useState(model.taxID);
+    // const [taxResidenceCountry, setTaxResidenceCountry] = useState(model.taxResidenceCountry);
     const [vatNumber, setVatNumber] = useState(model.vatNumber);
-    const [vatRegime, setVatRegime] = useState(model.vatRegime);
-    const [postalCode, setPostalCode] = useState(model.postalCode);
+    // const [vatRegime, setVatRegime] = useState(model.vatRegime);
+    // const [postalCode, setPostalCode] = useState(model.postalCode);
     const [vatRegimeBool, setVatRegimeBool] = useState<boolean>();
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidZipCode, setIsValidZipCode] = useState(true);
@@ -44,12 +44,9 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
     const [isVatNumberValid, setIsVatNumberValid] = useState(true);
 
-    const [isValidEmailForm, setIsValidEmailForm] = useState(false);
-    const [isValidZipCodeForm, setIsValidZipCodeForm] = useState(false);
-    const [isValidPhoneNumberForm, setIsValidPhoneNumberForm] = useState(false);
-    const [isVatNumberValidForm, setIsVatNumberValidForm] = useState(false);
-
     const [isLoaded, setIsLoaded] = useState(false);
+
+    const [validationError, setValidationError] = useState({email: false, zipCode: false, phoneNumber: false, vatNumber: false});
 
     const {setIsFormValidIdentification} = useGlobalContext()
 
@@ -88,16 +85,16 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         model.companySize, model.country, model.taxID, model,vatNumber, isLoaded])
 
     const identificationFormValidator = () => {
-        const booleanArray = [isValidEmailForm,isValidZipCodeForm,isValidPhoneNumberForm, isVatNumberValidForm];
+        const booleanArray = [validationError.email,validationError.zipCode,validationError.phoneNumber, validationError.vatNumber];
         setIsFormValidIdentification(booleanArray.every(bool => bool));
-        console.log({isValidEmailForm,isValidZipCodeForm,isValidPhoneNumberForm, isVatNumberValidForm})
     }
 
     const zipCodeValidator = (isActuallyValid: boolean) => {
         if(model.postalCode !== undefined) {
             let isNum = /^\d+$/.test(model.postalCode);
                 if(isActuallyValid) {
-                    setIsValidZipCodeForm(isNum)
+                    validationError.zipCode = isNum;
+                    setValidationError({...validationError});
                 } else {
                     setIsValidZipCode(isNum)
                 }
@@ -112,9 +109,11 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
             );
         if(isActuallyValid) {
             if(matchedEmail  === null) {
-                setIsValidEmailForm(false)
+                validationError.email = false;
+                setValidationError({...validationError});
             } else {
-                setIsValidEmailForm(true)
+                validationError.email = true;
+                setValidationError({...validationError});
             }
         } else {
             if (matchedEmail === null) {
@@ -132,9 +131,11 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                 .match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
             if(isActuallyValid) {
                 if (matchedPhone === null) {
-                    setIsValidPhoneNumberForm(false)
+                    validationError.phoneNumber = false;
+                    setValidationError({...validationError});
                 } else {
-                    setIsValidPhoneNumberForm(true)
+                    validationError.phoneNumber = true;
+                    setValidationError({...validationError});
                 }
             } else {
                 if (matchedPhone === null) {
@@ -151,14 +152,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         if (model.vatNumber !== undefined) {
             const matchedVat = /[A-Za-z0-9]{1,20}/.test(model.vatNumber);
             if (isActuallyValid) {
-                setIsVatNumberValidForm(matchedVat)
+                validationError.vatNumber = matchedVat;
+                setValidationError({...validationError});
             } else {
                 setIsVatNumberValid(matchedVat);
             }
         }
     }
-
-    // onClick={identificationFormValidator} onMouseLeave={identificationFormValidator}
 
     return (
       <div className="SupplierIdentificationUpsert">
