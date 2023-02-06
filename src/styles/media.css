@@ -3,6 +3,20 @@
         gap: 1.5rem;
         flex-direction: column;
     }
+    .info-container {
+        max-width: none;
+        min-width: 100%;
+    }
+    .info-upload-container {
+        max-width: none;
+        min-width: 100%;
+    }
+    .input-lg {
+        width: 100%;
+    }
+    .container-lg {
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 1020px) {
@@ -47,7 +61,7 @@
 
 @media only screen and (max-width: 500px) {
     .input-lg {
-        width: 250px;
+        min-width: 150px;
     }
     #sortCodeLabel {
         font-size: 12px;
