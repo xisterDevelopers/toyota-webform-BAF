@@ -4,6 +4,7 @@ import {SupplierBankDetailsUpsertModel} from "../../../models/supplierBankDetail
 import {CurrencyModel} from "../../../models/currency.model";
 import {CountryModel} from "../../../models/country.model";
 import bicValidator from 'bic-validator';
+import {useGlobalContext} from "../../../utils/AppContext";
 const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
@@ -27,6 +28,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const [ibanIsValid, setIbanIsValid] = useState(true);
     const [swiftIsValid, setSwiftIsValid] = useState(true);
 
+    const [ibanIsValidForm, setIbanIsValidForm] = useState(false);
+    const [swiftIsValidForm, setSwiftIsValidForm] = useState(false);
+
+    const {setIsFormValidBank} = useGlobalContext()
+
 
     useLayoutEffect(() => {
         if(outputDetails.factoryCompany !== undefined) {
@@ -40,15 +46,31 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         }
     }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate])
 
-    const ibanValidator = () => {
-        let validation = IBAN.isValid(outputDetails.ibanNumber);
-        setIbanIsValid(validation);
+    const bankFormValidator = () => {
+        const booleanArray = [ibanIsValidForm,swiftIsValidForm];
+        setIsFormValidBank(booleanArray.every(bool => bool));
     }
 
-    const swiftValidator = () => {
+    const ibanValidator = (isActuallyValid : boolean) => {
+        let validation = IBAN.isValid(outputDetails.ibanNumber);
+        if (isActuallyValid) {
+            setIbanIsValidForm(validation)
+            console.log(ibanIsValidForm)
+        } else {
+            setIbanIsValid(validation);
+        }
+
+    }
+
+    const swiftValidator = (isActuallyValid : boolean) => {
         if(outputDetails.swiftCode !== undefined) {
             let validation = bicValidator.isValid(outputDetails.swiftCode)
-            setSwiftIsValid(validation)
+            if (isActuallyValid) {
+                setSwiftIsValidForm(validation)
+            } else {
+                setSwiftIsValid(validation)
+            }
+
         }
     }
     return(
@@ -175,16 +197,24 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             IBAN number<span className="red">*</span>
                             {ibanIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
                         </label>
-                        <input type="text" className={"custom-input input-lg " + (ibanIsValid ? "" : "red")} onBlur={ibanValidator}
-                               defaultValue={outputDetails.ibanNumber} onChange={(event) => outputDetails.ibanNumber = event.target.value}/>
+                        <input type="text" className={"custom-input input-lg " + (ibanIsValid ? "" : "red")} onBlur={() => ibanValidator(false)}
+                               defaultValue={outputDetails.ibanNumber} onChange={(event) => {
+                            outputDetails.ibanNumber = event.target.value;
+                            ibanValidator(true);
+                            bankFormValidator();
+                        }}/>
                     </div>
                     <div className="d-flex flex-column">
                         <label className="font-input-label">
                             SWIFT code<span className="red">*</span>
                             {swiftIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
                         </label>
-                        <input type="text" className={"custom-input input-lg " + (swiftIsValid ? "" : "red")} onBlur={swiftValidator}
-                               defaultValue={outputDetails.swiftCode} onChange={(event) => outputDetails.swiftCode = event.target.value}/>
+                        <input type="text" className={"custom-input input-lg " + (swiftIsValid ? "" : "red")} onBlur={() => swiftValidator(false)}
+                               defaultValue={outputDetails.swiftCode} onChange={(event) => {
+                            outputDetails.swiftCode = event.target.value;
+                            swiftValidator(true);
+                            bankFormValidator();
+                        }}/>
                     </div>
                     <div className="d-flex flex-column">
                         <label id="sortCodeLabel" className="d-flex font-input-label txt-nowrap">SORT code (UK) / FIK (Denmark) / GIRO (Sweden)<span className="red">*</span></label>

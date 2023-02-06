@@ -3,6 +3,8 @@ import './SupplierIdentificationUpsert.css';
 import {SupplierIdentificationUpsertModel} from "../../../models/supplierIdentificationUpsert.model";
 import CountryService from "../../../api/country.service";
 import {CountryModel} from "../../../models/country.model";
+import {useGlobalContext} from "../../../utils/AppContext";
+import {unhover} from "@testing-library/user-event/dist/hover";
 
 interface SupplierIdentificationUpsertProps {
     model: SupplierIdentificationUpsertModel;
@@ -40,8 +42,16 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [isValidZipCode, setIsValidZipCode] = useState(true);
     const [isEstablishmentZipCodeValid, setIsEstablishmentZipCodeValid] = useState(true);
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
-    const [isLoaded, setIsLoaded] = useState(false);
     const [isVatNumberValid, setIsVatNumberValid] = useState(true);
+
+    const [isValidEmailForm, setIsValidEmailForm] = useState(false);
+    const [isValidZipCodeForm, setIsValidZipCodeForm] = useState(false);
+    const [isValidPhoneNumberForm, setIsValidPhoneNumberForm] = useState(false);
+    const [isVatNumberValidForm, setIsVatNumberValidForm] = useState(false);
+
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const {setIsFormValidIdentification} = useGlobalContext()
 
     useLayoutEffect(() => {
         if(model.vatRegime) {
@@ -77,52 +87,78 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     }, [model.vatRegime, model.establishment, model.governmentInstitution,
         model.companySize, model.country, model.taxID, model,vatNumber, isLoaded])
 
-    const zipCodeValidator = (valueToSet: string) => {
+    const identificationFormValidator = () => {
+        const booleanArray = [isValidEmailForm,isValidZipCodeForm,isValidPhoneNumberForm, isVatNumberValidForm];
+        setIsFormValidIdentification(booleanArray.every(bool => bool));
+        console.log({isValidEmailForm,isValidZipCodeForm,isValidPhoneNumberForm, isVatNumberValidForm})
+    }
+
+    const zipCodeValidator = (isActuallyValid: boolean) => {
         if(model.postalCode !== undefined) {
             let isNum = /^\d+$/.test(model.postalCode);
-            if(valueToSet === "zipCode") {
-                setIsValidZipCode(isNum)
-            }
-        }
-        if (model.establishmentPostalCode !== undefined) {
-            let isNum = /^\d+$/.test(model.establishmentPostalCode);
-            if(valueToSet === "establishmentZipCode") {
-                setIsEstablishmentZipCodeValid(isNum)
-            }
+                if(isActuallyValid) {
+                    setIsValidZipCodeForm(isNum)
+                } else {
+                    setIsValidZipCode(isNum)
+                }
         }
     }
 
-    const emailValidator = () => {
+    const emailValidator = (isActuallyValid : boolean) => {
         const matchedEmail = String(model.emailAddress)
             .toLowerCase()
             .match(
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
-        if (matchedEmail === null) {
-            setIsValidEmail(false)
+        if(isActuallyValid) {
+            if(matchedEmail  === null) {
+                setIsValidEmailForm(false)
+            } else {
+                setIsValidEmailForm(true)
+            }
         } else {
-            setIsValidEmail(true)
+            if (matchedEmail === null) {
+                setIsValidEmail(false)
+            } else {
+                setIsValidEmail(true)
+            }
         }
+
     }
 
-    const phoneValidator = () => {
+    const phoneValidator = (isActuallyValid : boolean) => {
         if(model.idd !== undefined && model.phoneNumber !== undefined) {
             const matchedPhone = String(model.idd + model.phoneNumber)
                 .match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
-            if (matchedPhone === null) {
-                setIsValidPhoneNumber(false)
+            if(isActuallyValid) {
+                if (matchedPhone === null) {
+                    setIsValidPhoneNumberForm(false)
+                } else {
+                    setIsValidPhoneNumberForm(true)
+                }
             } else {
-                setIsValidPhoneNumber(true)
+                if (matchedPhone === null) {
+                    setIsValidPhoneNumber(false)
+                } else {
+                    setIsValidPhoneNumber(true)
+                }
+            }
+
+        }
+    }
+
+    const vatNumberValidator = (isActuallyValid : boolean) => {
+        if (model.vatNumber !== undefined) {
+            const matchedVat = /[A-Za-z0-9]{1,20}/.test(model.vatNumber);
+            if (isActuallyValid) {
+                setIsVatNumberValidForm(matchedVat)
+            } else {
+                setIsVatNumberValid(matchedVat);
             }
         }
     }
 
-    const vatNumberValidator = () => {
-        if (model.vatNumber !== undefined) {
-            const matchedVat = /^[A-Za-z0-9]*$/.test(model.vatNumber);
-            setIsVatNumberValid(matchedVat);
-        }
-    }
+    // onClick={identificationFormValidator} onMouseLeave={identificationFormValidator}
 
     return (
       <div className="SupplierIdentificationUpsert">
@@ -153,8 +189,12 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           Email Address
                           {isValidEmail ? "" : <small> : <small className="red">Invalid</small></small>}
                       </label>
-                      <input type="email" id="emailAddress" className={"custom-input input-lg " + (isValidEmail ? "" : "red")} onBlur={emailValidator}
-                             defaultValue={model.emailAddress} onChange={event => model.emailAddress = event.target.value}/>
+                      <input type="email" id="emailAddress" className={"custom-input input-lg " + (isValidEmail ? "" : "red")} onBlur={() => emailValidator(false)}
+                             defaultValue={model.emailAddress} onChange={event => {
+                          model.emailAddress = event.target.value;
+                          emailValidator(true);
+                          identificationFormValidator();
+                      }}/>
                   </div>
               </div>
               <div id="addressContainer" className="d-flex gap-5">
@@ -173,8 +213,14 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           Postal Code
                           {isValidZipCode ? "" : <small> : <small className="red">Invalid</small></small>}
                       </label>
-                      <input type="text" id="postalCode" className={"custom-input input-md " + (isValidZipCode ? "" : "red")} onBlur={() => zipCodeValidator("zipCode")}
-                             defaultValue={model.postalCode} onChange={event => model.postalCode = event.target.value}/>
+                      <input type="text" id="postalCode" className={"custom-input input-md " + (isValidZipCode ? "" : "red")} onBlur={() => {
+                          zipCodeValidator( false);
+                      }}
+                             defaultValue={model.postalCode} onChange={event => {
+                          model.postalCode = event.target.value
+                          zipCodeValidator( true);
+                          identificationFormValidator()
+                      }}/>
                   </div>
               </div>
               <div className="d-flex">
@@ -203,7 +249,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <input type="checkbox" id="establishment" hidden checked={establishment !== undefined ? establishment : false}
                                  onChange={() => {
                                          setEstablishment(!establishment)
-                                         model.establishment = !establishment
+                                         model.establishment = !establishment;
                                  }}/>
                           <label id="establishmentCheckbox" htmlFor="establishment" className="font-input-label custom-checkbox mr-3"></label>
                           Establishment (legal registration address if different from above)
@@ -229,9 +275,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {isEstablishmentZipCodeValid ? "" : <small> : <small className="red">Invalid</small></small>}
                       </label>
                       <input type="text" id="postalCode" className={"custom-input input-md " + (isEstablishmentZipCodeValid ? "" : "red")}
-                             onBlur={() => zipCodeValidator("establishmentZipCode")}
                              defaultValue={model.establishmentPostalCode} disabled={establishment}
-                             onChange={event => model.establishmentPostalCode = event.target.value}/>
+                             onChange={event => {
+                                 model.establishmentPostalCode = event.target.value;
+                             }}/>
                   </div>
               </div>
               <div className="d-flex">
@@ -311,8 +358,12 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                       ))
                               }
                           </select>
-                          <input type="tell" id="phoneNumber" className={"custom-input input-fill " + (isValidPhoneNumber ? "" : "red")} onBlur={phoneValidator}
-                                 defaultValue={model.phoneNumber} onChange={event => model.phoneNumber = event.target.value}/>
+                          <input type="tell" id="phoneNumber" className={"custom-input input-fill " + (isValidPhoneNumber ? "" : "red")} onBlur={() => phoneValidator(false)}
+                                 defaultValue={model.phoneNumber} onChange={event => {
+                              model.phoneNumber = event.target.value;
+                              phoneValidator(true);
+                              identificationFormValidator();
+                          }}/>
                       </div>
                   </div>
               </div>
@@ -332,8 +383,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                       ))
                               }
                           </select>
-                          <input type="text" id="vatNumber" className={"custom-input input-fill " + (isVatNumberValid ? "" : "red")} onBlur={vatNumberValidator}
-                                 defaultValue={model.vatNumber} onChange={event => model.vatNumber = event.target.value}/>
+                          <input type="text" id="vatNumber" className={"custom-input input-fill " + (isVatNumberValid ? "" : "red")} onBlur={() => vatNumberValidator(false)}
+                                 defaultValue={model.vatNumber} onChange={event => {
+
+                                        model.vatNumber = event.target.value;
+                                        vatNumberValidator(true);
+                                        identificationFormValidator();
+                          }}/>
                       </div>
                   </div>
                   <div className="d-flex flex-column">
