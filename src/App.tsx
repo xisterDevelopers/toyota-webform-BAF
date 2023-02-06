@@ -9,10 +9,11 @@ const DetailBAF = React.lazy(() => import('./components/DetailBAF/DetailBAF'));
 
 function App() {
     const [formState, setFormState] = useState<string>('supplier pending');
-    const [isFormValid, setIsFormValid] = useState<boolean>(true);
+    const [isFormValidIdentification, setIsFormValidIdentification] = useState<boolean>(true);
+    const [isFormValidBank, setIsFormValidBank] = useState<boolean>(true);
 
   return (
-  <AppContext.Provider value={{formState, setFormState, isFormValid, setIsFormValid}}>
+  <AppContext.Provider value={{formState, setFormState, isFormValidIdentification, setIsFormValidIdentification, isFormValidBank, setIsFormValidBank}}>
     <div className="App app-wrapper">
       <header className="App-header">
           <img className="mb-5" src={logo} alt="logo" />

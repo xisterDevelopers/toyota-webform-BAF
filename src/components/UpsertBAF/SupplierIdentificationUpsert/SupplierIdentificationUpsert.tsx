@@ -3,7 +3,6 @@ import './SupplierIdentificationUpsert.css';
 import {SupplierIdentificationUpsertModel} from "../../../models/supplierIdentificationUpsert.model";
 import CountryService from "../../../api/country.service";
 import {CountryModel} from "../../../models/country.model";
-import {useGlobalContext} from "../../../utils/AppContext";
 
 interface SupplierIdentificationUpsertProps {
     model: SupplierIdentificationUpsertModel;
@@ -12,7 +11,6 @@ interface SupplierIdentificationUpsertProps {
 
 const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({model, countries}) => {
 
-    const {isFormValid, setIsFormValid} = useGlobalContext();
     const [sameTaxID, setSameTaxID] = useState(false);
     const [cca2, setCca2] = useState(model.cca2);
     const [idd, setIdd] = useState(model.idd);

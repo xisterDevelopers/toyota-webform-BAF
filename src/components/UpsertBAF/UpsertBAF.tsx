@@ -42,7 +42,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
 
-    const {formState, setFormState} = useGlobalContext();
+    const {formState, setFormState, isFormValidBank, isFormValidIdentification} = useGlobalContext();
 
     let navigate = useNavigate()
     let {id} = useParams();
@@ -412,7 +412,8 @@ const UpsertBaf: React.FunctionComponent = () => {
 
             <div className="d-flex gap-3 justify-end">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false} />
-                <Button color="bg-red" text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
+                <Button color={!isFormValidIdentification || !isFormValidBank ? "disabled" : "bg-red"}
+                        text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')
                     navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
