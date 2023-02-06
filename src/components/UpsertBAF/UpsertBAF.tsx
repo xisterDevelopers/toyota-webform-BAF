@@ -1,4 +1,4 @@
-import React, {useContext, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import './UpsertBAF.css';
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
@@ -190,12 +190,6 @@ const UpsertBaf: React.FunctionComponent = () => {
         uploadedFiles.splice(index, 1);
 
         setUploadedFiles([...uploadedFiles]);
-    }
-
-    const onConsole = () => {
-        console.log(supplierIdentification)
-        console.log(bankUpsertModel)
-        console.log(uploadedFiles)
     }
 
     const popUpHandler = () => {
@@ -415,13 +409,20 @@ const UpsertBaf: React.FunctionComponent = () => {
             }
 
             <div className="d-flex gap-3 justify-end">
-                <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false} />
-                <Button color={!isFormValidIdentification || !isFormValidBank ? "disabled" : "bg-red"}
+                <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false}
+                onClick={() => {
+                console.log("bank " + isFormValidBank)
+                    console.log(isFormValidIdentification)
+                }
+                }/>
+                <Button color="bg-red"
                         text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')
+                    console.log(supplierIdentification)
+                    console.log(bankUpsertModel)
                     navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
-                } disabled={false} />
+                } disabled={!isFormValidIdentification || !isFormValidBank} />
             </div>
         </div>
     );
