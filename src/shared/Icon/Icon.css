@@ -1,5 +1,5 @@
 .icon-width {
-    width: 58px;
+    min-width: 58px;
     height: 58px;
     border-radius: 50%;
     display: flex;

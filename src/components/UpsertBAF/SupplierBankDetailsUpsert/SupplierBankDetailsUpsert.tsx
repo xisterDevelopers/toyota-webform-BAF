@@ -43,7 +43,15 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         if(outputDetails.effectiveDate !== undefined) {
             setDate(outputDetails.effectiveDate)
         }
-    }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate])
+        if(outputDetails.ibanNumber !== undefined) {
+            ibanValidator(true)
+        }
+        if(outputDetails.swiftCode !== undefined) {
+            swiftValidator(true)
+        }
+        console.log(validationError)
+        bankFormValidator()
+    }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate, outputDetails.ibanNumber, outputDetails.swiftCode])
 
     const bankFormValidator = () => {
         const booleanArray = [validationError.iban,validationError.swift];
@@ -79,14 +87,14 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
             <h2 className="mb-5">B. Supplier bank details</h2>
             <form className="d-flex flex-column gap-3" >
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Bank name<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
                                defaultValue={outputDetails.bankName} onChange={(event) => outputDetails.bankName = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Bank account currency</label>
                         <select className="custom-select custom-input input-lg"
                                 value={outputDetails.bankAccountCurrency} onChange={(event) => setCurrency(outputDetails.bankAccountCurrency = event.target.value)} >
@@ -104,7 +112,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     </div>
                 </div>
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Effective date</label>
                         <input type="date" className="custom-input custom-date input-lg"
                                defaultValue={date} onChange={(event) => {
@@ -114,7 +122,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     </div>
                 </div>
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Bank account holder name</label>
                         <input type="text" className="custom-input input-lg"
                                defaultValue={outputDetails.bankAccountHolderName} onChange={(event) => outputDetails.bankAccountHolderName = event.target.value} />
@@ -146,7 +154,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     </div>
                 </div>
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg" disabled={!outputDetails.nameIsDifferentFromBankAccountName}
                                defaultValue={outputDetails.reasonName} onChange={(event) => outputDetails.reasonName = event.target.value}/>
@@ -178,14 +186,14 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     </div>
                 </div>
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg" disabled={!outputDetails.factoryCompany}
                                defaultValue={outputDetails.reasonFactory} onChange={(event) => outputDetails.reasonFactory = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
-                    <div className="d-flex flex-column">
+                    <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Bank account number<span className="red">*</span></label>
                         <input type="text" className="custom-input input-lg"
                                defaultValue={outputDetails.bankAccountNumber} onChange={(event) => outputDetails.bankAccountNumber = event.target.value}/>

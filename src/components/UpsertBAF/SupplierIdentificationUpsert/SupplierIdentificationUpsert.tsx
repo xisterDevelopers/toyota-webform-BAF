@@ -81,8 +81,22 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                 setIsLoaded(true)
             }
         }
+        if (model.emailAddress !== undefined) {
+            emailValidator(true)
+        }
+        if(model.phoneNumber !== undefined) {
+            phoneValidator(true)
+        }
+        if (model.vatNumber !== undefined) {
+            vatNumberValidator(true)
+        }
+        if (model.postalCode !== undefined) {
+            zipCodeValidator(true)
+        }
+        console.log(validationError)
+        identificationFormValidator()
     }, [model.vatRegime, model.establishment, model.governmentInstitution,
-        model.companySize, model.country, model.taxID, model,vatNumber, isLoaded])
+        model.companySize, model.country, model.taxID, model,vatNumber, isLoaded, model.emailAddress,model.phoneNumber,model.vatNumber,model.postalCode])
 
     const identificationFormValidator = () => {
         const booleanArray = [validationError.email,validationError.zipCode,validationError.phoneNumber, validationError.vatNumber];
@@ -165,7 +179,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
           <h2 className="section-A-font-title mb-5">A. Supplier identification</h2>
           <form className="d-flex flex-column gap-4">
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="supplierName" className="font-input-label">Supplier Name<span className="red">*</span></label>
                       <input type="text" id="supplierName" className="custom-input input-lg"
                               defaultValue={model.supplierName} onChange={event => model.supplierName = event.target.value}/>
@@ -184,7 +198,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   </div>
               </div>
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="emailAddress" className="font-input-label">
                           Email Address
                           {isValidEmail ? "" : <small> : <small className="red">Invalid</small></small>}
@@ -224,7 +238,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   </div>
               </div>
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="country" className="font-input-label">Country</label>
                       <select id="country" className="custom-input custom-select input-lg"
                               value={model.country}
@@ -282,7 +296,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   </div>
               </div>
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="country" className="font-input-label">Country</label>
                           <select id="country" className="custom-input custom-select input-lg"
                                   value={model.establishmentCountry} disabled={establishment}
@@ -325,7 +339,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   </div>
               </div>
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="numberPrefix" className="font-input-label">Company Size</label>
                       <select id="companySize" className="custom-input custom-select input-lg"
                               value={companySize} onChange={event => {
@@ -340,7 +354,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   </div>
               </div>
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="phoneNumber" className="font-input-label">
                           Phone Number
                           {isValidPhoneNumber ? "" : <small> : <small className="red">Invalid</small></small>}
@@ -436,7 +450,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   </div>
               </div>
               <div className="d-flex">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex flex-column container-lg">
                       <label htmlFor="registrationNumber" className="font-input-label">Registration number</label>
                       <input type="text" id="registrationNumber" className="custom-input input-lg"
                              defaultValue={model.registrationNumber} onChange={event => model.registrationNumber = event.target.value}/>
