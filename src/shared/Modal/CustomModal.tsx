@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useLayoutEffect} from 'react';
+import React, {FC, ReactNode} from 'react';
 import './CustomModal.css';
 import Button from "../Button/Button";
 

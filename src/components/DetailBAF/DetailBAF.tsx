@@ -45,7 +45,6 @@ const DetailBaf: FC<DetailBafProps> = () => {
         }
 
         const form = formService.getById(Number(id));
-        const files = formService.getById(Number(id));
 
         if (form !== undefined) {
             setSupplierIdentificationDetail(form.identification);
@@ -74,7 +73,6 @@ const DetailBaf: FC<DetailBafProps> = () => {
             if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
                 uploadFiles.push({ name: event.dataTransfer.files[i].name, type: "" });
             } else {
-                //TODO: gestione validazione dimensione massima file
                 console.error('Dimensione massima superata');
             }
         }
@@ -90,7 +88,6 @@ const DetailBaf: FC<DetailBafProps> = () => {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
                     uploadFiles.push({ name: event.target.files[i].name, type: "" });
                 } else {
-                    //TODO: gestione validazione dimensione massima file
                     console.error('Dimensione massima superata');
                 }
             }

@@ -1,10 +1,8 @@
 import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierIdentificationUpsert.css';
 import {SupplierIdentificationUpsertModel} from "../../../models/supplierIdentificationUpsert.model";
-import CountryService from "../../../api/country.service";
 import {CountryModel} from "../../../models/country.model";
 import {useGlobalContext} from "../../../utils/AppContext";
-import {unhover} from "@testing-library/user-event/dist/hover";
 
 interface SupplierIdentificationUpsertProps {
     model: SupplierIdentificationUpsertModel;
@@ -17,35 +15,18 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [cca2, setCca2] = useState(model.cca2);
     const [idd, setIdd] = useState(model.idd);
     const [country, setCountry] = useState(model.country);
-    // const [supplierName, setSupplierName] = useState(model.supplierName);
     const [establishment, setEstablishment] = useState(model.establishment);
-    // const [personName, setPersonName] = useState(model.personName);
-    // const [address, setAddress] = useState(model.address);
-    // const [city, setCity] = useState(model.city);
     const [companySize, setCompanySize] = useState(model.companySize);
-    // const [emailAddress, setEmailAddress] = useState(model.emailAddress);
-    // const [establishmentAddress, setEstablishmentAddress] = useState(model.establishmentAddress);
-    // const [establishmentCity, setEstablishmentCity] = useState(model.establishmentCity);
     const [establishmentCountry, setEstablishmentCountry] = useState(model.establishmentCountry);
-    // const [establishmentPostalCode, setEstablishmentPostalCode] = useState(model.establishmentPostalCode);
     const [governmentInstitution, setGovernmentInstitution] = useState(model.governmentInstitution);
-    // const [personSurname, setPersonSurname] = useState(model.personSurname);
-    // const [phoneNumber, setPhoneNumber] = useState(model.phoneNumber);
-    // const [registrationNumber, setRegistrationNumber] = useState(model.registrationNumber);
-    // const [taxID, setTaxID] = useState(model.taxID);
-    // const [taxResidenceCountry, setTaxResidenceCountry] = useState(model.taxResidenceCountry);
     const [vatNumber, setVatNumber] = useState(model.vatNumber);
-    // const [vatRegime, setVatRegime] = useState(model.vatRegime);
-    // const [postalCode, setPostalCode] = useState(model.postalCode);
     const [vatRegimeBool, setVatRegimeBool] = useState<boolean>();
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isValidZipCode, setIsValidZipCode] = useState(true);
     const [isEstablishmentZipCodeValid, setIsEstablishmentZipCodeValid] = useState(true);
     const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
     const [isVatNumberValid, setIsVatNumberValid] = useState(true);
-
     const [isLoaded, setIsLoaded] = useState(false);
-
     const [validationError, setValidationError] = useState({email: false, zipCode: false, phoneNumber: false, vatNumber: false});
 
     const {setIsFormValidIdentification} = useGlobalContext()
@@ -93,7 +74,6 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         if (model.postalCode !== undefined) {
             zipCodeValidator(true)
         }
-        console.log(validationError)
         identificationFormValidator()
     }, [model.vatRegime, model.establishment, model.governmentInstitution,
         model.companySize, model.country, model.taxID, model,vatNumber, isLoaded, model.emailAddress,model.phoneNumber,model.vatNumber,model.postalCode])
