@@ -127,7 +127,6 @@ const UpsertBaf: React.FunctionComponent = () => {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
                    toUploadFiles.push({ name: event.target.files[i].name, type: "" });
                 } else {
-                    //TODO: gestione validazione dimensione massima file
                     console.error('Dimensione massima superata');
                 }
             }
@@ -140,7 +139,6 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
 
     const upload = () => {
-        // upload a file manager
         setUploadedFiles([...uploadedFiles, ...toUploadFiles]);
         setToUploadFiles([]);
         setShowModal(false);
@@ -393,8 +391,6 @@ const UpsertBaf: React.FunctionComponent = () => {
                 <h2 className="font-w-light">Uploaded Files</h2>
                 <p>Dopo aver caricato i file seleziona la categoria di appertenenza per ciascuno di essi. Solo una volta che avrai correttamente associato la categoria i file saranno inseriti nel database.</p>
             </div>
-
-            {/*Card Upload*/}
             {
                 uploadedFiles.map((uploadedFile, index) => {
                     return (
@@ -408,18 +404,12 @@ const UpsertBaf: React.FunctionComponent = () => {
                 })
             }
 
-            <div className="d-flex gap-3 justify-end">
+            <div className="d-flex gap-3 justify-end pb-5">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false}
-                onClick={() => {
-                console.log("bank " + isFormValidBank)
-                    console.log(isFormValidIdentification)
-                }
-                }/>
+                onClick={() => {}}/>
                 <Button color="bg-red"
                         text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')
-                    console.log(supplierIdentification)
-                    console.log(bankUpsertModel)
                     navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
                 } disabled={!isFormValidIdentification || !isFormValidBank} />
