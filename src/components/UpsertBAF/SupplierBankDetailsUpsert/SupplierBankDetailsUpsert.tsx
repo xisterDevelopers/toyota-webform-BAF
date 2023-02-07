@@ -1,7 +1,6 @@
-import React, {FC, useEffect, useLayoutEffect, useState} from 'react';
+import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierBankDetailsUpsert.css';
 import {SupplierBankDetailsUpsertModel} from "../../../models/supplierBankDetailsUpsertModel";
-import {CurrencyModel} from "../../../models/currency.model";
 import {CountryModel} from "../../../models/country.model";
 import bicValidator from 'bic-validator';
 import {useGlobalContext} from "../../../utils/AppContext";
@@ -13,21 +12,12 @@ interface SupplierBankDetailsUpsertProps {
 }
 
 const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails, countries}) => {
-    // const [bankName, setBankName] = useState(outputDetails.bankName);
     const [currency, setCurrency] = useState(outputDetails.bankAccountCurrency);
     const [date, setDate] = useState<string>(outputDetails.effectiveDate ?? '');
-    // const [bankAccountHolderName, setBankAccountHolderName] = useState(outputDetails.bankAccountHolderName);
     const [isAccountDiffHolderName, setIsAccountDiffHolderName] = useState(outputDetails.nameIsDifferentFromBankAccountName);
-    // const [reasonHolderName, setReasonHolderName] = useState(outputDetails.reasonName);
     const [isFactoryCompany, setIsFactoryCompany] = useState(outputDetails.factoryCompany);
-    // const [reasonFactoryCompany, setReasonFactoryCompany] = useState(outputDetails.reasonFactory);
-    // const [bankAccountNumber, setBankAccountNumber] = useState(outputDetails.bankAccountNumber);
-    // const [iban, setIban] = useState(outputDetails.ibanNumber);
-    // const [swift, setSwift] = useState(outputDetails.swiftCode);
-    // const [sortCode, setSortCode] = useState(outputDetails.sortCode);
     const [ibanIsValid, setIbanIsValid] = useState(true);
     const [swiftIsValid, setSwiftIsValid] = useState(true);
-
     const [validationError, setValidationError] = useState({iban : false, swift: false})
 
     const {setIsFormValidBank} = useGlobalContext()
@@ -49,7 +39,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         if(outputDetails.swiftCode !== undefined) {
             swiftValidator(true)
         }
-        console.log(validationError)
         bankFormValidator()
     }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate, outputDetails.ibanNumber, outputDetails.swiftCode])
 

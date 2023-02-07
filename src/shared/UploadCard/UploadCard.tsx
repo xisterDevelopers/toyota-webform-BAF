@@ -1,4 +1,4 @@
-import React, {FC, ReactNode, useState} from 'react';
+import React, {FC, useState} from 'react';
 import './UploadCard.css';
 import {FiTrash2} from "react-icons/fi";
 import {UploadedFileModel} from "../../models/uploadedFile.model";
@@ -32,9 +32,9 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
     return (
         <div className={(type === "" ? "upload-container": "selected-type-upload-container") + spacing}>
             <div className="d-flex justify-between">
-                <div className="d-flex gap-4 align-center">
+                <div className="d-flex gap-4 align-center overflow">
                     <div className="document-icon"></div>
-                    <p className="dark-grey">{uploadedFile.name}</p>
+                    <p className="dark-grey overflow">{uploadedFile.name}</p>
                 </div>
                 <div className="d-flex align-center gap-3 dark-grey">
                     <FiTrash2 onClick={() => deleteFile()} cursor="pointer" />

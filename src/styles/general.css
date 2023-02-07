@@ -288,3 +288,9 @@
 .app-wrapper {
     margin: 41px 76px;
 }
+
+.overflow {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
