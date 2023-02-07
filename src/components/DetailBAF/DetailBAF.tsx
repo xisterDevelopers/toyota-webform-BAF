@@ -39,7 +39,6 @@ const DetailBaf: FC<DetailBafProps> = () => {
 
     useLayoutEffect(() => {
         if (formState === 'supplier pending' ||
-            formState === 'waiting for supplier pec' ||
             formState === 'Supplier Pending - ERROR') {
             navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
         }
