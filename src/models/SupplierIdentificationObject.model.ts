@@ -6,8 +6,8 @@ export interface SupplierIdentificationObject {
     personSurname?: string;
     emailAddress?: string;
     establishment?: boolean;
-    address1?: AddressObject;
-    address2?: AddressObject;
+    address1: AddressObject;
+    address2: AddressObject;
     governementInstitution?: boolean;
     companySize?: string;
     phoneNumber?: string;
@@ -17,4 +17,6 @@ export interface SupplierIdentificationObject {
     taxId?: string;
     vatRegime?: string;
     registrationNumber?: string;
+    idd?: string;
+    cca2?: string;
 }

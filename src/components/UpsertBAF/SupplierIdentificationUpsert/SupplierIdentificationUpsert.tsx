@@ -1,11 +1,11 @@
 import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierIdentificationUpsert.css';
-import {SupplierIdentificationUpsertModel} from "../../../models/supplierIdentificationUpsert.model";
 import {CountryModel} from "../../../models/country.model";
 import {useGlobalContext} from "../../../utils/AppContext";
+import {SupplierIdentificationObject} from "../../../models/SupplierIdentificationObject.model";
 
 interface SupplierIdentificationUpsertProps {
-    model: SupplierIdentificationUpsertModel;
+    model: SupplierIdentificationObject;
     countries: CountryModel[];
 }
 
@@ -14,11 +14,11 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [sameTaxID, setSameTaxID] = useState(false);
     const [cca2, setCca2] = useState(model.cca2);
     const [idd, setIdd] = useState(model.idd);
-    const [country, setCountry] = useState(model.country);
+    const [country, setCountry] = useState(model.address1.country);
     const [establishment, setEstablishment] = useState(model.establishment);
     const [companySize, setCompanySize] = useState(model.companySize);
-    const [establishmentCountry, setEstablishmentCountry] = useState(model.establishmentCountry);
-    const [governmentInstitution, setGovernmentInstitution] = useState(model.governmentInstitution);
+    const [establishmentCountry, setEstablishmentCountry] = useState(model.address2.country);
+    const [governmentInstitution, setGovernmentInstitution] = useState(model.governementInstitution);
     const [vatNumber, setVatNumber] = useState(model.vatNumber);
     const [vatRegimeBool, setVatRegimeBool] = useState<boolean>();
     const [isValidEmail, setIsValidEmail] = useState(true);
@@ -42,22 +42,22 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         if(model.establishment !== undefined) {
             setEstablishment(model.establishment)
         }
-        if(model.governmentInstitution !== undefined) {
-            setGovernmentInstitution(model.governmentInstitution)
+        if(model.governementInstitution !== undefined) {
+            setGovernmentInstitution(model.governementInstitution)
         }
         if(model.companySize !== undefined) {
             setCompanySize(model.companySize)
         }
-        if(model.country !== undefined) {
-            setCountry(model.country)
+        if(model.address1.country !== undefined) {
+            setCountry(model.address1.country)
         }
-        if(model.taxID !== undefined && model.vatNumber !== undefined) {
-            if(model.vatNumber !== model.taxID && !isLoaded ) {
+        if(model.taxId !== undefined && model.vatNumber !== undefined) {
+            if(model.vatNumber !== model.taxId && !isLoaded ) {
                 setSameTaxID(true)
                 setIsLoaded(true)
             }
-            if (model.vatNumber === model.taxID && !isLoaded) {
-                model.taxID = ""
+            if (model.vatNumber === model.taxId && !isLoaded) {
+                model.taxId = ""
                 setSameTaxID(false)
                 setIsLoaded(true)
             }
@@ -71,12 +71,12 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         if (model.vatNumber !== undefined) {
             vatNumberValidator(true)
         }
-        if (model.postalCode !== undefined) {
+        if (model.address1.postalCode !== undefined) {
             zipCodeValidator(true)
         }
         identificationFormValidator()
-    }, [model.vatRegime, model.establishment, model.governmentInstitution,
-        model.companySize, model.country, model.taxID, model,vatNumber, isLoaded, model.emailAddress,model.phoneNumber,model.vatNumber,model.postalCode])
+    }, [model.vatRegime, model.establishment, model.governementInstitution,
+        model.companySize, model.address1.country, model.taxId, model,vatNumber, isLoaded, model.emailAddress,model.phoneNumber,model.vatNumber,model.address1.postalCode])
 
     const identificationFormValidator = () => {
         const booleanArray = [validationError.email,validationError.zipCode,validationError.phoneNumber, validationError.vatNumber];
@@ -84,11 +84,12 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     }
 
     const zipCodeValidator = (isActuallyValid: boolean) => {
-        if(model.postalCode !== undefined) {
-            let isNum = /^\d+$/.test(model.postalCode);
+        if(model.address1?.postalCode !== undefined) {
+            let isNum = /^\d+$/.test(model.address1.postalCode);
                 if(isActuallyValid) {
                     validationError.zipCode = isNum;
                     setValidationError({...validationError});
+
                 } else {
                     setIsValidZipCode(isNum)
                 }
@@ -195,12 +196,20 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
-                             defaultValue={model.address} onChange={event => model.address = event.target.value}/>
+                             defaultValue={model.address1?.address} onChange={event => {
+                                 if (model.address1 !== undefined) {
+                                     model.address1.address = event.target.value
+                                 }
+                      }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="city" className="font-input-label">City</label>
                       <input type="text" id="city" className="custom-input input-lg"
-                             defaultValue={model.city} onChange={event => model.city = event.target.value}/>
+                             defaultValue={model.address1?.city} onChange={event => {
+                                 if (model.address1 !== undefined) {
+                                     model.address1.city = event.target.value
+                                 }
+                      }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="postalCode" className="font-input-label">
@@ -210,10 +219,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       <input type="text" id="postalCode" className={"custom-input input-md " + (isValidZipCode ? "" : "red")} onBlur={() => {
                           zipCodeValidator( false);
                       }}
-                             defaultValue={model.postalCode} onChange={event => {
-                          model.postalCode = event.target.value
-                          zipCodeValidator( true);
-                          identificationFormValidator()
+                             defaultValue={model.address1?.postalCode} onChange={event => {
+                                 model.address1.postalCode = event.target.value
+                                 zipCodeValidator( true);
+                                 identificationFormValidator()
                       }}/>
                   </div>
               </div>
@@ -221,12 +230,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="country" className="font-input-label">Country</label>
                       <select id="country" className="custom-input custom-select input-lg"
-                              value={model.country}
+                              value={model.address1?.country}
                               onChange={(event) => {
                                   setCca2(model.cca2 = countries?.find(c => c.name === event.target.value)?.cca2);
                                   setIdd(model.idd = countries?.find(c => c.name === event.target.value)?.idd.at(0));
-                                  setCountry(model.country = event.target.value);
-
+                                  if (model.address1 !== undefined) {
+                                      setCountry(model.address1.country = event.target.value);
+                                  }
                               }}>
                           {
                               countries?.map((country,i) =>
@@ -254,14 +264,22 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
-                             defaultValue={model.establishmentAddress} disabled={establishment}
-                             onChange={event => model.establishmentAddress = event.target.value}/>
+                             defaultValue={model.address2?.address} disabled={establishment}
+                             onChange={event => {
+                                 if (model.address2 !== undefined) {
+                                     model.address2.address = event.target.value
+                                 }
+                             }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="city" className="font-input-label">City</label>
                       <input type="text" id="city" className="custom-input input-lg"
-                             defaultValue={model.establishmentCity} disabled={establishment}
-                             onChange={event => model.establishmentCity = event.target.value}/>
+                             defaultValue={model.address2?.city} disabled={establishment}
+                             onChange={event => {
+                                 if (model.address2 !== undefined) {
+                                     model.address2.city = event.target.value
+                                 }
+                             }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="postalCode" className="font-input-label">
@@ -269,9 +287,11 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {isEstablishmentZipCodeValid ? "" : <small> : <small className="red">Invalid</small></small>}
                       </label>
                       <input type="text" id="postalCode" className={"custom-input input-md " + (isEstablishmentZipCodeValid ? "" : "red")}
-                             defaultValue={model.establishmentPostalCode} disabled={establishment}
+                             defaultValue={model.address2?.postalCode} disabled={establishment}
                              onChange={event => {
-                                 model.establishmentPostalCode = event.target.value;
+                                 if (model.address2 !== undefined) {
+                                     model.address2.postalCode = event.target.value;
+                                 }
                              }}/>
                   </div>
               </div>
@@ -279,9 +299,11 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="country" className="font-input-label">Country</label>
                           <select id="country" className="custom-input custom-select input-lg"
-                                  value={model.establishmentCountry} disabled={establishment}
+                                  value={model.address2?.country} disabled={establishment}
                                   onChange={(event) => {
-                                      setEstablishmentCountry(model.establishmentCountry = event.target.value);
+                                      if (model.address2 !== undefined) {
+                                          setEstablishmentCountry(model.address2.country = event.target.value);
+                                      }
                                   }}>
                               {
                                   countries?.map((country,i) =>
@@ -301,7 +323,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               <input type="radio" id="yes" name="governmentInstitution" checked={governmentInstitution === true}
                                      onChange={() => {
                                          setGovernmentInstitution(true)
-                                         model.governmentInstitution = true
+                                         model.governementInstitution = true
                                      }} hidden />
                               <label htmlFor="yes" className="font-input-label custom-radio"></label>
                               <label htmlFor="yes" className="font-input-label">Yes</label>
@@ -310,7 +332,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               <input type="radio" id="no" name="governmentInstitution" defaultChecked={governmentInstitution === false}
                                      onChange={() => {
                                          setGovernmentInstitution(false)
-                                         model.governmentInstitution = false
+                                         model.governementInstitution = false
                                      }} hidden />
                               <label htmlFor="no" className="font-input-label custom-radio"></label>
                               <label htmlFor="no" className="font-input-label">No</label>
@@ -403,7 +425,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           Different from vat number
                       </label>
                       <input type="text" id="taxID" className="custom-input input-lg mt-3" disabled={!sameTaxID}
-                             defaultValue={model.taxID} onChange={event => model.taxID = event.target.value}/>
+                             defaultValue={model.taxId} onChange={event => model.taxId = event.target.value}/>
                   </div>
               </div>
               <div id="vatRegime" className="d-flex flex-column">

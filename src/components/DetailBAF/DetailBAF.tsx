@@ -7,15 +7,14 @@ import UploadFile from "../../shared/UploadFile/UploadFile";
 import {UploadedFileModel} from "../../models/uploadedFile.model";
 import SupplierIdentificationDetail from "./SupplierIdentificationDetail/SupplierIdentificationDetail";
 import SupplierBankDetailsDetail from "./SupplierBankDetailsDetail/SupplierBankDetailsDetail";
-import {SupplierIdentificationDetailModel} from "../../models/supplierIdentificationDetail.model";
 import formService from "../../api/form.service";
-import uploadFileService from "../../api/uploadFile.service";
-import {SupplierBankDetailsDetailModel} from "../../models/supplierBankDetailsDetail.model";
 import {useGlobalContext} from "../../utils/AppContext";
 import success_dot from "../../assets/svg/success_icon.svg";
 import dot from "../../assets/svg/simple_dot.svg";
 import {FileTypeModel} from "../../models/fileType.model";
 import db from "../../utils/db.json";
+import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.model";
+import {SupplierIdentificationObject} from "../../models/SupplierIdentificationObject.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -27,8 +26,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const {formState, setFormState} = useGlobalContext();
 
     const [uploadFiles, setUploadFiles] = useState<UploadedFileModel[]>([ ]);
-    const [supplierIdentificationDetail, setSupplierIdentificationDetail] = useState<SupplierIdentificationDetailModel>({ });
-    const [bankDetailsDetail, setBankDetailsDetail] = useState<SupplierBankDetailsDetailModel>({ });
+    const [supplierIdentificationDetail, setSupplierIdentificationDetail] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
+    const [bankDetailsDetail, setBankDetailsDetail] = useState<SupplierBankDetailsObject>({ });
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
     const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
@@ -43,19 +42,19 @@ const DetailBaf: FC<DetailBafProps> = () => {
             navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
         }
 
-        const form = formService.getById(Number(id));
-
-        if (form !== undefined) {
-            setSupplierIdentificationDetail(form.identification);
-            setBankDetailsDetail(form.bankDetails);
-            setUploadedFiles(uploadFileService.getAll);
-            setRequiredFileTypes(db.requiredFileTypes);
-            setAcceptanceFiles(db.acceptanceFiles);
-            setIntegrativeFiles(db.integrativeFiles);
-            setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
-            setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
-            setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
-        }
+        // const form = formService.getById(Number(id));
+        //
+        // if (form !== undefined) {
+        //     setSupplierIdentificationDetail(form.identification);
+        //     setBankDetailsDetail(form.bankDetails);
+        //     setUploadedFiles(uploadFileService.getAll);
+        //     setRequiredFileTypes(db.requiredFileTypes);
+        //     setAcceptanceFiles(db.acceptanceFiles);
+        //     setIntegrativeFiles(db.integrativeFiles);
+        //     setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
+        //     setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
+        //     setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
+        // }
 
         window.scrollTo(0, 0);
     }, [])
