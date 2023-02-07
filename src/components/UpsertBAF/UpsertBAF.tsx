@@ -3,10 +3,8 @@ import './UpsertBAF.css';
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
-import {SupplierBankDetailsUpsertModel} from "../../models/supplierBankDetailsUpsertModel";
 import {CountryModel} from "../../models/country.model";
 import CountryService from "../../api/country.service";
-import {SupplierIdentificationUpsertModel} from "../../models/supplierIdentificationUpsert.model";
 import Button from "../../shared/Button/Button";
 import UploadCard from "../../shared/UploadCard/UploadCard";
 import {UploadedFileModel} from "../../models/uploadedFile.model";
@@ -20,15 +18,18 @@ import {useGlobalContext} from "../../utils/AppContext";
 import Banner from "../../shared/Banner/Banner";
 import Icon from "../../shared/Icon/Icon";
 import {IoMdClose} from 'react-icons/io';
-import FormService from "../../api/form.service";
-import UploadFileService from "../../api/uploadFile.service";
+// import FormService from "../../api/form.service";
+// import UploadFileService from "../../api/uploadFile.service";
+import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.model";
+import {SupplierIdentificationObject} from "../../models/SupplierIdentificationObject.model";
+// import {BAFObjectDTO} from "../../models/BAFObjectDTO.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
-    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ });
-    const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsUpsertModel>({ });
+    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
+    const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
     const [toUpdateFile, setToUpdateFile] = useState<UploadedFileModel>({ name: "", type: "" })
     const [toUploadFiles, setToUploadFiles] = useState<UploadedFileModel[]>([ ]);
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
@@ -68,24 +69,24 @@ const UpsertBaf: React.FunctionComponent = () => {
 
         setCountries(sortedCountries);
 
-        if (id !== undefined) {
-            const form = FormService.getById(Number(id));
-            const uploadedFile = UploadFileService.getAll();
-            if(form) {
-                setSupplierIdentification(form.identification);
-                setBankUpsertModel(form.bankDetails);
-            }
-            if(uploadedFile.length > 0 && form?.id === Number(id)) {
-                setUploadedFiles(uploadedFile)
-            }
-        } else {
-            setSupplierIdentification({
-                country: sortedCountries?.at(0)?.name,
-                idd: sortedCountries?.at(0)?.idd.at(0),
-                cca2: sortedCountries?.at(0)?.cca2,
-                establishment: true
-            })
-        }
+        // if (id !== undefined) {
+        //     const form = FormService.getById(Number(id));
+        //     const uploadedFile = UploadFileService.getAll();
+        //     if(form) {
+        //         setSupplierIdentification(form.supplierIdentification);
+        //         setBankUpsertModel(form.supplierBankDetails);
+        //     }
+        //     if(uploadedFile.length > 0 && form?.id === Number(id)) {
+        //         setUploadedFiles(uploadedFile)
+        //     }
+        // } else {
+        //     setSupplierIdentification({
+        //         address1 : {country: sortedCountries?.at(0)?.name},
+        //         idd: sortedCountries?.at(0)?.idd.at(0),
+        //         cca2: sortedCountries?.at(0)?.cca2,
+        //         establishment: true
+        //     })
+        // }
 
 
         setRequiredFileTypes(db.requiredFileTypes);
