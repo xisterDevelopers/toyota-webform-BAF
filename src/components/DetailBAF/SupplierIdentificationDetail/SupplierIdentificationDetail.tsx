@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import './SupplierIdentificationDetail.css';
-import {SupplierIdentificationDetailModel} from "../../../models/supplierIdentificationDetail.model";
+import {SupplierIdentificationObject} from "../../../models/SupplierIdentificationObject.model";
 
 interface SupplierIdentificationDetailProps {
-    model: SupplierIdentificationDetailModel;
+    model: SupplierIdentificationObject;
 }
 
 const SupplierIdentificationDetail: FC<SupplierIdentificationDetailProps> = ({model}) => (
@@ -35,21 +35,21 @@ const SupplierIdentificationDetail: FC<SupplierIdentificationDetailProps> = ({mo
             <div className="d-flex gap-5">
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Address</strong></p>
-                    <p>{model.address}</p>
+                    <p>{model.address1?.address}</p>
                 </div>
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>City</strong></p>
-                    <p>{model.city}</p>
+                    <p>{model.address1?.city}</p>
                 </div>
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Postal Code</strong></p>
-                    <p>{model.postalCode}</p>
+                    <p>{model.address1?.postalCode}</p>
                 </div>
             </div>
             <div className="d-flex">
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Country</strong></p>
-                    <p>{model.country}</p>
+                    <p>{model.address1?.country}</p>
                 </div>
             </div>
             <div className="d-flex">
@@ -64,27 +64,27 @@ const SupplierIdentificationDetail: FC<SupplierIdentificationDetailProps> = ({mo
             <div className="d-flex gap-5">
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Address</strong></p>
-                    <p>{model.establishmentAddress}</p>
+                    <p>{model.address2?.address}</p>
                 </div>
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>City</strong></p>
-                    <p>{model.establishmentCity}</p>
+                    <p>{model.address2?.city}</p>
                 </div>
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Postal Code</strong></p>
-                    <p>{model.establishmentPostalCode}</p>
+                    <p>{model.address2?.postalCode}</p>
                 </div>
             </div>
             <div className="d-flex">
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Country</strong></p>
-                    <p>{model.establishmentCountry}</p>
+                    <p>{model.address2?.country}</p>
                 </div>
             </div>
             <div className="d-flex py-3">
                 <div id="governmentInstitution" className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Government institution</strong></p>
-                    <p>{model.governmentInstitution ? "Yes" : "No"}</p>
+                    <p>{model.governementInstitution ? "Yes" : "No"}</p>
                 </div>
             </div>
             <div className="d-flex">
@@ -106,13 +106,13 @@ const SupplierIdentificationDetail: FC<SupplierIdentificationDetailProps> = ({mo
                 </div>
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>Tax residence country</strong></p>
-                    <p>{model.taxResidenceCountry?.name}</p>
+                    <p>{model.taxResidenceCountry}</p>
                 </div>
             </div>
             <div className="d-flex">
                 <div className="d-flex flex-column w-25">
                     <p className="m-0"><strong>TaxID</strong></p>
-                    <p>{model.taxID}</p>
+                    <p>{model.taxId}</p>
                 </div>
             </div>
             <div id="vatRegime" className="d-flex flex-column">

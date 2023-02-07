@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import './SupplierBankDetailsDetail.css';
-import {SupplierBankDetailsDetailModel} from "../../../models/supplierBankDetailsDetail.model";
+import {SupplierBankDetailsObject} from "../../../models/SupplierBankDetailsObject.model";
 
 interface SupplierBankDetailsDetailProps {
-    model: SupplierBankDetailsDetailModel;
+    model: SupplierBankDetailsObject;
 }
 
 const SupplierBankDetailsDetail: FC<SupplierBankDetailsDetailProps> = ({model}) => (
@@ -38,25 +38,25 @@ const SupplierBankDetailsDetail: FC<SupplierBankDetailsDetailProps> = ({model}) 
           <div className="d-flex gap-5">
               <div id="accountHolderName" className="d-flex flex-column">
                   <p className="m-0"><strong>Supplier name is different from bank account holder name?</strong></p>
-                  <p>{model.nameIsDifferentFromBankAccountName ? "Yes" : "No"}</p>
+                  <p>{model.isSupplierDifferentFromHolderName ? "Yes" : "No"}</p>
               </div>
           </div>
           <div className="d-flex gap-5">
               <div className="d-flex flex-column">
                   <p className="m-0"><strong>Reason</strong></p>
-                  <p>{model.reasonName}</p>
+                  <p>{model.supplierDifferentReason}</p>
               </div>
           </div>
           <div className="d-flex gap-5">
               <div id="factoryCompany" className="d-flex flex-column">
                   <p className="m-0"><strong>Factory company?</strong></p>
-                  <p>{model.factoryCompany ? "Yes" : "No"}</p>
+                  <p>{model.isFactoryCompany ? "Yes" : "No"}</p>
               </div>
           </div>
           <div className="d-flex gap-5">
               <div className="d-flex flex-column">
                   <p className="m-0"><strong>Reason</strong></p>
-                  <p>{model.reasonFactory}</p>
+                  <p>{model.factoryCompanyReason}</p>
               </div>
           </div>
           <div className="d-flex gap-5">
@@ -72,7 +72,7 @@ const SupplierBankDetailsDetail: FC<SupplierBankDetailsDetailProps> = ({model}) 
               </div>
               <div className="d-flex flex-column w-25">
                   <p className="m-0"><strong>SWIFT code</strong></p>
-                  <p>{model.swiftCode}</p>
+                  <p>{model.swiftNumber}</p>
               </div>
               <div className="d-flex flex-column w-50">
                   <p className="m-0"><strong>SORT code (UK) / FIK (Denmark) / GIRO (Sweden)</strong></p>
