@@ -5,7 +5,7 @@ export interface SupplierIdentificationObject {
     personName?: string;
     personSurname?: string;
     emailAddress?: string;
-    establishment?: string;
+    establishment?: boolean;
     address1?: AddressObject;
     address2?: AddressObject;
     governementInstitution?: boolean;

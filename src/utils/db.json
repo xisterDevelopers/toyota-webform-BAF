@@ -117,13 +117,13 @@
         "bankAccountCurrency": "Euro",
         "effectiveDate": "2012-04-04",
         "bankAccountHolderName": "AS ROMA S.r.l",
-        "nameIsDifferentFromBankAccountName": true,
-        "reasonName": "Name Test",
-        "factoryCompany": true,
-        "reasonFactory": "Reason test",
+        "isSupplierDifferentFromHolderName": true,
+        "supplierDifferentReason": "Name Test",
+        "isFactoryCompany": true,
+        "factoryCompanyReason": "Reason test",
         "bankAccountNumber": "0560000714",
         "ibanNumber": "IT73R0344103212CC0560000714",
-        "swiftCode": "SVTUIT21",
+        "swiftNumber": "SVTUIT21",
         "sortCode": "12-34-56"
       }
     }

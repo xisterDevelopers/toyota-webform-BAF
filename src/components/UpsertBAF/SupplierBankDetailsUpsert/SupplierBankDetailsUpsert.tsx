@@ -1,21 +1,21 @@
 import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierBankDetailsUpsert.css';
-import {SupplierBankDetailsUpsertModel} from "../../../models/supplierBankDetailsUpsertModel";
 import {CountryModel} from "../../../models/country.model";
 import bicValidator from 'bic-validator';
 import {useGlobalContext} from "../../../utils/AppContext";
+import {SupplierBankDetailsObject} from "../../../models/SupplierBankDetailsObject.model";
 const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
-    outputDetails: SupplierBankDetailsUpsertModel;
+    outputDetails: SupplierBankDetailsObject;
     countries: CountryModel[]
 }
 
 const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails, countries}) => {
     const [currency, setCurrency] = useState(outputDetails.bankAccountCurrency);
     const [date, setDate] = useState<string>(outputDetails.effectiveDate ?? '');
-    const [isAccountDiffHolderName, setIsAccountDiffHolderName] = useState(outputDetails.nameIsDifferentFromBankAccountName);
-    const [isFactoryCompany, setIsFactoryCompany] = useState(outputDetails.factoryCompany);
+    const [isAccountDiffHolderName, setIsAccountDiffHolderName] = useState(outputDetails.isSupplierDifferentFromHolderName);
+    const [isFactoryCompany, setIsFactoryCompany] = useState(outputDetails.isFactoryCompany);
     const [ibanIsValid, setIbanIsValid] = useState(true);
     const [swiftIsValid, setSwiftIsValid] = useState(true);
     const [validationError, setValidationError] = useState({iban : false, swift: false})
@@ -24,11 +24,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
 
 
     useLayoutEffect(() => {
-        if(outputDetails.factoryCompany !== undefined) {
-            setIsFactoryCompany(outputDetails.factoryCompany)
+        if(outputDetails.isFactoryCompany !== undefined) {
+            setIsFactoryCompany(outputDetails.isFactoryCompany)
         }
-        if(outputDetails.nameIsDifferentFromBankAccountName !== undefined) {
-            setIsAccountDiffHolderName(outputDetails.nameIsDifferentFromBankAccountName)
+        if(outputDetails.isSupplierDifferentFromHolderName !== undefined) {
+            setIsAccountDiffHolderName(outputDetails.isSupplierDifferentFromHolderName)
         }
         if(outputDetails.effectiveDate !== undefined) {
             setDate(outputDetails.effectiveDate)
@@ -36,11 +36,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         if(outputDetails.ibanNumber !== undefined) {
             ibanValidator(true)
         }
-        if(outputDetails.swiftCode !== undefined) {
+        if(outputDetails.swiftNumber !== undefined) {
             swiftValidator(true)
         }
         bankFormValidator()
-    }, [outputDetails.factoryCompany, outputDetails.nameIsDifferentFromBankAccountName, outputDetails.effectiveDate, outputDetails.ibanNumber, outputDetails.swiftCode])
+    }, [outputDetails.isFactoryCompany, outputDetails.isSupplierDifferentFromHolderName, outputDetails.effectiveDate, outputDetails.ibanNumber, outputDetails.swiftNumber])
 
     const bankFormValidator = () => {
         const booleanArray = [validationError.iban,validationError.swift];
@@ -59,8 +59,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     }
 
     const swiftValidator = (isActuallyValid : boolean) => {
-        if(outputDetails.swiftCode !== undefined) {
-            let validation = bicValidator.isValid(outputDetails.swiftCode)
+        if(outputDetails.swiftNumber !== undefined) {
+            let validation = bicValidator.isValid(outputDetails.swiftNumber)
             if (isActuallyValid) {
                 validationError.swift = validation;
                 setValidationError({...validationError})
@@ -125,7 +125,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                 <input type="radio" id="yesAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === true}
                                        onChange={() =>  {
                                            setIsAccountDiffHolderName(true)
-                                           outputDetails.nameIsDifferentFromBankAccountName = true
+                                           outputDetails.isSupplierDifferentFromHolderName = true
                                        }}/>
                                 <label htmlFor="yesAccount" className="custom-radio"></label>
                                 <label htmlFor="yesAccount">Yes</label>
@@ -134,7 +134,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                 <input type="radio" id="noAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === false}
                                        onChange={() => {
                                            setIsAccountDiffHolderName(false)
-                                           outputDetails.nameIsDifferentFromBankAccountName = false
+                                           outputDetails.isSupplierDifferentFromHolderName = false
                                        }}/>
                                 <label htmlFor="noAccount" className="custom-radio"></label>
                                 <label htmlFor="noAccount">No</label>
@@ -145,8 +145,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.nameIsDifferentFromBankAccountName}
-                               defaultValue={outputDetails.reasonName} onChange={(event) => outputDetails.reasonName = event.target.value}/>
+                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.isSupplierDifferentFromHolderName}
+                               defaultValue={outputDetails.supplierDifferentReason} onChange={(event) => outputDetails.supplierDifferentReason = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -157,7 +157,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                 <input type="radio" id="yesFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === true}
                                        onChange={() => {
                                            setIsFactoryCompany(true)
-                                           outputDetails.factoryCompany = true
+                                           outputDetails.isFactoryCompany = true
                                        }}/>
                                 <label htmlFor="yesFactory" className="custom-radio"></label>
                                 <label htmlFor="yesFactory">Yes</label>
@@ -166,7 +166,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                 <input type="radio" id="noFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === false}
                                        onChange={() => {
                                            setIsFactoryCompany(false)
-                                           outputDetails.factoryCompany = false
+                                           outputDetails.isFactoryCompany = false
                                        }}/>
                                 <label htmlFor="noFactory" className="custom-radio"></label>
                                 <label htmlFor="noFactory">No</label>
@@ -177,8 +177,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 <div className="d-flex gap-5">
                     <div className="d-flex flex-column container-lg">
                         <label className="font-input-label">Reason<span className="red">*</span></label>
-                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.factoryCompany}
-                               defaultValue={outputDetails.reasonFactory} onChange={(event) => outputDetails.reasonFactory = event.target.value}/>
+                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.isFactoryCompany}
+                               defaultValue={outputDetails.factoryCompanyReason} onChange={(event) => outputDetails.factoryCompanyReason = event.target.value}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -207,8 +207,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {swiftIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
                         </label>
                         <input type="text" className={"custom-input input-lg " + (swiftIsValid ? "" : "red")} onBlur={() => swiftValidator(false)}
-                               defaultValue={outputDetails.swiftCode} onChange={(event) => {
-                            outputDetails.swiftCode = event.target.value;
+                               defaultValue={outputDetails.swiftNumber} onChange={(event) => {
+                            outputDetails.swiftNumber = event.target.value;
                             swiftValidator(true);
                             bankFormValidator();
                         }}/>

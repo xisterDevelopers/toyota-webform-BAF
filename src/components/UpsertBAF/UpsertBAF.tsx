@@ -3,7 +3,6 @@ import './UpsertBAF.css';
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
-import {SupplierBankDetailsUpsertModel} from "../../models/supplierBankDetailsUpsertModel";
 import {CountryModel} from "../../models/country.model";
 import CountryService from "../../api/country.service";
 import {SupplierIdentificationUpsertModel} from "../../models/supplierIdentificationUpsert.model";
@@ -22,13 +21,14 @@ import Icon from "../../shared/Icon/Icon";
 import {IoMdClose} from 'react-icons/io';
 import FormService from "../../api/form.service";
 import UploadFileService from "../../api/uploadFile.service";
+import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
     const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationUpsertModel>({ });
-    const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsUpsertModel>({ });
+    const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
     const [toUpdateFile, setToUpdateFile] = useState<UploadedFileModel>({ name: "", type: "" })
     const [toUploadFiles, setToUploadFiles] = useState<UploadedFileModel[]>([ ]);
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
