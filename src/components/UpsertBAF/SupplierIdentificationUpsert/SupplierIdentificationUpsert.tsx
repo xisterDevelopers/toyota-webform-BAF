@@ -84,7 +84,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     }
 
     const zipCodeValidator = (isActuallyValid: boolean) => {
-        if(model.address1?.postalCode !== undefined) {
+        if(model.address1.postalCode !== undefined) {
             let isNum = /^\d+$/.test(model.address1.postalCode);
                 if(isActuallyValid) {
                     validationError.zipCode = isNum;
