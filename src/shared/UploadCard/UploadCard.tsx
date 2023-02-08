@@ -1,23 +1,23 @@
 import React, {FC, useState} from 'react';
 import './UploadCard.css';
 import {FiTrash2} from "react-icons/fi";
-import {UploadedFileModel} from "../../models/uploadedFile.model";
 import db from "../../utils/db.json";
 import Button from "../Button/Button";
+import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
 
 interface UploadCardProps {
-    uploadedFile: UploadedFileModel;
+    uploadedFile: UpdateFileRequestDTO;
     selectedTypology: string;
     status: string;
     spacing: string;
-    typologySelectedEvent: (uploadedFiles: UploadedFileModel) => void;
+    typologySelectedEvent: (uploadedFiles: UpdateFileRequestDTO) => void;
     updateTypology: () => void;
     deleteFile: () => void;
 }
 
 const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
 
-    const [type, setType] = useState<string>(uploadedFile.type);
+    const [type, setType] = useState<string>(uploadedFile.category !== undefined ? uploadedFile.category : "");
     const types = [
         ...db.requiredFileTypes,
         ...db.integrativeFiles,
@@ -34,7 +34,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
             <div className="d-flex justify-between">
                 <div className="d-flex gap-4 align-center overflow">
                     <div className="document-icon"></div>
-                    <p className="dark-grey overflow">{uploadedFile.name}</p>
+                    <p className="dark-grey overflow">{uploadedFile.fileName}</p>
                 </div>
                 <div className="d-flex align-center gap-3 dark-grey">
                     <FiTrash2 onClick={() => deleteFile()} cursor="pointer" />
@@ -48,8 +48,8 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                             onChange={event => {
                                 setType(event.target.value);
                                 typologySelectedEvent({
-                                    name: uploadedFile.name,
-                                    type: event.target.value
+                                    fileName: uploadedFile.fileName,
+                                    category: event.target.value
                                 });
                                 setShowButtons(status !== "modal")
                             }}>

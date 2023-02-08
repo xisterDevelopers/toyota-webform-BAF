@@ -17,6 +17,8 @@ export interface SupplierIdentificationObject {
     taxId?: string;
     vatRegime?: string;
     registrationNumber?: string;
+
+    // Not in BE schema
     idd?: string;
     cca2?: string;
 }
