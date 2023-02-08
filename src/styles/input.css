@@ -139,3 +139,15 @@ input[type="checkbox"]:checked + .custom-checkbox
 .filled-wrapped-ul {
     list-style: disc;
 }
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

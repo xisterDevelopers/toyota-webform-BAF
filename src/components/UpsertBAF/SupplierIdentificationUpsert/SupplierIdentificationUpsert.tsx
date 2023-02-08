@@ -3,10 +3,26 @@ import './SupplierIdentificationUpsert.css';
 import {CountryModel} from "../../../models/country.model";
 import {useGlobalContext} from "../../../utils/AppContext";
 import {SupplierIdentificationObject} from "../../../models/SupplierIdentificationObject.model";
+import {behaviorPlugin} from "@testing-library/user-event/dist/keyboard/types";
 
 interface SupplierIdentificationUpsertProps {
     model: SupplierIdentificationObject;
     countries: CountryModel[];
+}
+
+interface RequiredFields {
+    supplierName: null | boolean,
+    personName: null | boolean,
+    personSurname: null | boolean,
+    address: null | boolean,
+    city: null | boolean,
+    postalCode: null | boolean,
+    country: null | boolean,
+    governmentInstitution: null | boolean,
+    companySize: null | boolean,
+    phoneNumber: null | boolean,
+    vatNumber: null | boolean,
+    taxResidenceCountry: null | boolean
 }
 
 const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({model, countries}) => {
@@ -22,15 +38,24 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [vatNumber, setVatNumber] = useState(model.vatNumber);
     const [vatRegimeBool, setVatRegimeBool] = useState<boolean>();
     const [isValidEmail, setIsValidEmail] = useState(true);
-    const [isValidZipCode, setIsValidZipCode] = useState(true);
-    const [isEstablishmentZipCodeValid, setIsEstablishmentZipCodeValid] = useState(true);
-    const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
-    const [isVatNumberValid, setIsVatNumberValid] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [validationError, setValidationError] = useState({email: false, zipCode: false, phoneNumber: false, vatNumber: false});
+    const [validationError, setValidationError] = useState({email: false, phoneNumber: false, vatNumber: false});
+    const [validationRequired, setValidationRequired] = useState<RequiredFields>({
+        supplierName: null,
+        personName: null,
+        personSurname: null,
+        address: null,
+        city: null,
+        postalCode: null,
+        country: null,
+        governmentInstitution: null,
+        companySize: null,
+        phoneNumber: null,
+        vatNumber: null,
+        taxResidenceCountry: null
+    })
 
     const {setIsFormValidIdentification} = useGlobalContext()
-
     useLayoutEffect(() => {
         if(model.vatRegime) {
             if(model.vatRegime == "Encaissement/Deferred") {
@@ -65,35 +90,71 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         if (model.emailAddress !== undefined) {
             emailValidator(true)
         }
-        if(model.phoneNumber !== undefined) {
-            phoneValidator(true)
-        }
-        if (model.vatNumber !== undefined) {
-            vatNumberValidator(true)
-        }
-        if (model.address1.postalCode !== undefined) {
-            zipCodeValidator(true)
-        }
         identificationFormValidator()
     }, [model.vatRegime, model.establishment, model.governementInstitution,
         model.companySize, model.address1.country, model.taxId, model,vatNumber, isLoaded, model.emailAddress,model.phoneNumber,model.vatNumber,model.address1.postalCode])
 
     const identificationFormValidator = () => {
-        const booleanArray = [validationError.email,validationError.zipCode,validationError.phoneNumber, validationError.vatNumber];
+        const booleanArray = [validationError.email, validationRequired.supplierName,
+            validationRequired.personName, validationRequired.personSurname, validationRequired.address,validationRequired.city,
+            validationRequired.postalCode,validationRequired.country, validationRequired.governmentInstitution,
+            validationRequired.companySize,validationRequired.phoneNumber,validationRequired.vatNumber, validationRequired.taxResidenceCountry];
         setIsFormValidIdentification(booleanArray.every(bool => bool));
     }
 
-    const zipCodeValidator = (isActuallyValid: boolean) => {
-        if(model.address1.postalCode !== undefined) {
-            let isNum = /^\d+$/.test(model.address1.postalCode);
-                if(isActuallyValid) {
-                    validationError.zipCode = isNum;
-                    setValidationError({...validationError});
-
-                } else {
-                    setIsValidZipCode(isNum)
-                }
+    const requireValidator = (field : string) => {
+        switch(field) {
+            case 'supplierName':
+                validationRequired.supplierName =
+                    model.supplierName !== undefined && model.supplierName?.length > 0 ? validationRequired.supplierName = true : false;
+                break;
+            case 'personName':
+                validationRequired.personName =
+                    model.personName !== undefined && model.personName?.length > 0 ? validationRequired.personName = true : false;
+                break;
+            case 'personSurname':
+                validationRequired.personSurname =
+                    model.personSurname !== undefined && model.personSurname?.length > 0 ? validationRequired.personSurname = true : false;
+                break;
+            case 'address':
+                validationRequired.address =
+                    model.address1.address !== undefined && model.address1.address?.length > 0 ? validationRequired.address = true : false;
+                break;
+            case 'city':
+                validationRequired.city =
+                    model.address1.city !== undefined && model.address1.city?.length > 0 ? validationRequired.city = true : false;
+                break;
+            case 'postalCode':
+                validationRequired.postalCode =
+                    model.address1.postalCode !== undefined && model.address1.postalCode?.length > 0 ? validationRequired.postalCode = true : false;
+                break;
+            case 'country':
+                validationRequired.country =
+                    model.address1.country !== undefined && model.address1.country?.length > 0 ? validationRequired.country = true : false;
+                break;
+            case 'governmentInstitution':
+                validationRequired.governmentInstitution =
+                    model.governementInstitution !== undefined ? validationRequired.governmentInstitution = true : false;
+                break;
+            case 'companySize':
+                validationRequired.companySize =
+                    model.companySize !== undefined && model.companySize.length > 0 ? validationRequired.companySize = true : false;
+                break;
+            case 'phoneNumber':
+                validationRequired.phoneNumber =
+                    model.phoneNumber !== undefined && model.phoneNumber.length > 0 ? validationRequired.phoneNumber = true : false;
+                break;
+            case 'vatNumber':
+                validationRequired.vatNumber =
+                    model.vatNumber !== undefined && model.vatNumber.length > 0 ? validationRequired.vatNumber = true : false;
+                break;
+            case 'taxResidenceCountry':
+                validationRequired.taxResidenceCountry =
+                    model.taxResidenceCountry !== undefined && model.taxResidenceCountry.length > 0 ? validationRequired.taxResidenceCountry = true : false;
+                break;
         }
+        setValidationRequired({...validationRequired})
+        identificationFormValidator()
     }
 
     const emailValidator = (isActuallyValid : boolean) => {
@@ -120,68 +181,42 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
     }
 
-    const phoneValidator = (isActuallyValid : boolean) => {
-        if(model.idd !== undefined && model.phoneNumber !== undefined) {
-            const matchedPhone = String(model.idd + model.phoneNumber)
-                .match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
-            if(isActuallyValid) {
-                if (matchedPhone === null) {
-                    validationError.phoneNumber = false;
-                    setValidationError({...validationError});
-                } else {
-                    validationError.phoneNumber = true;
-                    setValidationError({...validationError});
-                }
-            } else {
-                if (matchedPhone === null) {
-                    setIsValidPhoneNumber(false)
-                } else {
-                    setIsValidPhoneNumber(true)
-                }
-            }
-
-        }
-    }
-
-    const vatNumberValidator = (isActuallyValid : boolean) => {
-        if (model.vatNumber !== undefined) {
-            const matchedVat = /[A-Za-z0-9]{1,20}/.test(model.vatNumber);
-            if (isActuallyValid) {
-                validationError.vatNumber = matchedVat;
-                setValidationError({...validationError});
-            } else {
-                setIsVatNumberValid(matchedVat);
-            }
-        }
-    }
-
     return (
       <div className="SupplierIdentificationUpsert">
           <h2 className="section-A-font-title mb-5">A. Supplier identification</h2>
           <form className="d-flex flex-column gap-4">
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
-                      <label htmlFor="supplierName" className="font-input-label">Supplier Name<span className="red">*</span></label>
-                      <input type="text" id="supplierName" className="custom-input input-lg"
+                      <label htmlFor="supplierName" className="font-input-label">
+                          Supplier Name<span className="red">*</span>
+                          {!validationRequired.supplierName && validationRequired.supplierName !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <input type="text" id="supplierName" className="custom-input input-lg" onBlur={() => requireValidator('supplierName')}
                               defaultValue={model.supplierName} onChange={event => model.supplierName = event.target.value}/>
                   </div>
               </div>
               <div id="personNameContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
-                      <label htmlFor="personName" className="font-input-label">Person Name<span className="red">*</span></label>
-                      <input type="text" id="personName" className="custom-input input-lg"
+                      <label htmlFor="personName" className="font-input-label">
+                          Person Name<span className="red">*</span>
+                          {!validationRequired.personName && validationRequired.personName !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <input type="text" id="personName" className="custom-input input-lg" onBlur={() => requireValidator('personName')}
                              defaultValue={model.personName} onChange={event => model.personName = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
-                      <label htmlFor="personSurname" className="font-input-label">Person Surname</label>
-                      <input type="text" id="personSurname" className="custom-input input-lg"
+                      <label htmlFor="personSurname" className="font-input-label">
+                          Person Surname<span className="red">*</span>
+                          {!validationRequired.personSurname && validationRequired.personSurname !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <input type="text" id="personSurname" className="custom-input input-lg" onBlur={() => requireValidator('personSurname')}
                              defaultValue={model.personSurname} onChange={event => model.personSurname = event.target.value}/>
                   </div>
               </div>
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="emailAddress" className="font-input-label">
-                          Email Address
+                          Email Address<span className="red">*</span>
                           {isValidEmail ? "" : <small> : <small className="red">Invalid</small></small>}
                       </label>
                       <input type="email" id="emailAddress" className={"custom-input input-lg " + (isValidEmail ? "" : "red")} onBlur={() => emailValidator(false)}
@@ -194,34 +229,39 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               </div>
               <div id="addressContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
-                      <label htmlFor="address" className="font-input-label">Address</label>
-                      <input type="text" id="address" className="custom-input input-lg"
+                      <label htmlFor="address" className="font-input-label">
+                          Address<span className="red">*</span>
+                          {!validationRequired.address && validationRequired.address !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <input type="text" id="address" className="custom-input input-lg" onBlur={() => requireValidator('address')}
                              defaultValue={model.address1.address} onChange={event => model.address1.address = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
-                      <label htmlFor="city" className="font-input-label">City</label>
-                      <input type="text" id="city" className="custom-input input-lg"
+                      <label htmlFor="city" className="font-input-label">
+                          City<span className="red">*</span>
+                          {!validationRequired.city && validationRequired.city !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <input type="text" id="city" className="custom-input input-lg" onBlur={() => requireValidator('city')}
                              defaultValue={model.address1.city} onChange={event => model.address1.city = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="postalCode" className="font-input-label">
-                          Postal Code
-                          {isValidZipCode ? "" : <small> : <small className="red">Invalid</small></small>}
+                          Postal Code<span className="red">*</span>
+                          {!validationRequired.postalCode && validationRequired.postalCode !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
-                      <input type="text" id="postalCode" className={"custom-input input-md " + (isValidZipCode ? "" : "red")} onBlur={() => {
-                          zipCodeValidator( false);
-                      }}
+                      <input type="text" id="postalCode" className="custom-input input-md" onBlur={() => requireValidator('postalCode')}
                              defaultValue={model.address1.postalCode} onChange={event => {
                                  model.address1.postalCode = event.target.value
-                                 zipCodeValidator( true);
-                                 identificationFormValidator()
                       }}/>
                   </div>
               </div>
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
-                      <label htmlFor="country" className="font-input-label">Country</label>
-                      <select id="country" className="custom-input custom-select input-lg"
+                      <label htmlFor="country" className="font-input-label">
+                          Country<span className="red">*</span>
+                          {!validationRequired.country && validationRequired.country !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <select id="country" className="custom-input custom-select input-lg" onBlur={() => requireValidator('country')}
                               value={model.address1.country}
                               onChange={(event) => {
                                   setCca2(model.cca2 = countries?.find(c => c.name === event.target.value)?.cca2);
@@ -254,22 +294,19 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column">
                       <label htmlFor="address" className="font-input-label">Address</label>
                       <input type="text" id="address" className="custom-input input-lg"
-                             defaultValue={model.address2.address} disabled={establishment}
+                             defaultValue={model.address2.address} disabled={!establishment}
                              onChange={event => model.address2.address = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="city" className="font-input-label">City</label>
                       <input type="text" id="city" className="custom-input input-lg"
-                             defaultValue={model.address2.city} disabled={establishment}
+                             defaultValue={model.address2.city} disabled={!establishment}
                              onChange={event => model.address2.city = event.target.value}/>
                   </div>
                   <div className="d-flex flex-column">
-                      <label htmlFor="postalCode" className="font-input-label">
-                          Postal Code
-                          {isEstablishmentZipCodeValid ? "" : <small> : <small className="red">Invalid</small></small>}
-                      </label>
-                      <input type="text" id="postalCode" className={"custom-input input-md " + (isEstablishmentZipCodeValid ? "" : "red")}
-                             defaultValue={model.address2.postalCode} disabled={establishment}
+                      <label htmlFor="postalCode" className="font-input-label">Postal Code</label>
+                      <input type="text" id="postalCode" className="custom-input input-md"
+                             defaultValue={model.address2.postalCode} disabled={!establishment}
                              onChange={event => model.address2.postalCode = event.target.value}/>
                   </div>
               </div>
@@ -277,7 +314,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="country" className="font-input-label">Country</label>
                           <select id="country" className="custom-input custom-select input-lg"
-                                  value={model.address2.country} disabled={establishment}
+                                  value={model.address2.country} disabled={!establishment}
                                   onChange={(event) =>  setEstablishmentCountry(model.address2.country = event.target.value)}>
                               {
                                   countries?.map((country,i) =>
@@ -291,13 +328,17 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
               <div className="d-flex py-3">
                   <div id="governmentInstitution" className="d-flex flex-column">
-                      <label htmlFor="governmentInstitution" className="font-input-label mb-2">Government institution</label>
+                      <label htmlFor="governmentInstitution" className="font-input-label mb-2">
+                          Government institution<span className="red">*</span>
+                          {!validationRequired.governmentInstitution && validationRequired.governmentInstitution !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
                       <div className="d-flex gap-6">
                           <div className="d-flex gap-2">
                               <input type="radio" id="yes" name="governmentInstitution" checked={governmentInstitution === true}
                                      onChange={() => {
                                          setGovernmentInstitution(true)
                                          model.governementInstitution = true
+                                         requireValidator('governmentInstitution')
                                      }} hidden />
                               <label htmlFor="yes" className="font-input-label custom-radio"></label>
                               <label htmlFor="yes" className="font-input-label">Yes</label>
@@ -307,6 +348,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                      onChange={() => {
                                          setGovernmentInstitution(false)
                                          model.governementInstitution = false
+                                         requireValidator('governmentInstitution')
                                      }} hidden />
                               <label htmlFor="no" className="font-input-label custom-radio"></label>
                               <label htmlFor="no" className="font-input-label">No</label>
@@ -316,8 +358,11 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               </div>
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
-                      <label htmlFor="numberPrefix" className="font-input-label">Company Size</label>
-                      <select id="companySize" className="custom-input custom-select input-lg"
+                      <label htmlFor="numberPrefix" className="font-input-label">
+                          Company Size<span className="red">*</span>
+                          {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
                               value={companySize} onChange={event => {
                                   setCompanySize(event.target.value)
                                   model.companySize = event.target.value
@@ -332,8 +377,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="phoneNumber" className="font-input-label">
-                          Phone Number
-                          {isValidPhoneNumber ? "" : <small> : <small className="red">Invalid</small></small>}
+                          Phone Number<span className="red">*</span>
+                          {!validationRequired.phoneNumber && validationRequired.phoneNumber !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <div className="d-flex input-lg gap-2">
                           <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd}
@@ -348,11 +393,9 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                       ))
                               }
                           </select>
-                          <input type="tell" id="phoneNumber" className={"custom-input input-fill " + (isValidPhoneNumber ? "" : "red")} onBlur={() => phoneValidator(false)}
+                          <input type="number" id="phoneNumber" className="custom-input input-fill" onBlur={() => requireValidator('phoneNumber')}
                                  defaultValue={model.phoneNumber} onChange={event => {
                               model.phoneNumber = event.target.value;
-                              phoneValidator(true);
-                              identificationFormValidator();
                           }}/>
                       </div>
                   </div>
@@ -360,8 +403,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               <div id="vatContainer" className="d-flex gap-5">
                   <div className="d-flex flex-column">
                       <label htmlFor="vatNumber" className="font-input-label">
-                          Vat Number
-                          {isVatNumberValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                          Vat Number<span className="red">*</span>
+                          {!validationRequired.vatNumber && validationRequired.vatNumber !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <div className="d-flex input-lg gap-2">
                           <select id="vatPrefix" className="custom-input custom-select input-sm" value={model.cca2}
@@ -373,23 +416,27 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                                       ))
                               }
                           </select>
-                          <input type="text" id="vatNumber" className={"custom-input input-fill " + (isVatNumberValid ? "" : "red")} onBlur={() => vatNumberValidator(false)}
+                          <input type="text" id="vatNumber" className="custom-input input-fill" onBlur={() => requireValidator('vatNumber')}
                                  defaultValue={model.vatNumber} onChange={event => {
-
                                         model.vatNumber = event.target.value;
-                                        vatNumberValidator(true);
-                                        identificationFormValidator();
                           }}/>
                       </div>
                   </div>
                   <div className="d-flex flex-column">
-                      <label htmlFor="taxResidenceCountry" className="font-input-label">Tax residence country</label>
-                      <select id="taxResidenceCountry" className="custom-input custom-select input-lg" />
+                      <label htmlFor="taxResidenceCountry" className="font-input-label">
+                          Tax residence country<span className="red">*</span>
+                          {!validationRequired.taxResidenceCountry && validationRequired.taxResidenceCountry !== null ? <small> : <small className="red">Required</small></small> : ""}
+                      </label>
+                      <select id="taxResidenceCountry" onBlur={() => requireValidator('taxResidenceCountry')}
+                              className="custom-input custom-select input-lg" onChange={event => model.taxResidenceCountry = event.target.value}>
+                          <option value=""></option>
+                          <option value=" "></option>
+                      </select>
                   </div>
               </div>
               <div className="d-flex">
                   <div className="d-flex flex-column">
-                      <label htmlFor="taxID" className="font-input-label mb-2">Tax ID</label>
+                      <label htmlFor="taxID" className="font-input-label mb-2">Tax ID<span className="red">*</span></label>
                       <label htmlFor="differentTaxID" className="d-flex font-input-label">
                           <input type="checkbox" id="differentTaxID" hidden checked={sameTaxID !== undefined ? sameTaxID : false}
                                  onChange={() => {
