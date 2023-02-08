@@ -268,7 +268,7 @@ const UpsertBaf: React.FunctionComponent = () => {
             <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
-                <h2 className="mb-5">C. Caricamento Allegati</h2>
+                <h2 className="mb-5">C. Upload Files</h2>
                 <h3 className="ml-4">Documentazione obbligatoria</h3>
                 {
                     requiredFileTypes.map((requiredFileType, i) => {

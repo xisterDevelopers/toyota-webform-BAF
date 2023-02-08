@@ -111,19 +111,14 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
                             <div className="d-flex flex-column">
                                 <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>
-                                <p>Segui i seguenti passaggi:</p>
+                                <p>Procedi eseguendo i seguenti passaggi:</p>
                                 <ul>
                                     <li>Scarica il form compilato</li>
                                     <li>
-                                        Raccogli i seguenti documenti:
-                                        <ul className="filled-wrapped-ul pl-4-5">
-                                            <li>Doc 1</li>
-                                            <li>Doc 2</li>
-                                            <li>Doc 3 ...</li>
-                                        </ul>
+                                        Raccogli tutti i documenti allegati al form
                                     </li>
-                                    <li>Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> allegando i documenti richiesti e il form compilato</li>
-                                    <li>Carica la ricevuta dell’invio della PEC e conferma</li>
+                                    <li>Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> i documenti richiesti e il form compilato</li>
+                                    <li>Carica le ricevute di conferma dell’invio della PEC e sottometti il form.</li>
                                 </ul>
                             </div>
                         } />
@@ -131,7 +126,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         <div className="mb-5">
                             <Button color="bg-red" text="Scarica" textColor="white" btnWidth="110px" disabled={false} />
                         </div>
-                        <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e conferma</strong></p>
+                        <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e sottometti</strong></p>
                         <div className="mt-5 w-100 inline-flex">
                             <UploadFile handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
                         </div>
@@ -156,7 +151,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     <div>
                         <Banner stroke="border-green" fill="bg-light-green" icon="done" content={
                             <div>
-                                <p><strong>Complimenti!</strong> Da oggi sei un nostro partner.</p>
+                                <p><strong>Grazie!</strong> Abbiamo acquisito i tuoi dati. La richiesta è in corso di valutazione.</p>
                             </div>
                         } />
                     </div> : ''
@@ -166,7 +161,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
             <SupplierBankDetailsDetail model={bankDetailsDetail} />
             <hr className="break-line mb-5 mt-6" />
             <div className=" info-container mb-5">
-                <h2 className="mb-5">C. Caricamento Allegati</h2>
+                <h2 className="mb-5">C. Upload Files</h2>
                 <h3 className="ml-4">Documentazione obbligatoria</h3>
                 {
                     requiredFileTypes.map((requiredFileType, i) => {
