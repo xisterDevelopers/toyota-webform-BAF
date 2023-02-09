@@ -109,16 +109,16 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         }} />
                         <p className="my-5">oppure:</p>
                         <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
-                            <div className="d-flex flex-column">
+                            <div id="warningBanner" className="d-flex flex-column">
                                 <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>
-                                <p>Procedi eseguendo i seguenti passaggi:</p>
+                                <>Procedi eseguendo i seguenti passaggi:</>
                                 <ul>
-                                    <li>Scarica il form compilato</li>
-                                    <li>
+                                    <li className="banner-list">Scarica il form compilato</li>
+                                    <li className="banner-list">
                                         Raccogli tutti i documenti allegati al form
                                     </li>
-                                    <li>Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> i documenti richiesti e il form compilato</li>
-                                    <li>Carica le ricevute di conferma dell’invio della PEC e sottometti il form.</li>
+                                    <li className="banner-list">Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> i documenti richiesti e il form compilato</li>
+                                    <li className="banner-list">Carica le ricevute di conferma dell’invio della PEC e sottometti il form.</li>
                                 </ul>
                             </div>
                         } />

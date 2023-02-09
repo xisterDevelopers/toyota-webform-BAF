@@ -11,7 +11,7 @@ interface BannerProps {
 
 const Banner: FC<BannerProps> = ({stroke,fill,content,icon}) => {
     return(
-      <div className={"banner-container p-4 " + fill + " " + stroke}>
+      <div id="sharedBanner" className={"banner-container p-4 " + fill + " " + stroke}>
           <Icon icon={icon} />
           <div className="mx-3 content-container">
               {content}

@@ -18,3 +18,7 @@
 li {
     list-style-type: none;
 }
+
+.banner-list {
+    list-style-type: disc;
+}
