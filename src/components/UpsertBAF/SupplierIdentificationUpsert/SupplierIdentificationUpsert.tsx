@@ -192,7 +192,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.supplierName && validationRequired.supplierName !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <input type="text" id="supplierName" className="custom-input input-lg" onBlur={() => requireValidator('supplierName')}
-                              defaultValue={model.supplierName} onChange={event => model.supplierName = event.target.value}/>
+                              defaultValue={model.supplierName} onChange={event => {
+                                  model.supplierName = event.target.value;
+                                  requireValidator('supplierName');
+                      }}/>
                   </div>
               </div>
               <div id="personNameContainer" className="d-flex gap-5">
@@ -202,7 +205,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.personName && validationRequired.personName !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <input type="text" id="personName" className="custom-input input-lg" onBlur={() => requireValidator('personName')}
-                             defaultValue={model.personName} onChange={event => model.personName = event.target.value}/>
+                             defaultValue={model.personName} onChange={event => {
+                                  model.personName = event.target.value;
+                                  requireValidator('personName');
+                      }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="personSurname" className="font-input-label">
@@ -210,7 +216,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.personSurname && validationRequired.personSurname !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <input type="text" id="personSurname" className="custom-input input-lg" onBlur={() => requireValidator('personSurname')}
-                             defaultValue={model.personSurname} onChange={event => model.personSurname = event.target.value}/>
+                             defaultValue={model.personSurname} onChange={event => {
+                                  model.personSurname = event.target.value;
+                                  requireValidator('personSurname');
+                      }}/>
                   </div>
               </div>
               <div className="d-flex">
@@ -234,7 +243,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.address && validationRequired.address !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <input type="text" id="address" className="custom-input input-lg" onBlur={() => requireValidator('address')}
-                             defaultValue={model.address1.address} onChange={event => model.address1.address = event.target.value}/>
+                             defaultValue={model.address1.address} onChange={event => {
+                                  model.address1.address = event.target.value;
+                                  requireValidator('address');
+                      }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="city" className="font-input-label">
@@ -242,7 +254,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.city && validationRequired.city !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <input type="text" id="city" className="custom-input input-lg" onBlur={() => requireValidator('city')}
-                             defaultValue={model.address1.city} onChange={event => model.address1.city = event.target.value}/>
+                             defaultValue={model.address1.city} onChange={event => {
+                                  model.address1.city = event.target.value;
+                                  requireValidator('city');
+                      }}/>
                   </div>
                   <div className="d-flex flex-column">
                       <label htmlFor="postalCode" className="font-input-label">
@@ -251,7 +266,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </label>
                       <input type="text" id="postalCode" className="custom-input input-md" onBlur={() => requireValidator('postalCode')}
                              defaultValue={model.address1.postalCode} onChange={event => {
-                                 model.address1.postalCode = event.target.value
+                                 model.address1.postalCode = event.target.value;
+                                 requireValidator('postalCode');
                       }}/>
                   </div>
               </div>
@@ -395,7 +411,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           </select>
                           <input type="number" id="phoneNumber" className="custom-input input-fill" onBlur={() => requireValidator('phoneNumber')}
                                  defaultValue={model.phoneNumber} onChange={event => {
-                              model.phoneNumber = event.target.value;
+                                      model.phoneNumber = event.target.value;
+                                      requireValidator('phoneNumber');
                           }}/>
                       </div>
                   </div>
@@ -419,6 +436,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <input type="text" id="vatNumber" className="custom-input input-fill" onBlur={() => requireValidator('vatNumber')}
                                  defaultValue={model.vatNumber} onChange={event => {
                                         model.vatNumber = event.target.value;
+                                        requireValidator('vatNumber');
                           }}/>
                       </div>
                   </div>
