@@ -165,7 +165,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.bankName && validationRequired.bankName !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('bankName')}
-                               defaultValue={outputDetails.bankName} onChange={(event) => outputDetails.bankName = event.target.value}/>
+                               defaultValue={outputDetails.bankName} onChange={(event) => {
+                                    outputDetails.bankName = event.target.value;
+                                    requireValidator('bankName');
+                        }}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -175,7 +178,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.bankAccountCurrency && validationRequired.bankAccountCurrency !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <select className="custom-select custom-input input-lg" onBlur={() => requireValidator('bankAccountCurrency')}
-                                value={outputDetails.bankAccountCurrency} onChange={(event) => setCurrency(outputDetails.bankAccountCurrency = event.target.value)} >
+                                value={outputDetails.bankAccountCurrency} onChange={(event) => {
+                                    setCurrency(outputDetails.bankAccountCurrency = event.target.value);
+                                    requireValidator('bankAccountCurrency');
+                        }} >
                             {
                                 Array.from(new Set(countries.filter(country => country.currency !== null)
                                     .sort((a, b) => a.currency.name > b.currency.name ? 1 : -1)
@@ -198,7 +204,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         <input type="date" className="custom-input custom-date input-lg" onBlur={() => requireValidator('effectiveDate')}
                                defaultValue={date} onChange={(event) => {
                                     setDate(event.target.value)
-                                    outputDetails.effectiveDate = event.target.value
+                                    outputDetails.effectiveDate = event.target.value;
+                                    requireValidator('effectiveDate');
                         }} />
                     </div>
                 </div>
@@ -209,7 +216,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.bankAccountHolderName && validationRequired.bankAccountHolderName !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('bankAccountHolderName')}
-                               defaultValue={outputDetails.bankAccountHolderName} onChange={(event) => outputDetails.bankAccountHolderName = event.target.value} />
+                               defaultValue={outputDetails.bankAccountHolderName} onChange={(event) => {
+                                    outputDetails.bankAccountHolderName = event.target.value;
+                                    requireValidator('bankAccountHolderName');
+                        }} />
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -251,7 +261,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.reasonName && validationRequired.reasonName !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <input type="text" className="custom-input input-lg" disabled={!outputDetails.isSupplierDifferentFromHolderName} onBlur={() => requireValidator('reasonName')}
-                               defaultValue={outputDetails.supplierDifferentReason} onChange={(event) => outputDetails.supplierDifferentReason = event.target.value}/>
+                               defaultValue={outputDetails.supplierDifferentReason} onChange={(event) => {
+                                    outputDetails.supplierDifferentReason = event.target.value;
+                                    requireValidator('reasonName')
+                        }}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -293,7 +306,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.factoryReason && validationRequired.factoryReason !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <input type="text" className="custom-input input-lg" disabled={!outputDetails.isFactoryCompany} onBlur={() => requireValidator('factoryReason')}
-                               defaultValue={outputDetails.factoryCompanyReason} onChange={(event) => outputDetails.factoryCompanyReason = event.target.value}/>
+                               defaultValue={outputDetails.factoryCompanyReason} onChange={(event) => {
+                                    outputDetails.factoryCompanyReason = event.target.value;
+                                    requireValidator('factoryReason');
+                        }}/>
                     </div>
                 </div>
                 <div className="d-flex gap-5">
@@ -303,7 +319,10 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.bankAccountNumber && validationRequired.bankAccountNumber !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('bankAccountNumber')}
-                               defaultValue={outputDetails.bankAccountNumber} onChange={(event) => outputDetails.bankAccountNumber = event.target.value}/>
+                               defaultValue={outputDetails.bankAccountNumber} onChange={(event) => {
+                                    outputDetails.bankAccountNumber = event.target.value;
+                                    requireValidator('bankAccountNumber')
+                        }}/>
                     </div>
                 </div>
                 <div id="bankContainer" className="d-flex gap-5">
