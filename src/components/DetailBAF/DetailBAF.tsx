@@ -4,7 +4,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import Button from "../../shared/Button/Button";
 import Banner from "../../shared/Banner/Banner";
 import UploadFile from "../../shared/UploadFile/UploadFile";
-import {UploadedFileModel} from "../../models/uploadedFile.model";
 import SupplierIdentificationDetail from "./SupplierIdentificationDetail/SupplierIdentificationDetail";
 import SupplierBankDetailsDetail from "./SupplierBankDetailsDetail/SupplierBankDetailsDetail";
 import formService from "../../api/form.service";
@@ -15,6 +14,8 @@ import {FileTypeModel} from "../../models/fileType.model";
 import db from "../../utils/db.json";
 import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.model";
 import {SupplierIdentificationObject} from "../../models/SupplierIdentificationObject.model";
+import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
+import {convertBase64} from "../../utils/base64converter";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -25,10 +26,10 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const navigate = useNavigate();
     const {formState, setFormState} = useGlobalContext();
 
-    const [uploadFiles, setUploadFiles] = useState<UploadedFileModel[]>([ ]);
+    const [uploadFiles, setUploadFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [supplierIdentificationDetail, setSupplierIdentificationDetail] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
     const [bankDetailsDetail, setBankDetailsDetail] = useState<SupplierBankDetailsObject>({ });
-    const [uploadedFiles, setUploadedFiles] = useState<UploadedFileModel[]>([ ]);
+    const [uploadedFiles, setUploadedFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
     const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
     const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
@@ -64,12 +65,13 @@ const DetailBaf: FC<DetailBafProps> = () => {
         event.stopPropagation();
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
         preventDefaults(event);
 
         for (let i = 0; i < event.dataTransfer.files.length; i++) {
             if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
-                uploadFiles.push({ name: event.dataTransfer.files[i].name, type: "" });
+                const base64 = await convertBase64(event.dataTransfer.files[i])
+                uploadFiles.push({ fileName: event.dataTransfer.files[i].name, base64File: base64 });
             } else {
                 console.error('Dimensione massima superata');
             }
@@ -78,13 +80,14 @@ const DetailBaf: FC<DetailBafProps> = () => {
         setUploadFiles([...uploadFiles]);
     }
 
-    const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         preventDefaults(event);
 
         if (event.target.files) {
             for (let i = 0; i < event.target.files.length; i++) {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
-                    uploadFiles.push({ name: event.target.files[i].name, type: "" });
+                    const base64 = await convertBase64(event.target.files[i])
+                    uploadFiles.push({ fileName: event.target.files[i].name, base64File: base64 });
                 } else {
                     console.error('Dimensione massima superata');
                 }
@@ -169,8 +172,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     requiredFileTypes.map((requiredFileType, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.category === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.category === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{requiredFileType.type}:</strong>
                                     <p className="m-0">{requiredFileType.info}</p>
@@ -208,8 +211,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFiles.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -232,8 +235,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFilesHighRisk.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -256,8 +259,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFilesLowRisk.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.type === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.type === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -271,8 +274,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFilesHighLowRisk.map((requiredFileType, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.type === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.type === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.category === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.category === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{requiredFileType.type}:</strong>
                                     <p className="m-0">{requiredFileType.info}</p>
