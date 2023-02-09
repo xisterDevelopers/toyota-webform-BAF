@@ -31,6 +31,15 @@
         gap: 1.5rem;
         flex-direction: column;
     }
+    #warningBanner {
+        word-wrap: anywhere;
+    }
+    #sharedBanner {
+        flex-direction: column;
+    }
+    .icon-width {
+        width: 20px;
+    }
 }
 
 @media only screen and (max-width: 1250px) {
