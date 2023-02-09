@@ -265,7 +265,7 @@ const UpsertBaf: React.FunctionComponent = () => {
             }
             <SupplierIdentificationUpsert countries={countries} model={supplierIdentification} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} countries={countries} />
+            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} cca={supplierIdentification.cca2} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
                 <h2 className="mb-5">C. Caricamento Allegati</h2>
