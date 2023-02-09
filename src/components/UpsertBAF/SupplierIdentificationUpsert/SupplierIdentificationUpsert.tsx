@@ -317,16 +317,20 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="numberPrefix" className="font-input-label">Company Size</label>
-                      <select id="companySize" className="custom-input custom-select input-lg"
-                              value={companySize} onChange={event => {
-                                  setCompanySize(event.target.value)
-                                  model.companySize = event.target.value
-                      }}>
-                          <option value=""></option>
-                          <option value="small">Small [0 - 249]</option>
-                          <option value="medium">Medium [250 - 999]</option>
-                          <option value="large">Large [1000+]</option>
-                      </select>
+                      <div className="tooltip">
+                          <span className="tooltiptext"><span className="red">Large companies</span><br />Double signature and double call back required.</span>
+                          <select id="companySize" className="custom-input custom-select input-lg tooltip"
+                                  value={companySize} onChange={event => {
+                              setCompanySize(event.target.value)
+                              model.companySize = event.target.value
+                          }}>
+                              <option value=""></option>
+                              <option value="small">Small [0 - 249]</option>
+                              <option value="medium">Medium [250 - 999]</option>
+                              <option value="large">Large [1000+]</option>
+                          </select>
+                      </div>
+
                   </div>
               </div>
               <div className="d-flex">

@@ -240,15 +240,18 @@ const UpsertBaf: React.FunctionComponent = () => {
                     }
                 </div>
             </CustomModal>
-            <div className="info-container mb-5 pb-5 pt-3">
-                <p><strong>1 Person companies/small companies* - One signature and one call back required</strong></p>
-                <p>*1 person companies/small companies - only one person within the company of management level</p>
-                <p><strong>Large companies - Double signature and double call back required</strong></p>
-                <p className="mb-5"><strong>Government agency - One signature and one call back required + Supporting documentation (government agency’s website validated by is department)</strong></p>
-                <p><strong>Note to Vendors:</strong> Toyota is mindful of the risks involved with the creation and maintenance of Vendor bank details.
-                    To mitigate there risks and to protect your interests, as well as the interests of Toyota,
-                    creation or update of bank account will be processed based on the completed, authorised and verified information on this form only.</p>
-            </div>
+            {
+                formState === 'supplier pending' ? <div className="info-container mb-5 pb-5 pt-3">
+                    <p><strong>1 Person companies/small companies* - One signature and one call back required</strong></p>
+                    <p>*1 person companies/small companies - only one person within the company of management level</p>
+                    <p><strong>Large companies - Double signature and double call back required</strong></p>
+                    <p className="mb-5"><strong>Government agency - One signature and one call back required + Supporting documentation (government agency’s website validated by is department)</strong></p>
+                    <p><strong>Note to Vendors:</strong> Toyota is mindful of the risks involved with the creation and maintenance of Vendor bank details.
+                        To mitigate there risks and to protect your interests, as well as the interests of Toyota,
+                        creation or update of bank account will be processed based on the completed, authorised and verified information on this form only.</p>
+                </div> : ""
+            }
+
             {
                 formState === 'Supplier Pending - ERROR' ?
                     <Banner
