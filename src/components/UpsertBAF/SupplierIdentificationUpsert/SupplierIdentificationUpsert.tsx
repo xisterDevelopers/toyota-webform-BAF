@@ -378,16 +378,20 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           Company Size<span className="red">*</span>
                           {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
-                      <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
-                              value={companySize} onChange={event => {
-                                  setCompanySize(event.target.value)
-                                  model.companySize = event.target.value
-                      }}>
-                          <option value=""></option>
-                          <option value="small">Small [0 - 249]</option>
-                          <option value="medium">Medium [250 - 999]</option>
-                          <option value="large">Large [1000+]</option>
-                      </select>
+                      <div className="tooltip">
+                          <span className="tooltiptext"><span className="red">Large companies</span><br />Double signature and double call back required.</span>
+                          <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
+                                  value={companySize} onChange={event => {
+                              setCompanySize(event.target.value)
+                              model.companySize = event.target.value
+                          }}>
+                              <option value=""></option>
+                              <option value="small">Small [0 - 249]</option>
+                              <option value="medium">Medium [250 - 999]</option>
+                              <option value="large">Large [1000+]</option>
+                          </select>
+                      </div>
+
                   </div>
               </div>
               <div className="d-flex">
