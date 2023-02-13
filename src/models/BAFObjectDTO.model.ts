@@ -4,6 +4,7 @@ import {SupplierBankDetailsObject} from "./SupplierBankDetailsObject.model";
 export interface BAFObjectDTO {
     supplierIdentification?: SupplierIdentificationObject;
     supplierBankDetails?: SupplierBankDetailsObject;
+    badIf?: string;
     bafState?: string;
     comebackReason?: string;
     riskCategory?: string;

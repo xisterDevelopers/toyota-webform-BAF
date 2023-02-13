@@ -31,7 +31,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
     const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
     const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
-    const [toUpdateFile, setToUpdateFile] = useState<UpdateFileRequestDTO>({ fileName: "", category: "" })
+    const [toUpdateFile, setToUpdateFile] = useState<UpdateFileRequestDTO>({ fileName: "", bafDocumentType: "" })
     const [toUploadFiles, setToUploadFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [uploadedFiles, setUploadedFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
@@ -150,7 +150,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     const updateFileTypology = () => {
         uploadedFiles.map(file => {
             if (file.fileName === toUpdateFile.fileName) {
-                file.category = toUpdateFile.category;
+                file.bafDocumentType = toUpdateFile.bafDocumentType;
             }
         });
 
@@ -160,7 +160,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     const updateToUploadFileTypology = (updatedFile: UpdateFileRequestDTO) => {
         toUploadFiles.map(file => {
             if (file.fileName === updatedFile.fileName) {
-                file.category = updatedFile.category;
+                file.bafDocumentType = updatedFile.bafDocumentType;
             }
         });
 
@@ -172,7 +172,7 @@ const UpsertBaf: React.FunctionComponent = () => {
         setCheckDisable(false);
 
         toUploadFiles.map(file => {
-            if (file.category === "") {
+            if (file.bafDocumentType === "") {
                 setCheckDisable(true);
             }
         });
@@ -231,7 +231,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                             return (
                                 <UploadCard key={index} uploadedFile={uploadedFile}
                                             typologySelectedEvent={updateToUploadFileTypology}
-                                            selectedTypology={uploadedFile.category !== undefined ? uploadedFile.category : ""}
+                                            selectedTypology={uploadedFile.bafDocumentType !== undefined ? uploadedFile.bafDocumentType : ""}
                                             status="modal" spacing=" p-3 mx-3"
                                             updateTypology={() => { }}
                                             deleteFile={() => deleteToUploadFile(index)}/>
@@ -274,8 +274,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                     requiredFileTypes.map((requiredFileType, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{requiredFileType.type}:</strong>
                                     <p className="m-0">{requiredFileType.info}</p>
@@ -313,8 +313,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                     integrativeFiles.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -337,8 +337,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                     integrativeFilesHighRisk.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -361,8 +361,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                     integrativeFilesLowRisk.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -376,8 +376,8 @@ const UpsertBaf: React.FunctionComponent = () => {
                     integrativeFilesHighLowRisk.map((requiredFileType, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{requiredFileType.type}:</strong>
                                     <p className="m-0">{requiredFileType.info}</p>
@@ -399,7 +399,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                     return (
                         <UploadCard key={index} uploadedFile={uploadedFile}
                                     typologySelectedEvent={setToUpdateFile}
-                                    selectedTypology={uploadedFile.category !== undefined ? uploadedFile.category : ""}
+                                    selectedTypology={uploadedFile.bafDocumentType !== undefined ? uploadedFile.bafDocumentType : ""}
                                     status="form" spacing=" p-3 mt-5 mb-5"
                                     updateTypology={updateFileTypology}
                                     deleteFile={() => deleteUploadedFile(index)}/>

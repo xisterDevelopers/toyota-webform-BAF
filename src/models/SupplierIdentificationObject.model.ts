@@ -5,6 +5,7 @@ export interface SupplierIdentificationObject {
     personName?: string;
     personSurname?: string;
     emailAddress?: string;
+    // establishment is string?
     establishment?: boolean;
     address1: AddressObject;
     address2: AddressObject;
@@ -15,6 +16,7 @@ export interface SupplierIdentificationObject {
     taxResidenceCountry?: string;
     isDifferentFromVATNumber?: boolean;
     taxId?: string;
+    // vatRegime is boolean?
     vatRegime?: string;
     registrationNumber?: string;
 
