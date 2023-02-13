@@ -17,6 +17,12 @@
     .container-lg {
         width: 100%;
     }
+    .tooltiptext {
+        display: none;
+    }
+    .tooltipclick {
+        display: block !important;
+    }
 }
 
 @media only screen and (max-width: 1020px) {
@@ -65,6 +71,19 @@
         gap: 1.5rem;
         flex-direction: column;
         margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .input-lg {
+        min-width: 150px;
+    }
+    #sortCodeLabel {
+        white-space: normal;
+    }
+    #establishmentCheckbox {
+        width: 50px;
+        background-size: 20px;
     }
 }
 
