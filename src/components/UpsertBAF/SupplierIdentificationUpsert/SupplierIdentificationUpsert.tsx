@@ -3,7 +3,7 @@ import './SupplierIdentificationUpsert.css';
 import {CountryModel} from "../../../models/country.model";
 import {useGlobalContext} from "../../../utils/AppContext";
 import {SupplierIdentificationObject} from "../../../models/SupplierIdentificationObject.model";
-import {behaviorPlugin} from "@testing-library/user-event/dist/keyboard/types";
+import {FiInfo} from 'react-icons/fi'
 
 interface SupplierIdentificationUpsertProps {
     model: SupplierIdentificationObject;
@@ -39,6 +39,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [vatRegimeBool, setVatRegimeBool] = useState<boolean>();
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [tooltipCompanySize, setTooltipCompanySize] = useState(false);
+    const [tooltipGovernment, setTooltipGovernment] = useState(false);
     const [validationError, setValidationError] = useState({email: false, phoneNumber: false, vatNumber: false});
     const [validationRequired, setValidationRequired] = useState<RequiredFields>({
         supplierName: null,
@@ -344,10 +346,23 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
               <div className="d-flex py-3">
                   <div id="governmentInstitution" className="d-flex flex-column">
-                      <label htmlFor="governmentInstitution" className="font-input-label mb-2">
-                          Government institution<span className="red">*</span>
-                          {!validationRequired.governmentInstitution && validationRequired.governmentInstitution !== null ? <small> : <small className="red">Required</small></small> : ""}
-                      </label>
+                      <div className="d-flex">
+                          <label htmlFor="governmentInstitution" className="font-input-label mb-2">
+                              Government institution<span className="red">*</span>
+                              {!validationRequired.governmentInstitution && validationRequired.governmentInstitution !== null ? <small> : <small className="red">Required</small></small> : ""}
+                          </label>
+                          <div className="tooltip">
+                            <span className="tooltiptext">
+                                <b>Government agency - One signature and one call back required + Supporting documentation
+                                    (government agency’s website validated by is department)</b>
+                            </span>
+                              <div className="dark-grey d-flex justify-center align-center mx-2 font-icon mt-2">
+                                  <FiInfo onClick={() => setTooltipGovernment(!tooltipGovernment)}></FiInfo>
+                              </div>
+                          </div>
+                      </div>
+
+
                       <div className="d-flex gap-6">
                           <div className="d-flex gap-2">
                               <input type="radio" id="yes" name="governmentInstitution" checked={governmentInstitution === true}
@@ -372,14 +387,18 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </div>
                   </div>
               </div>
+
+              {
+                  tooltipGovernment ? <span className="tooltipclick"><b>Government agency - One signature and one call back required + Supporting documentation
+                                    (government agency’s website validated by is department)</b></span> : ""
+              }
+
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="numberPrefix" className="font-input-label">
                           Company Size<span className="red">*</span>
                           {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
-                      <div className="tooltip">
-                          <span className="tooltiptext"><span className="red">Large companies</span><br />Double signature and double call back required.</span>
                           <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
                                   value={companySize} onChange={event => {
                               setCompanySize(event.target.value)
@@ -390,10 +409,22 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               <option value="medium">Medium [250 - 999]</option>
                               <option value="large">Large [1000+]</option>
                           </select>
-                      </div>
 
                   </div>
+                  <div className="tooltip">
+                      <span className="tooltiptext"><b>1 Person companies/small companies* - One signature and one call back required</b>
+                            <p>*1 person companies/small companies - only one person within the company of managment level</p>
+                            <b>Large companies - Double signature and double call back required</b></span>
+                      <div className="dark-grey d-flex justify-center align-center mx-2 font-icon mt-5">
+                          <FiInfo onClick={() => setTooltipCompanySize(!tooltipCompanySize)}></FiInfo>
+                      </div>
+                  </div>
               </div>
+              {
+                tooltipCompanySize ? <span className="tooltipclick"><b>1 Person companies/small companies* - One signature and one call back required</b>
+                            <p>*1 person companies/small companies - only one person within the company of managment level</p>
+                            <b>Large companies - Double signature and double call back required</b></span> : ""
+              }
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="phoneNumber" className="font-input-label">
