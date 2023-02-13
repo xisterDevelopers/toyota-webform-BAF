@@ -17,7 +17,7 @@ function App() {
     <div className="App app-wrapper">
       <header className="App-header">
           <img className="mb-5" src={logo} alt="logo" />
-          <h1 className="font-title black">Welcome on <span className="dark-red">Bank Account Form</span></h1>
+          <h1 className="font-title black mb-5 pb-4">Welcome on <span className="dark-red">Bank Account Form</span></h1>
               <React.Suspense fallback={""}>
                   <Routes>
                       <Route path='/error' element={<ErrorPage />}/>
