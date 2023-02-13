@@ -17,7 +17,7 @@ interface UploadCardProps {
 
 const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
 
-    const [type, setType] = useState<string>(uploadedFile.category !== undefined ? uploadedFile.category : "");
+    const [type, setType] = useState<string>(uploadedFile.bafDocumentType !== undefined ? uploadedFile.bafDocumentType : "");
     const types = [
         ...db.requiredFileTypes,
         ...db.integrativeFiles,
@@ -49,7 +49,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                                 setType(event.target.value);
                                 typologySelectedEvent({
                                     fileName: uploadedFile.fileName,
-                                    category: event.target.value
+                                    bafDocumentType: event.target.value
                                 });
                                 setShowButtons(status !== "modal")
                             }}>

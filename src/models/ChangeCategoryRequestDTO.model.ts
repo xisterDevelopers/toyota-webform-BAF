@@ -1,4 +1,4 @@
 export interface ChangeCategoryRequestDTO {
     url?: string;
-    category?: string;
+    bafDocumentType?: string;
 }

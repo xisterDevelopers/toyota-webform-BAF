@@ -167,8 +167,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     requiredFileTypes.map((requiredFileType, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{requiredFileType.type}:</strong>
                                     <p className="m-0">{requiredFileType.info}</p>
@@ -206,8 +206,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFiles.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -230,8 +230,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFilesHighRisk.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -254,8 +254,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFilesLowRisk.map((integrativeFile, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === integrativeFile.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{integrativeFile.type}:</strong>
                                     <p className="m-0">{integrativeFile.info}</p>
@@ -269,8 +269,8 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     integrativeFilesHighLowRisk.map((requiredFileType, i) => {
                         return (
                             <div key={i} className="custom-ul d-flex flex-row">
-                                <img className={(uploadedFiles.find(file => file.category === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
-                                     src={uploadedFiles.find(file => file.category === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
+                                <img className={(uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? "success_dot" : "dot") + " custom-li"}
+                                     src={uploadedFiles.find(file => file.bafDocumentType === requiredFileType.type) ? success_dot : dot} alt="custom_"/>
                                 <div className="my-3">
                                     <strong>{requiredFileType.type}:</strong>
                                     <p className="m-0">{requiredFileType.info}</p>

@@ -3,8 +3,10 @@ export interface SupplierBankDetailsObject {
     bankAccountCurrency?: string;
     effectiveDate?: string;
     bankAccountHolderName?: string;
+    //isSupplierDifferent è una stringa nel BE
     isSupplierDifferentFromHolderName?: boolean;
     supplierDifferentReason?: string;
+    //isFactoryCompany è una stringa nel BE
     isFactoryCompany?: boolean;
     factoryCompanyReason?: string;
     bankAccountNumber?: string;
