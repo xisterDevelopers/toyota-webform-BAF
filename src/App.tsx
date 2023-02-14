@@ -11,9 +11,15 @@ function App() {
     const [formState, setFormState] = useState<string>('supplier pending');
     const [isFormValidIdentification, setIsFormValidIdentification] = useState<boolean>(false);
     const [isFormValidBank, setIsFormValidBank] = useState<boolean>(false);
+    const [isFormValidManagement, setIsFormValidManagement] = useState<boolean>(false);
 
   return (
-  <AppContext.Provider value={{formState, setFormState, isFormValidIdentification, setIsFormValidIdentification, isFormValidBank, setIsFormValidBank}}>
+  <AppContext.Provider value={
+      {formState, setFormState,
+          isFormValidIdentification, setIsFormValidIdentification,
+          isFormValidBank, setIsFormValidBank,
+          isFormValidManagement, setIsFormValidManagement}
+  }>
     <div className="App app-wrapper">
       <header className="App-header">
           <img className="mb-5" src={logo} alt="logo" />
