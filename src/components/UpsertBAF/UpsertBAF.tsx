@@ -31,7 +31,7 @@ const MAX_FILE_SIZE: number = 5E+6;
 
 const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
-    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
+    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {}, companySize: 'small' });
     const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
     const [managementApproval, setManagementApproval] = useState<SupplierManagementObject>({ })
     const [toUpdateFile, setToUpdateFile] = useState<UpdateFileRequestDTO>({ fileName: "", bafDocumentType: "" })
@@ -47,7 +47,9 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
 
-    const {formState, setFormState, isFormValidBank, isFormValidIdentification, isFormValidManagement} = useGlobalContext();
+    const {formState, setFormState, isFormValidBank,
+        isFormValidIdentification, isFormValidManagement,
+        isOnlyFirstApproval} = useGlobalContext();
 
     let navigate = useNavigate()
     let {id} = useParams();
@@ -261,7 +263,7 @@ const UpsertBaf: React.FunctionComponent = () => {
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} cca={supplierIdentification.cca2} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierManagementUpsert countries={countries} model={managementApproval} />
+            <SupplierManagementUpsert countries={countries} model={managementApproval} isCompanySmall={isOnlyFirstApproval}/>
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
                 <h2 className="mb-5 section-A-font-title">D. Upload Files</h2>
@@ -405,7 +407,7 @@ const UpsertBaf: React.FunctionComponent = () => {
 
             <div className="d-flex gap-3 justify-end pb-5">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false}
-                onClick={() => {}}/>
+                onClick={() => {console.log(isFormValidManagement)}}/>
                 <Button color="bg-red"
                         text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')

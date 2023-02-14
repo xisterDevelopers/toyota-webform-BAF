@@ -57,7 +57,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         taxResidenceCountry: null
     })
 
-    const {setIsFormValidIdentification} = useGlobalContext()
+    const {setIsFormValidIdentification, setIsOnlyFirstApproval} = useGlobalContext()
     useLayoutEffect(() => {
         if(model.vatRegime) {
             if(model.vatRegime == "Encaissement/Deferred") {
@@ -395,19 +395,18 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
-                      <label htmlFor="numberPrefix" className="font-input-label">
+                      <label htmlFor="numberPrefix" className="font-input-label" onClick={() => console.log(model.companySize)}>
                           Company Size<span className="red">*</span>
                           {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                           <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
                                   value={companySize} onChange={event => {
-                              setCompanySize(event.target.value)
-                              model.companySize = event.target.value
+                              setCompanySize(event.target.value);
+                              model.companySize = event.target.value;
+                              event.target.value === 'small' ? setIsOnlyFirstApproval(true) : setIsOnlyFirstApproval(null)
                           }}>
-                              <option value=""></option>
-                              <option value="small">Small [0 - 249]</option>
-                              <option value="medium">Medium [250 - 999]</option>
-                              <option value="large">Large [1000+]</option>
+                              <option value="small">1 Person companies/small companies</option>
+                              <option value="large">Large companies</option>
                           </select>
 
                   </div>

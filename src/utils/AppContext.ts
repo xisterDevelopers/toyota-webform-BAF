@@ -8,6 +8,8 @@ export type GlobalContent = {
     setIsFormValidBank:(c: boolean) => void
     isFormValidManagement: boolean
     setIsFormValidManagement:(c: boolean) => void
+    isOnlyFirstApproval: boolean | null
+    setIsOnlyFirstApproval:(c: boolean | null) => void
 }
 export const AppContext = createContext<GlobalContent>({
     formState: 'supplier pending',
@@ -17,6 +19,8 @@ export const AppContext = createContext<GlobalContent>({
     isFormValidBank: false,
     setIsFormValidBank:() => {},
     isFormValidManagement: false,
-    setIsFormValidManagement:() => {}
+    setIsFormValidManagement:() => {},
+    isOnlyFirstApproval: true,
+    setIsOnlyFirstApproval:() => {}
 })
 export const useGlobalContext = () => useContext(AppContext)

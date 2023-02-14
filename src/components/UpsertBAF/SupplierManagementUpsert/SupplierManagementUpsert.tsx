@@ -1,4 +1,4 @@
-import React, {FC, useContext, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {CountryModel} from "../../../models/country.model";
 import {SupplierManagementObject} from "../../../models/SupplierManagementObject.model";
 import {useGlobalContext} from "../../../utils/AppContext";
@@ -6,6 +6,7 @@ import {useGlobalContext} from "../../../utils/AppContext";
 interface SupplierManagementUpsertProps {
     countries : CountryModel[];
     model: SupplierManagementObject;
+    isCompanySmall: boolean | null;
 }
 
 interface RequireFields {
@@ -19,24 +20,39 @@ interface RequireFields {
     phoneNumber2: null | boolean;
 }
 
-const SupplierManagementUpsert : FC<SupplierManagementUpsertProps> = ({countries, model}) => {
+const SupplierManagementUpsert : FC<SupplierManagementUpsertProps> = ({countries, model, isCompanySmall}) => {
 const [isValidEmail, setIsValidEmail] = useState(true);
 const [isValidEmail2, setIsValidEmail2] = useState(true);
-const [idd, setIdd] = useState(model.idd);
-const [validationError, setValidationError] = useState({email: false, email2: false});
+const [validationError, setValidationError] = useState({email: false, email2: true});
 const [validationRequired, setValidationRequired] = useState<RequireFields>({
     name: null,
-    name2: null,
+    name2: isCompanySmall,
     phoneNumber: null,
-    phoneNumber2: null,
+    phoneNumber2: isCompanySmall,
     position: null,
-    position2: null,
+    position2: isCompanySmall,
     surname: null,
-    surname2: null
+    surname2: isCompanySmall
 });
 
-const {setIsFormValidManagement} = useGlobalContext()
+const {setIsFormValidManagement} = useGlobalContext();
 
+useEffect(() => {
+    setValidationRequired({name: validationRequired.name, name2: isCompanySmall, phoneNumber: validationRequired.phoneNumber, phoneNumber2: isCompanySmall, position: validationRequired.position, position2: isCompanySmall, surname: validationRequired.surname, surname2: isCompanySmall})
+    if(!isCompanySmall) {
+        setValidationError({email: validationError.email, email2: false})
+    }
+    if(isCompanySmall) {
+        setValidationError({email: validationError.email, email2: true})
+        model.name2 = '';
+        model.surname2 = '';
+        model.phoneNumber2 = '';
+        model.position2 = '';
+        model.idd2 = '';
+        model.emailAddress2 = '';
+        managementFormValidator()
+    }
+}, [isCompanySmall, validationRequired.name,validationError.email,validationRequired.phoneNumber, validationRequired.position, validationRequired.surname])
     const requireValidator = (field : string) => {
         switch(field) {
             case 'name':
@@ -73,11 +89,11 @@ const {setIsFormValidManagement} = useGlobalContext()
                 break;
         }
         setValidationRequired({...validationRequired})
-        identificationFormValidator()
+        managementFormValidator()
     }
 
-    const identificationFormValidator = () => {
-        const booleanArray = [validationError.email, validationRequired.name,
+    const managementFormValidator = () => {
+        const booleanArray = [validationError.email,validationError.email2, validationRequired.name,
             validationRequired.surname, validationRequired.position, validationRequired.phoneNumber,validationRequired.name2,
             validationRequired.surname2,validationRequired.position2, validationRequired.phoneNumber2];
         setIsFormValidManagement(booleanArray.every(bool => bool));
@@ -135,13 +151,13 @@ const {setIsFormValidManagement} = useGlobalContext()
             <h2 className="section-A-font-title mb-5">C. Supplier's management approval</h2>
             <form className="d-flex flex-column gap-4">
                 <h3><strong>First Approval (Operations)</strong></h3>
-                <div id="personNameContainer" className="d-flex gap-5">
+                <div className="d-flex gap-5 person-name-container">
                     <div className="d-flex flex-column">
                         <label htmlFor="nameApproval" className="font-input-label">
                             Name <span className="red">*</span>
                             {!validationRequired.name && validationRequired.name !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
-                        <input type="text" id="nameApproval" className="custom-input input-lg" onBlur={() => requireValidator('name')}
+                        <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('name')}
                                defaultValue={model.name} onChange={event => {
                             model.name = event.target.value;
                             requireValidator('name');
@@ -152,7 +168,7 @@ const {setIsFormValidManagement} = useGlobalContext()
                             Surname <span className="red">*</span>
                             {!validationRequired.surname && validationRequired.surname !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
-                        <input type="text" id="surnameApproval" className="custom-input input-lg" onBlur={() => requireValidator('surname')}
+                        <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('surname')}
                                defaultValue={model.surname} onChange={event => {
                             model.surname = event.target.value;
                             requireValidator('surname');
@@ -165,7 +181,7 @@ const {setIsFormValidManagement} = useGlobalContext()
                             Position <span className="red">*</span>
                             {!validationRequired.position && validationRequired.position !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
-                        <input type="text" id="positionApproval" className="custom-input input-lg" onBlur={() => requireValidator('position')}
+                        <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('position')}
                                defaultValue={model.position} onChange={event => {
                             model.position = event.target.value;
                             requireValidator('position');
@@ -179,8 +195,8 @@ const {setIsFormValidManagement} = useGlobalContext()
                             {!validationRequired.phoneNumber && validationRequired.phoneNumber !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <div className="d-flex input-lg gap-2">
-                            <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd}
-                                    onChange={(event => setIdd(model.idd = event.target.value))}>
+                            <select className="custom-input custom-select input-md" value={model.idd}
+                                    onChange={(event => model.idd = event.target.value)}>
                                 {
                                     countries?.map(country =>
                                         (
@@ -191,7 +207,7 @@ const {setIsFormValidManagement} = useGlobalContext()
                                         ))
                                 }
                             </select>
-                            <input type="number" id="phoneNumberApproval" className="custom-input input-fill" onBlur={() => requireValidator('phoneNumber')}
+                            <input type="number" className="custom-input input-fill" onBlur={() => requireValidator('phoneNumber')}
                                    defaultValue={model.phoneNumber} onChange={event => {
                                 model.phoneNumber = event.target.value;
                                 requireValidator('phoneNumber');
@@ -205,92 +221,96 @@ const {setIsFormValidManagement} = useGlobalContext()
                             Email Address <span className="red">*</span>
                             {isValidEmail ? "" : <small> : <small className="red">Invalid</small></small>}
                         </label>
-                        <input type="email" id="emailAddressApproval" className={"custom-input input-lg " + (isValidEmail ? "" : "red")} onBlur={() => emailValidator(false, "email")}
+                        <input type="email" className={"custom-input input-lg " + (isValidEmail ? "" : "red")} onBlur={() => emailValidator(false, "email")}
                                defaultValue={model.emailAddress} onChange={event => {
                             model.emailAddress = event.target.value;
                             emailValidator(true, "email");
-                        }}/>
-                    </div>
-                </div>
+                            managementFormValidator();
 
-                <h3 className="mt-6"><strong>Second Approval Operations (accounting finals)</strong></h3>
-                <div id="personNameContainer" className="d-flex gap-5">
-                    <div className="d-flex flex-column">
-                        <label htmlFor="nameApproval2" className="font-input-label">
-                            Name <span className="red">*</span>
-                            {!validationRequired.name2 && validationRequired.name2 !== null ? <small> : <small className="red">Required</small></small> : ""}
-                        </label>
-                        <input type="text" id="nameApproval2" className="custom-input input-lg" onBlur={() => requireValidator('name2')}
-                               defaultValue={model.name2} onChange={event => {
-                            model.name2 = event.target.value;
-                            requireValidator('name2');
-                        }}/>
-                    </div>
-                    <div className="d-flex flex-column">
-                        <label htmlFor="surnameApproval2" className="font-input-label">
-                            Surname <span className="red">*</span>
-                            {!validationRequired.surname2 && validationRequired.surname2 !== null ? <small> : <small className="red">Required</small></small> : ""}
-                        </label>
-                        <input type="text" id="surnameApproval2" className="custom-input input-lg" onBlur={() => requireValidator('surname2')}
-                               defaultValue={model.surname2} onChange={event => {
-                            model.surname2 = event.target.value;
-                            requireValidator('surname2');
                         }}/>
                     </div>
                 </div>
-                <div className="d-flex">
-                    <div className="d-flex flex-column container-lg">
-                        <label htmlFor="positionApproval2" className="font-input-label">
-                            Position <span className="red">*</span>
-                            {!validationRequired.position2 && validationRequired.position2 !== null ? <small> : <small className="red">Required</small></small> : ""}
-                        </label>
-                        <input type="text" id="positionApproval2" className="custom-input input-lg" onBlur={() => requireValidator('position2')}
-                               defaultValue={model.position2} onChange={event => {
-                            model.position2 = event.target.value;
-                            requireValidator('position2');
-                        }}/>
-                    </div>
-                </div>
-                <div className="d-flex">
-                    <div className="d-flex flex-column container-lg">
-                        <label htmlFor="phoneNumberApproval2" className="font-input-label">
-                            Phone Number <span className="red">*</span>
-                            {!validationRequired.phoneNumber2 && validationRequired.phoneNumber2 !== null ? <small> : <small className="red">Required</small></small> : ""}
-                        </label>
-                        <div className="d-flex input-lg gap-2">
-                            <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd2}
-                                    onChange={(event => setIdd(model.idd2 = event.target.value))}>
-                                {
-                                    countries?.map(country =>
-                                        (
-                                            country?.idd?.map((suffix, i) =>
-                                                (
-                                                    <option key={i}>{suffix}</option>
-                                                ))
-                                        ))
-                                }
-                            </select>
-                            <input type="number" id="phoneNumberApproval2" className="custom-input input-fill" onBlur={() => requireValidator('phoneNumber2')}
-                                   defaultValue={model.phoneNumber2} onChange={event => {
-                                model.phoneNumber2 = event.target.value;
-                                requireValidator('phoneNumber2');
-                            }}/>
+                {
+                    isCompanySmall ? "" : <><h3 className="mt-6"><strong>Second Approval Operations (accounting finals)</strong></h3>
+                        <div className="d-flex gap-5">
+                            <div className="d-flex flex-column">
+                                <label htmlFor="nameApproval2" className="font-input-label">
+                                    Name <span className="red">*</span>
+                                    {!validationRequired.name2 && validationRequired.name2 !== null ? <small> : <small className="red">Required</small></small> : ""}
+                                </label>
+                                <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('name2')}
+                                       defaultValue={model.name2} onChange={event => {
+                                    model.name2 = event.target.value;
+                                    requireValidator('name2');
+                                }}/>
+                            </div>
+                            <div className="d-flex flex-column">
+                                <label  htmlFor="surnameApproval2" className="font-input-label">
+                                    Surname <span className="red">*</span>
+                                    {!validationRequired.surname2 && validationRequired.surname2 !== null ? <small> : <small className="red">Required</small></small> : ""}
+                                </label>
+                                <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('surname2')}
+                                       defaultValue={model.surname2} onChange={event => {
+                                    model.surname2 = event.target.value;
+                                    requireValidator('surname2');
+                                }}/>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="d-flex">
-                    <div className="d-flex flex-column container-lg">
-                        <label htmlFor="emailAddressApproval2" className="font-input-label">
-                            Email Address <span className="red">*</span>
-                            {isValidEmail2 ? "" : <small> : <small className="red">Invalid</small></small>}
-                        </label>
-                        <input type="email" id="emailAddressApproval2" className={"custom-input input-lg " + (isValidEmail2 ? "" : "red")} onBlur={() => emailValidator(false, "email2")}
-                               defaultValue={model.emailAddress2} onChange={event => {
-                            model.emailAddress2 = event.target.value;
-                            emailValidator(true, "email2");
-                        }}/>
-                    </div>
-                </div>
+                        <div className="d-flex">
+                            <div className="d-flex flex-column container-lg">
+                                <label htmlFor="positionApproval2" className="font-input-label">
+                                    Position <span className="red">*</span>
+                                    {!validationRequired.position2 && validationRequired.position2 !== null ? <small> : <small className="red">Required</small></small> : ""}
+                                </label>
+                                <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('position2')}
+                                       defaultValue={model.position2} onChange={event => {
+                                    model.position2 = event.target.value;
+                                    requireValidator('position2');
+                                }}/>
+                            </div>
+                        </div>
+                        <div className="d-flex">
+                            <div className="d-flex flex-column container-lg">
+                                <label htmlFor="phoneNumberApproval2" className="font-input-label">
+                                    Phone Number <span className="red">*</span>
+                                    {!validationRequired.phoneNumber2 && validationRequired.phoneNumber2 !== null ? <small> : <small className="red">Required</small></small> : ""}
+                                </label>
+                                <div className="d-flex input-lg gap-2">
+                                    <select className="custom-input custom-select input-md" value={model.idd2}
+                                            onChange={(event => model.idd2 = event.target.value)}>
+                                        {
+                                            countries?.map(country =>
+                                                (
+                                                    country?.idd?.map((suffix, i) =>
+                                                        (
+                                                            <option key={i}>{suffix}</option>
+                                                        ))
+                                                ))
+                                        }
+                                    </select>
+                                    <input type="number" className="custom-input input-fill" onBlur={() => requireValidator('phoneNumber2')}
+                                           defaultValue={model.phoneNumber2} onChange={event => {
+                                        model.phoneNumber2 = event.target.value;
+                                        requireValidator('phoneNumber2');
+                                    }}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="d-flex">
+                            <div className="d-flex flex-column container-lg">
+                                <label htmlFor="emailAddressApproval2" className="font-input-label">
+                                    Email Address <span className="red">*</span>
+                                    {isValidEmail2 ? "" : <small> : <small className="red">Invalid</small></small>}
+                                </label>
+                                <input type="email" className={"custom-input input-lg " + (isValidEmail2 ? "" : "red")} onBlur={() => emailValidator(false, "email2")}
+                                       defaultValue={model.emailAddress2} onChange={event => {
+                                    model.emailAddress2 = event.target.value;
+                                    emailValidator(true, "email2");
+                                    managementFormValidator();
+                                }}/>
+                            </div>
+                        </div></>
+                }
             </form>
         </div>
     )

@@ -12,13 +12,15 @@ function App() {
     const [isFormValidIdentification, setIsFormValidIdentification] = useState<boolean>(false);
     const [isFormValidBank, setIsFormValidBank] = useState<boolean>(false);
     const [isFormValidManagement, setIsFormValidManagement] = useState<boolean>(false);
+    const [isOnlyFirstApproval, setIsOnlyFirstApproval] = useState<boolean|null>(true);
 
   return (
   <AppContext.Provider value={
       {formState, setFormState,
           isFormValidIdentification, setIsFormValidIdentification,
           isFormValidBank, setIsFormValidBank,
-          isFormValidManagement, setIsFormValidManagement}
+          isFormValidManagement, setIsFormValidManagement,
+          isOnlyFirstApproval, setIsOnlyFirstApproval}
   }>
     <div className="App app-wrapper">
       <header className="App-header">
