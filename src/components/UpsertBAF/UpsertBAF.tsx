@@ -4,7 +4,6 @@ import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
 import {CountryModel} from "../../models/country.model";
-import CountryService from "../../api/country.service";
 import Button from "../../shared/Button/Button";
 import UploadCard from "../../shared/UploadCard/UploadCard";
 import dot from "../../assets/svg/simple_dot.svg";
@@ -17,15 +16,14 @@ import {useGlobalContext} from "../../utils/AppContext";
 import Banner from "../../shared/Banner/Banner";
 import Icon from "../../shared/Icon/Icon";
 import {IoMdClose} from 'react-icons/io';
-// import FormService from "../../api/form.service";
-// import UploadFileService from "../../api/uploadFile.service";
 import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.model";
 import {SupplierIdentificationObject} from "../../models/SupplierIdentificationObject.model";
 import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
 import {convertBase64} from "../../utils/base64converter";
 import SupplierManagementUpsert from "./SupplierManagementUpsert/SupplierManagementUpsert";
 import {SupplierManagementObject} from "../../models/SupplierManagementObject.model";
-// import {BAFObjectDTO} from "../../models/BAFObjectDTO.model";
+import FormService from "../../api/form.service";
+import DocumentService from "../../api/document.service";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -58,40 +56,44 @@ const UpsertBaf: React.FunctionComponent = () => {
             navigate(id ? `/detail-BAF/${id}` : `/error`);
         }
 
-        const countries = CountryService.getAll();
-        const sortedCountries = countries.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
-            const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
+        FormService.getD365Values().then(result => {
+            const sortedCountries = result.countries?.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
+                const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
 
-            return {
-                name: country.name.common,
-                cca2: country.cca2,
-                idd: country.idd.suffixes?.map((suffix: string) => {
-                    return country.idd.root + suffix;
-                } ),
-                currency: currencyKey ? country.currencies[currencyKey] : null
-            } as CountryModel;
-        }) as CountryModel[];
+                return {
+                    name: country.name.common,
+                    cca2: country.cca2,
+                    idd: country.idd.suffixes?.map((suffix: string) => {
+                        return country.idd.root + suffix;
+                    } ),
+                    currency: currencyKey ? country.currencies[currencyKey] : null
+                } as CountryModel;
+            }) as CountryModel[];
 
-        setCountries(sortedCountries);
+            setCountries(sortedCountries);
 
-        // if (id !== undefined) {
-        //     const form = FormService.getById(Number(id));
-        //     const uploadedFile = UploadFileService.getAll();
-        //     if(form) {
-        //         setSupplierIdentification(form.supplierIdentification);
-        //         setBankUpsertModel(form.supplierBankDetails);
-        //     }
-        //     if(uploadedFile.length > 0 && form?.id === Number(id)) {
-        //         setUploadedFiles(uploadedFile)
-        //     }
-        // } else {
-        //     setSupplierIdentification({
-        //         address1 : {country: sortedCountries?.at(0)?.name},
-        //         idd: sortedCountries?.at(0)?.idd.at(0),
-        //         cca2: sortedCountries?.at(0)?.cca2,
-        //         establishment: true
-        //     })
-        // }
+            if (id) {
+                FormService.get(id).then(form => {
+                    if (form.supplierIdentification && form.supplierBankDetails) {
+                        setSupplierIdentification(form.supplierIdentification);
+                        setBankUpsertModel(form.supplierBankDetails);
+                    }
+                });
+                DocumentService.getDocumentsByBAFId(id).then(documents => {
+                    if(documents.length > 0) {
+                        setUploadedFiles(documents)
+                    }
+                });
+            } else {
+                setSupplierIdentification({
+                    address1 : {country: countries?.at(0)?.name},
+                    address2 : {country: countries?.at(0)?.name},
+                    idd: countries?.at(0)?.idd.at(0),
+                    cca2: countries?.at(0)?.cca2,
+                    establishment: true
+                })
+            }
+        });
 
 
         setRequiredFileTypes(db.requiredFileTypes);

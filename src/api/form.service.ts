@@ -4,37 +4,37 @@ import {SubmitBAFRequestDTO} from "../models/SubmitBAFRequestDTO..model";
 import {ValuesDTO} from "../models/ValuesDTO.model";
 import {BaseResponseDTO} from "../models/BaseResponseDTO.model";
 
-const Get = (id: string) : Promise<BAFObjectDTO> => {
-    return axios.get(process.env.REACT_APP_API_URL! + '/Form/' + id);
+const get = (id: string) : Promise<BAFObjectDTO> => {
+    return axios.get(process.env.REACT_APP_API_URL! + '/form/' + id);
 };
 
-const GetD365Values = () : Promise<ValuesDTO> => {
-    return axios.get(process.env.REACT_APP_API_URL! + '/Form/GetD365Values');
+const getD365Values = () : Promise<ValuesDTO> => {
+    return axios.get(process.env.REACT_APP_API_URL! + '/form/getd365values');
 };
 
-const SaveBAFDraft = (bafObjectDTO: BAFObjectDTO) : Promise<BaseResponseDTO> => {
-    return axios.post(process.env.REACT_APP_API_URL! + '/Form/SaveBAFDraft', bafObjectDTO);
+const saveBAFDraft = (bafObjectDTO: BAFObjectDTO) : Promise<BaseResponseDTO> => {
+    return axios.post(process.env.REACT_APP_API_URL! + '/form/savebafdraft', bafObjectDTO);
 };
 
-const SubmitBAF = (bafObjectDTO: BAFObjectDTO) : Promise<BaseResponseDTO> => {
-    return axios.post(process.env.REACT_APP_API_URL! + '/Form/SubmitBAF', bafObjectDTO);
+const submitBAF = (bafObjectDTO: BAFObjectDTO) : Promise<BaseResponseDTO> => {
+    return axios.post(process.env.REACT_APP_API_URL! + '/form/submitbaf', bafObjectDTO);
 };
 
-const SubmitBAFWithPEC = (submitBAFRequestDTO: SubmitBAFRequestDTO) : Promise<BaseResponseDTO> => {
-    return axios.post(process.env.REACT_APP_API_URL! + '/Form/SubmitBAFWithPEC', submitBAFRequestDTO);
+const submitBAFWithPEC = (submitBAFRequestDTO: SubmitBAFRequestDTO) : Promise<BaseResponseDTO> => {
+    return axios.post(process.env.REACT_APP_API_URL! + '/form/submitbafwithpec', submitBAFRequestDTO);
 };
 
-const ReturnBAFInSupplierPending = (bafId: string) : Promise<BaseResponseDTO> => {
-    return axios.post(process.env.REACT_APP_API_URL! + '/Form/ReturnBAFInSupplierPending/' + bafId);
+const returnBAFInSupplierPending = (bafId: string) : Promise<BaseResponseDTO> => {
+    return axios.post(process.env.REACT_APP_API_URL! + '/form/returnbafinsupplierpending/' + bafId);
 };
 
 const FormService = {
-    Get,
-    GetD365Values,
-    SaveBAFDraft,
-    SubmitBAF,
-    SubmitBAFWithPEC,
-    ReturnBAFInSupplierPending
+    get,
+    getD365Values,
+    saveBAFDraft,
+    submitBAF,
+    submitBAFWithPEC,
+    returnBAFInSupplierPending
 };
 
 export default FormService;
