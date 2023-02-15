@@ -395,7 +395,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
               <div className="d-flex">
                   <div className="d-flex flex-column container-lg">
-                      <label htmlFor="numberPrefix" className="font-input-label" onClick={() => console.log(model.companySize)}>
+                      <label htmlFor="numberPrefix" className="font-input-label">
                           Company Size<span className="red">*</span>
                           {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
