@@ -57,7 +57,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         taxResidenceCountry: null
     })
 
-    const {setIsFormValidIdentification, setIsOnlyFirstApproval} = useGlobalContext()
+    const {setIsFormValidIdentification} = useGlobalContext()
     useLayoutEffect(() => {
         if(model.vatRegime) {
             if(model.vatRegime == "Encaissement/Deferred") {
@@ -401,12 +401,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       </label>
                           <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
                                   value={companySize} onChange={event => {
-                              setCompanySize(event.target.value);
-                              model.companySize = event.target.value;
-                              event.target.value === 'small' ? setIsOnlyFirstApproval(true) : setIsOnlyFirstApproval(null)
+                              setCompanySize(event.target.value)
+                              model.companySize = event.target.value
                           }}>
-                              <option value="small">1 Person companies/small companies</option>
-                              <option value="large">Large companies</option>
+                              <option value=""></option>
+                              <option value="small">Small [0 - 249]</option>
+                              <option value="medium">Medium [250 - 999]</option>
+                              <option value="large">Large [1000+]</option>
                           </select>
 
                   </div>

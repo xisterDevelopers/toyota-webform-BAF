@@ -23,17 +23,14 @@ import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.
 import {SupplierIdentificationObject} from "../../models/SupplierIdentificationObject.model";
 import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
 import {convertBase64} from "../../utils/base64converter";
-import SupplierManagementUpsert from "./SupplierManagementUpsert/SupplierManagementUpsert";
-import {SupplierManagementObject} from "../../models/SupplierManagementObject.model";
 // import {BAFObjectDTO} from "../../models/BAFObjectDTO.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 const UpsertBaf: React.FunctionComponent = () => {
     const [countries, setCountries] = useState<CountryModel[]>([ ]);
-    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {}, companySize: 'small' });
+    const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
     const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
-    const [managementApproval, setManagementApproval] = useState<SupplierManagementObject>({ })
     const [toUpdateFile, setToUpdateFile] = useState<UpdateFileRequestDTO>({ fileName: "", bafDocumentType: "" })
     const [toUploadFiles, setToUploadFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [uploadedFiles, setUploadedFiles] = useState<UpdateFileRequestDTO[]>([ ]);
@@ -47,8 +44,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
 
-    const {formState, setFormState, isFormValidBank,
-        isFormValidIdentification, isFormValidManagement} = useGlobalContext();
+    const {formState, setFormState, isFormValidBank, isFormValidIdentification} = useGlobalContext();
 
     let navigate = useNavigate()
     let {id} = useParams();
@@ -262,10 +258,8 @@ const UpsertBaf: React.FunctionComponent = () => {
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} cca={supplierIdentification.cca2} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierManagementUpsert countries={countries} model={managementApproval}/>
-            <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
-                <h2 className="mb-5 section-A-font-title">D. Upload Files</h2>
+                <h2 className="mb-5">D. Upload Files</h2>
                 <h3 className="ml-4">Documentazione obbligatoria</h3>
                 {
                     requiredFileTypes.map((requiredFileType, i) => {
@@ -412,7 +406,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                     setFormState('waiting for supplier pec')
                     navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
-                } disabled={!isFormValidIdentification || !isFormValidBank || !isFormValidManagement} />
+                } disabled={!isFormValidIdentification || !isFormValidBank} />
             </div>
         </div>
     );
