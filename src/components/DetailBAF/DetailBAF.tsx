@@ -16,6 +16,8 @@ import {SupplierBankDetailsObject} from "../../models/SupplierBankDetailsObject.
 import {SupplierIdentificationObject} from "../../models/SupplierIdentificationObject.model";
 import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
 import {convertBase64} from "../../utils/base64converter";
+import {SupplierManagementObject} from "../../models/SupplierManagementObject.model";
+import SupplierManagementDetail from "./SupplierManagementDetail/SupplierManagementDetail";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -29,6 +31,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [uploadFiles, setUploadFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [supplierIdentificationDetail, setSupplierIdentificationDetail] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
     const [bankDetailsDetail, setBankDetailsDetail] = useState<SupplierBankDetailsObject>({ });
+    const [supplierManagementDetail, setSupplierManagementDetail] = useState<SupplierManagementObject>({ });
     const [uploadedFiles, setUploadedFiles] = useState<UpdateFileRequestDTO[]>([ ]);
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
     const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
@@ -160,8 +163,10 @@ const DetailBaf: FC<DetailBafProps> = () => {
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsDetail model={bankDetailsDetail} />
             <hr className="break-line mb-5 mt-6" />
+            <SupplierManagementDetail model={supplierManagementDetail} />
+            <hr className="break-line mb-5 mt-6" />
             <div className=" info-container mb-5">
-                <h2 className="mb-5">C. Upload Files</h2>
+                <h2 className="mb-5">D. Upload Files</h2>
                 <h3 className="ml-4">Documentazione obbligatoria</h3>
                 {
                     requiredFileTypes.map((requiredFileType, i) => {
