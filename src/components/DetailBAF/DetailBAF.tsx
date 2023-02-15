@@ -18,6 +18,8 @@ import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
 import {convertBase64} from "../../utils/base64converter";
 import {SupplierManagementObject} from "../../models/SupplierManagementObject.model";
 import SupplierManagementDetail from "./SupplierManagementDetail/SupplierManagementDetail";
+import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
+import documentService from "../../api/document.service";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -32,7 +34,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [supplierIdentificationDetail, setSupplierIdentificationDetail] = useState<SupplierIdentificationObject>({ address1: {}, address2: {} });
     const [bankDetailsDetail, setBankDetailsDetail] = useState<SupplierBankDetailsObject>({ });
     const [supplierManagementDetail, setSupplierManagementDetail] = useState<SupplierManagementObject>({ });
-    const [uploadedFiles, setUploadedFiles] = useState<UpdateFileRequestDTO[]>([ ]);
+    const [uploadedFiles, setUploadedFiles] = useState<BafDocumentDTO[]>([ ]);
     const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
     const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
     const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
@@ -46,19 +48,26 @@ const DetailBaf: FC<DetailBafProps> = () => {
             navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
         }
 
-        // const form = formService.getById(Number(id));
-        //
-        // if (form !== undefined) {
-        //     setSupplierIdentificationDetail(form.identification);
-        //     setBankDetailsDetail(form.bankDetails);
-        //     setUploadedFiles(uploadFileService.getAll);
-        //     setRequiredFileTypes(db.requiredFileTypes);
-        //     setAcceptanceFiles(db.acceptanceFiles);
-        //     setIntegrativeFiles(db.integrativeFiles);
-        //     setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
-        //     setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
-        //     setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
-        // }
+        if(id) {
+            formService.get(id).then(model => {
+                if(model.supplierIdentification && model.supplierBankDetails) {
+                    setSupplierIdentificationDetail(model.supplierIdentification);
+                    setBankDetailsDetail(model.supplierBankDetails);
+                }
+
+            })
+        }
+        if(id) {
+            documentService.getDocumentsByBAFId(id).then(documents => {
+                setUploadedFiles(documents);
+            })
+        }
+             setRequiredFileTypes(db.requiredFileTypes);
+             setAcceptanceFiles(db.acceptanceFiles);
+             setIntegrativeFiles(db.integrativeFiles);
+             setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
+             setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
+             setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
 
         window.scrollTo(0, 0);
     }, [])
