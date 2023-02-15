@@ -8,6 +8,7 @@
 @import "./styles/input.css";
 @import "./styles/media.css";
 @import "./styles/tooltip.css";
+@import "./styles/animation.css";
 
 @font-face {
   font-family: "Toyota Type";
