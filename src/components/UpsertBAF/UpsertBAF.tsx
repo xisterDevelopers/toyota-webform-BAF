@@ -3,7 +3,6 @@ import './UpsertBAF.css';
 import UploadFile from "../../shared/UploadFile/UploadFile";
 import SupplierBankDetailsUpsert from "./SupplierBankDetailsUpsert/SupplierBankDetailsUpsert";
 import SupplierIdentificationUpsert from "./SupplierIdentificationUpsert/SupplierIdentificationUpsert";
-import {CountryModel} from "../../models/country.model";
 import Button from "../../shared/Button/Button";
 import UploadCard from "../../shared/UploadCard/UploadCard";
 import dot from "../../assets/svg/simple_dot.svg";
@@ -24,11 +23,14 @@ import SupplierManagementUpsert from "./SupplierManagementUpsert/SupplierManagem
 import {SupplierManagementObject} from "../../models/SupplierManagementObject.model";
 import FormService from "../../api/form.service";
 import DocumentService from "../../api/document.service";
+import {CountryObject} from "../../models/CountryObject.model";
+import {CurrencyObject} from "../../models/CurrencyObject.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 const UpsertBaf: React.FunctionComponent = () => {
-    const [countries, setCountries] = useState<CountryModel[]>([ ]);
+    const [countries, setCountries] = useState<CountryObject[]>([ ]);
+    const [currencies, setCurrencies] = useState<CurrencyObject[]>([ ]);
     const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {}, companySize: 'small' });
     const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
     const [managementApproval, setManagementApproval] = useState<SupplierManagementObject>({ })
@@ -44,9 +46,40 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
+    const [loader, setLoader] = useState<boolean>(true);
 
     const {formState, setFormState, isFormValidBank,
         isFormValidIdentification, isFormValidManagement} = useGlobalContext();
+
+    const fetchData = async () => {
+        await FormService.getD365Values().then(async (result) => {
+
+            setCountries(result.data.countries ?? []);
+            setCurrencies(result.data.currencies ?? []);
+
+            if (id) {
+                await FormService.get(id).then(async (form) => {
+                    if (form.supplierIdentification && form.supplierBankDetails) {
+                        setSupplierIdentification(form.supplierIdentification);
+                        setBankUpsertModel(form.supplierBankDetails);
+                    }
+                });
+                await DocumentService.getDocumentsByBAFId(id).then(async (documents) => {
+                    if(documents.length > 0) {
+                        setUploadedFiles(documents)
+                    }
+                });
+            } else {
+                setSupplierIdentification({
+                    address1 : {country: countries?.at(0)?.countryName},
+                    address2 : {country: countries?.at(0)?.countryName},
+                    idd: countries?.at(0)?.prefix,
+                    cca2: countries?.at(0)?.prefixVatNumber,
+                    establishment: true
+                })
+            }
+        });
+    }
 
     let navigate = useNavigate()
     let {id} = useParams();
@@ -56,52 +89,14 @@ const UpsertBaf: React.FunctionComponent = () => {
             navigate(id ? `/detail-BAF/${id}` : `/error`);
         }
 
-        FormService.getD365Values().then(result => {
-            const sortedCountries = result.countries?.sort((a: any, b: any) => a.name.common > b.name.common ? 1 : -1).map((country: any) => {
-                const currencyKey = Object.keys(country.currencies || { })?.at(0) ?? null;
-
-                return {
-                    name: country.name.common,
-                    cca2: country.cca2,
-                    idd: country.idd.suffixes?.map((suffix: string) => {
-                        return country.idd.root + suffix;
-                    } ),
-                    currency: currencyKey ? country.currencies[currencyKey] : null
-                } as CountryModel;
-            }) as CountryModel[];
-
-            setCountries(sortedCountries);
-
-            if (id) {
-                FormService.get(id).then(form => {
-                    if (form.supplierIdentification && form.supplierBankDetails) {
-                        setSupplierIdentification(form.supplierIdentification);
-                        setBankUpsertModel(form.supplierBankDetails);
-                    }
-                });
-                DocumentService.getDocumentsByBAFId(id).then(documents => {
-                    if(documents.length > 0) {
-                        setUploadedFiles(documents)
-                    }
-                });
-            } else {
-                setSupplierIdentification({
-                    address1 : {country: countries?.at(0)?.name},
-                    address2 : {country: countries?.at(0)?.name},
-                    idd: countries?.at(0)?.idd.at(0),
-                    cca2: countries?.at(0)?.cca2,
-                    establishment: true
-                })
-            }
-        });
-
-
         setRequiredFileTypes(db.requiredFileTypes);
         setAcceptanceFiles(db.acceptanceFiles);
         setIntegrativeFiles(db.integrativeFiles);
         setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
         setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
         setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
+
+        fetchData().then(r => setLoader(false));
     }, []);
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -203,6 +198,10 @@ const UpsertBaf: React.FunctionComponent = () => {
         setIsPopUpShow(!isPopUpShow);
     }
 
+    if (loader) {
+        return <div>Loading...</div>
+    }
+
     return(
         <div className="UpsertBAF">
             {
@@ -262,7 +261,7 @@ const UpsertBaf: React.FunctionComponent = () => {
             }
             <SupplierIdentificationUpsert countries={countries} model={supplierIdentification} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} cca={supplierIdentification.cca2} countries={countries} />
+            <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} cca={supplierIdentification.cca2} currencies={currencies} />
             <hr className="break-line mb-5 mt-6" />
             <SupplierManagementUpsert countries={countries} model={managementApproval}/>
             <hr className="break-line mb-5 mt-6" />

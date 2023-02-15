@@ -1,14 +1,14 @@
 import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierBankDetailsUpsert.css';
-import {CountryModel} from "../../../models/country.model";
 import bicValidator from 'bic-validator';
 import {useGlobalContext} from "../../../utils/AppContext";
 import {SupplierBankDetailsObject} from "../../../models/SupplierBankDetailsObject.model";
+import {CurrencyObject} from "../../../models/CurrencyObject.model";
 const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
     outputDetails: SupplierBankDetailsObject;
-    countries: CountryModel[]
+    currencies: CurrencyObject[]
     cca: string | undefined;
 }
 
@@ -25,7 +25,7 @@ interface BankValidationRequired {
     // IBAN SWIFT SORT FIK GIRO (cca già importato)
 }
 
-const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails, countries,cca}) => {
+const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDetails, currencies, cca}) => {
     const [currency, setCurrency] = useState(outputDetails.bankAccountCurrency);
     const [date, setDate] = useState<string>(outputDetails.effectiveDate ?? '');
     const [isAccountDiffHolderName, setIsAccountDiffHolderName] = useState(outputDetails.isSupplierDifferentFromHolderName);
@@ -188,12 +188,9 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                                     requireValidator('bankAccountCurrency');
                         }} >
                             {
-                                Array.from(new Set(countries.filter(country => country.currency !== null)
-                                    .sort((a, b) => a.currency.name > b.currency.name ? 1 : -1)
-                                    .map(country => country.currency.name)
-                                )).map((currency, index) => {
+                                currencies.map((currency, index) => {
                                     return (
-                                        <option key={index}>{currency}</option>
+                                        <option key={index}>{currency.currencyName}</option>
                                     )
                                 })
                             }

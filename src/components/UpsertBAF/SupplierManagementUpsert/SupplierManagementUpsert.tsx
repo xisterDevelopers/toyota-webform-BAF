@@ -1,10 +1,10 @@
 import React, {FC, useEffect, useLayoutEffect, useState} from "react";
-import {CountryModel} from "../../../models/country.model";
 import {SupplierManagementObject} from "../../../models/SupplierManagementObject.model";
 import {useGlobalContext} from "../../../utils/AppContext";
+import {CountryObject} from "../../../models/CountryObject.model";
 
 interface SupplierManagementUpsertProps {
-    countries : CountryModel[];
+    countries : CountryObject[];
     model: SupplierManagementObject;
 }
 
@@ -199,12 +199,9 @@ useLayoutEffect(() => {
                             <select className="custom-input custom-select input-md" value={model.idd}
                                     onChange={(event => model.idd = event.target.value)}>
                                 {
-                                    countries?.map(country =>
+                                    countries?.map((country, i) =>
                                         (
-                                            country?.idd?.map((suffix, i) =>
-                                                (
-                                                    <option key={i}>{suffix}</option>
-                                                ))
+                                            <option key={i}>{country.prefix}</option>
                                         ))
                                 }
                             </select>
@@ -280,12 +277,9 @@ useLayoutEffect(() => {
                                     <select className="custom-input custom-select input-md" value={model.idd2}
                                             onChange={(event => model.idd2 = event.target.value)}>
                                         {
-                                            countries?.map(country =>
+                                            countries?.map((country, i) =>
                                                 (
-                                                    country?.idd?.map((suffix, i) =>
-                                                        (
-                                                            <option key={i}>{suffix}</option>
-                                                        ))
+                                                    <option key={i}>{country.prefix}</option>
                                                 ))
                                         }
                                     </select>

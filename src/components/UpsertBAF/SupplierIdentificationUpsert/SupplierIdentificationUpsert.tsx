@@ -1,13 +1,13 @@
 import React, {FC, useLayoutEffect, useState} from 'react';
 import './SupplierIdentificationUpsert.css';
-import {CountryModel} from "../../../models/country.model";
 import {useGlobalContext} from "../../../utils/AppContext";
 import {SupplierIdentificationObject} from "../../../models/SupplierIdentificationObject.model";
 import {FiInfo} from 'react-icons/fi'
+import {CountryObject} from "../../../models/CountryObject.model";
 
 interface SupplierIdentificationUpsertProps {
     model: SupplierIdentificationObject;
-    countries: CountryModel[];
+    countries: CountryObject[];
 }
 
 interface RequiredFields {
@@ -282,14 +282,14 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                       <select id="country" className="custom-input custom-select input-lg" onBlur={() => requireValidator('country')}
                               value={model.address1.country}
                               onChange={(event) => {
-                                  setCca2(model.cca2 = countries?.find(c => c.name === event.target.value)?.cca2);
-                                  setIdd(model.idd = countries?.find(c => c.name === event.target.value)?.idd.at(0));
+                                  setCca2(model.cca2 = countries?.find(c => c.countryName === event.target.value)?.prefixVatNumber);
+                                  setIdd(model.idd = countries?.find(c => c.countryName === event.target.value)?.prefix);
                                   setCountry(model.address1.country = event.target.value);
                               }}>
                           {
                               countries?.map((country,i) =>
                                   (
-                                      <option key={i}>{country.name}</option>
+                                      <option key={i}>{country.countryName}</option>
                                   ))
                           }
                       </select>
@@ -337,7 +337,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               {
                                   countries?.map((country,i) =>
                                       (
-                                          <option key={i}>{country.name}</option>
+                                          <option key={i}>{country.countryName}</option>
                                       ))
                               }
                           </select>
@@ -435,12 +435,9 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd}
                                   onChange={(event => setIdd(model.idd = event.target.value))}>
                               {
-                                  countries?.map(country =>
+                                  countries?.map((country, i) =>
                                       (
-                                          country?.idd?.map((suffix, i) =>
-                                              (
-                                                  <option key={i}>{suffix}</option>
-                                              ))
+                                        <option key={i}>{country.prefix}</option>
                                       ))
                               }
                           </select>
@@ -464,7 +461,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                               {
                                   countries?.map((country,i) =>
                                       (
-                                          <option key={i}>{country?.cca2}</option>
+                                          <option key={i}>{country?.prefixVatNumber}</option>
                                       ))
                               }
                           </select>
