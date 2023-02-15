@@ -263,7 +263,7 @@ const UpsertBaf: React.FunctionComponent = () => {
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsUpsert outputDetails={bankUpsertModel} cca={supplierIdentification.cca2} countries={countries} />
             <hr className="break-line mb-5 mt-6" />
-            <SupplierManagementUpsert countries={countries} model={managementApproval} isCompanySmall={isOnlyFirstApproval}/>
+            <SupplierManagementUpsert countries={countries} model={managementApproval}/>
             <hr className="break-line mb-5 mt-6" />
             <div className="info-container mb-5">
                 <h2 className="mb-5 section-A-font-title">D. Upload Files</h2>
@@ -407,13 +407,13 @@ const UpsertBaf: React.FunctionComponent = () => {
 
             <div className="d-flex gap-3 justify-end pb-5">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false}
-                onClick={() => {console.log(isFormValidManagement)}}/>
+                onClick={() => {}}/>
                 <Button color="bg-red"
                         text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
                     setFormState('waiting for supplier pec')
                     navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
                 }
-                } disabled={!isFormValidIdentification || !isFormValidBank} />
+                } disabled={!isFormValidIdentification || !isFormValidBank || !isFormValidManagement} />
             </div>
         </div>
     );

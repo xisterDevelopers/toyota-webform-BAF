@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useEffect, useLayoutEffect, useState} from "react";
 import {CountryModel} from "../../../models/country.model";
 import {SupplierManagementObject} from "../../../models/SupplierManagementObject.model";
 import {useGlobalContext} from "../../../utils/AppContext";
@@ -6,7 +6,6 @@ import {useGlobalContext} from "../../../utils/AppContext";
 interface SupplierManagementUpsertProps {
     countries : CountryModel[];
     model: SupplierManagementObject;
-    isCompanySmall: boolean | null;
 }
 
 interface RequireFields {
@@ -20,9 +19,10 @@ interface RequireFields {
     phoneNumber2: null | boolean;
 }
 
-const SupplierManagementUpsert : FC<SupplierManagementUpsertProps> = ({countries, model, isCompanySmall}) => {
+const SupplierManagementUpsert : FC<SupplierManagementUpsertProps> = ({countries, model}) => {
 const [isValidEmail, setIsValidEmail] = useState(true);
 const [isValidEmail2, setIsValidEmail2] = useState(true);
+const [isCompanySmall, setIsCompanySmall] = useState<boolean | null>(true);
 const [validationError, setValidationError] = useState({email: false, email2: true});
 const [validationRequired, setValidationRequired] = useState<RequireFields>({
     name: null,
@@ -35,9 +35,9 @@ const [validationRequired, setValidationRequired] = useState<RequireFields>({
     surname2: isCompanySmall
 });
 
-const {setIsFormValidManagement} = useGlobalContext();
+const {isOnlyFirstApproval, setIsFormValidManagement} = useGlobalContext();
 
-useEffect(() => {
+useLayoutEffect(() => {
     setValidationRequired({name: validationRequired.name, name2: isCompanySmall, phoneNumber: validationRequired.phoneNumber, phoneNumber2: isCompanySmall, position: validationRequired.position, position2: isCompanySmall, surname: validationRequired.surname, surname2: isCompanySmall})
     if(!isCompanySmall) {
         setValidationError({email: validationError.email, email2: false})
@@ -50,9 +50,10 @@ useEffect(() => {
         model.position2 = '';
         model.idd2 = '';
         model.emailAddress2 = '';
-        managementFormValidator()
+        managementFormValidator();
     }
-}, [isCompanySmall, validationRequired.name,validationError.email,validationRequired.phoneNumber, validationRequired.position, validationRequired.surname])
+    setIsCompanySmall(isOnlyFirstApproval);
+}, [validationRequired.name,validationError.email,validationRequired.phoneNumber, validationRequired.position, validationRequired.surname, isOnlyFirstApproval])
     const requireValidator = (field : string) => {
         switch(field) {
             case 'name':
@@ -231,8 +232,8 @@ useEffect(() => {
                     </div>
                 </div>
                 {
-                    isCompanySmall ? "" : <><h3 className="mt-6"><strong>Second Approval Operations (accounting finals)</strong></h3>
-                        <div className="d-flex gap-5">
+                    !isCompanySmall && <div><h3 className="mt-6"><strong>Second Approval Operations (accounting finals)</strong></h3>
+                        <div className="d-flex gap-5 person-name-container">
                             <div className="d-flex flex-column">
                                 <label htmlFor="nameApproval2" className="font-input-label">
                                     Name <span className="red">*</span>
@@ -309,7 +310,7 @@ useEffect(() => {
                                     managementFormValidator();
                                 }}/>
                             </div>
-                        </div></>
+                        </div></div>
                 }
             </form>
         </div>
