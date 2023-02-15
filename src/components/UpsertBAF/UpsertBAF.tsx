@@ -48,8 +48,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
 
     const {formState, setFormState, isFormValidBank,
-        isFormValidIdentification, isFormValidManagement,
-        isOnlyFirstApproval} = useGlobalContext();
+        isFormValidIdentification, isFormValidManagement} = useGlobalContext();
 
     let navigate = useNavigate()
     let {id} = useParams();
