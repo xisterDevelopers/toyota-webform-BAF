@@ -8,7 +8,7 @@ interface SupplierBankDetailsDetailProps {
 
 const SupplierBankDetailsDetail: FC<SupplierBankDetailsDetailProps> = ({model}) => (
   <div className="SupplierBankDetailsDetail">
-      <h2 className="mb-5">B. Supplier bank details</h2>
+      <h2 className="mb-5 section-A-font-title">B. Supplier bank details</h2>
 
       <div className="d-flex flex-column gap-3" >
           <div className="d-flex gap-5">
