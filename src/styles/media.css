@@ -1,5 +1,5 @@
 @media only screen and (max-width: 850px) {
-    #personNameContainer, #vatContainer, .person-name-container {
+    #personNameContainer, #vatContainer {
         gap: 1.5rem;
         flex-direction: column;
     }

@@ -156,7 +156,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
 
     return(
         <div>
-            <h2 className="mb-5 section-A-font-title">B. Supplier bank details</h2>
+            <h2 className="mb-5">B. Supplier bank details</h2>
             <div className="info-container pb-5">
                 <p><strong>Note to Vendors:</strong> Toyota is mindful of the risks involved with the creation and maintenance of Vendor bank details.
                     To mitigate there risks and to protect your interests, as well as the interests of Toyota,
