@@ -7,7 +7,7 @@ import {DownloadResponseDTO} from "../models/DownloadResponseDTO.model";
 import {BaseResponseDTO} from "../models/BaseResponseDTO.model";
 
 const GetDocumentsByBAFId = (bafId: string) : Promise<BafDocumentDTO> => {
-    return  axios.get(process.env.REACT_APP_API_URL! + '/Document/GetDocumentsByBAFId/'+ bafId);
+    return  axios.get(process.env.REACT_APP_API_URL! + '/Document/getdocumentsbybafid/'+ bafId);
 };
 
 const DownloadFile = (fileRequest : FileRequestDTO) : Promise<DownloadResponseDTO> => {
