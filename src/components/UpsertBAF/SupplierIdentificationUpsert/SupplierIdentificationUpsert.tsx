@@ -353,8 +353,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           </label>
                           <div className="tooltip">
                             <span className="tooltiptext">
-                                <b>Government agency - One signature and one call back required + Supporting documentation
-                                    (government agency’s website validated by is department)</b>
+                                <b>- AGENZIA GOVERNATIVA</b> - Una Firma e una richiamata per conferma dati richieste + Documentazione di Supporto
+                                    (Sito Web dell’agenzia Governativa Convalidato dal Dipartimento Infrastrutture e Sicurezza – IS)
                             </span>
                               <div className="dark-grey d-flex justify-center align-center mx-2 font-icon mt-2">
                                   <FiInfo onClick={() => setTooltipGovernment(!tooltipGovernment)}></FiInfo>
@@ -412,9 +412,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
 
                   </div>
                   <div className="tooltip">
-                      <span className="tooltiptext"><b>1 Person companies/small companies* - One signature and one call back required</b>
-                            <p>*1 person companies/small companies - only one person within the company of managment level</p>
-                            <b>Large companies - Double signature and double call back required</b></span>
+                      <span className="tooltiptext"><b>- AZIENDA UNIPERSONALE/PICCOLE AZIENDE*</b>
+                            <p className="mt-0">- Una Firma e una richiamata per conferma dati richieste</p>
+                            <p>* per questa tipologia di aziende è presente solo una persona di livello dirigenziale all'interno dell'azienda</p>
+                            <b>- GRANDI AZIENDE</b> – Doppia Firma e doppia richiamata per conferma dati richieste</span>
                       <div className="dark-grey d-flex justify-center align-center mx-2 font-icon mt-5">
                           <FiInfo onClick={() => setTooltipCompanySize(!tooltipCompanySize)}></FiInfo>
                       </div>
