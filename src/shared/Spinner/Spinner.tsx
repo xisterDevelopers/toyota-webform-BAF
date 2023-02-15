@@ -1,6 +1,10 @@
 import './Spinner.css'
+import {FC} from "react";
 
-const Spinner = () => {
+interface SpinnerProps {
+    text: string;
+}
+const Spinner: FC<SpinnerProps> = ({text}) => {
     return (
         <div className="d-flex flex-column align-center">
         <div className="center-body">
@@ -10,7 +14,7 @@ const Spinner = () => {
                 <div className="arc"></div>
             </div>
         </div>
-    <p className="loader-text">Loading</p></div>
+    <p className="loader-text">{text}</p></div>
     )
 }
 
