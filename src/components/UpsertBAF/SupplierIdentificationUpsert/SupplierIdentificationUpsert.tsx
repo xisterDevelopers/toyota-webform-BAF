@@ -280,7 +280,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.country && validationRequired.country !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <select id="country" className="custom-input custom-select input-lg" onBlur={() => requireValidator('country')}
-                              value={model.address1.country}
+                              value={model.address1.country === undefined ? "Italy" : model.address1.country}
                               onChange={(event) => {
                                   setCca2(model.cca2 = countries?.find(c => c.countryName === event.target.value)?.prefixVatNumber);
                                   setIdd(model.idd = countries?.find(c => c.countryName === event.target.value)?.prefix);
@@ -289,7 +289,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {
                               countries?.map((country,i) =>
                                   (
-                                      <option key={i}>{country.countryName}</option>
+                                      <option value={country.countryName} key={i}>{country.countryName}</option>
                                   ))
                           }
                       </select>

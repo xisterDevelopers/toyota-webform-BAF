@@ -105,19 +105,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 validationRequired.factoryReason =
                     outputDetails.factoryCompanyReason !== undefined && outputDetails.factoryCompanyReason.length > 0 ? validationRequired.factoryReason = true : false;
                 break;
-
-            // case 'phoneNumber':
-            //     validationRequired.phoneNumber =
-            //         outputDetails.phoneNumber !== undefined && outputDetails.phoneNumber.length > 0 ? validationRequired.phoneNumber = true : false;
-            //     break;
-            // case 'vatNumber':
-            //     validationRequired.vatNumber =
-            //         outputDetails.vatNumber !== undefined && outputDetails.vatNumber.length > 0 ? validationRequired.vatNumber = true : false;
-            //     break;
-            // case 'taxResidenceCountry':
-            //     validationRequired.taxResidenceCountry =
-            //         outputDetails.taxResidenceCountry !== undefined && outputDetails.taxResidenceCountry.length > 0 ? validationRequired.taxResidenceCountry = true : false;
-            //     break;
         }
         setValidationRequired({...validationRequired})
         bankFormValidator()

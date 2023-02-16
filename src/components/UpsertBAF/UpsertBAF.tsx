@@ -25,6 +25,7 @@ import FormService from "../../api/form.service";
 import DocumentService from "../../api/document.service";
 import {CountryObject} from "../../models/CountryObject.model";
 import {CurrencyObject} from "../../models/CurrencyObject.model";
+import Spinner from "../../shared/Spinner/Spinner";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -71,10 +72,10 @@ const UpsertBaf: React.FunctionComponent = () => {
                 });
             } else {
                 setSupplierIdentification({
-                    address1 : {country: countries?.at(0)?.countryName},
-                    address2 : {country: countries?.at(0)?.countryName},
-                    idd: countries?.at(0)?.prefix,
-                    cca2: countries?.at(0)?.prefixVatNumber,
+                    address1 : {country: result.data.countries?.at(0)?.countryName},
+                    address2 : {country: result.data.countries?.at(0)?.countryName},
+                    idd: result.data.countries?.at(0)?.prefix,
+                    cca2: result.data.countries?.at(0)?.prefixVatNumber,
                     establishment: true
                 })
             }
@@ -199,7 +200,7 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
 
     if (loader) {
-        return <div>Loading...</div>
+        return <Spinner text="Loading"></Spinner>
     }
 
     return(
