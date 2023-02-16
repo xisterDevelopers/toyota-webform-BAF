@@ -150,7 +150,6 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
     const upload = () => {
         setUploadedFiles([...uploadedFiles, ...toUploadFiles]);
-        console.log(toUploadFiles)
         toUploadFiles.map(el => {
             filePost(el).then();
         })
