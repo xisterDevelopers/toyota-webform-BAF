@@ -26,6 +26,9 @@ import DocumentService from "../../api/document.service";
 import {CountryObject} from "../../models/CountryObject.model";
 import {CurrencyObject} from "../../models/CurrencyObject.model";
 import Spinner from "../../shared/Spinner/Spinner";
+import {ChangeCategoryRequestDTO} from "../../models/ChangeCategoryRequestDTO.model";
+import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
+import {FileRequestDTO} from "../../models/FileRequestDTO.model";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -142,20 +145,47 @@ const UpsertBaf: React.FunctionComponent = () => {
         checkValidation();
     }
 
-
+    const filePost = async (updateFile : UpdateFileRequestDTO) => {
+        await DocumentService.uploadFileForBAF(updateFile);
+    }
     const upload = () => {
         setUploadedFiles([...uploadedFiles, ...toUploadFiles]);
+        console.log(toUploadFiles)
+        toUploadFiles.map(el => {
+            filePost(el).then();
+        })
         setToUploadFiles([]);
         setShowModal(false);
     }
 
+    const fileUpdate = async (changeReq : ChangeCategoryRequestDTO) => {
+        await DocumentService.changeCategoryByFileURL(changeReq);
+    }
+
+    const documentsFetch = async (id: string) => {
+        if(id) {
+            return await DocumentService.getDocumentsByBAFId(id);
+        }
+    }
+
     const updateFileTypology = () => {
+        let postRequest: ChangeCategoryRequestDTO = {}
+        let documents : BafDocumentDTO[] | undefined = [];
+        if(id) {
+            documentsFetch(id).then(res => documents = res)
+        }
         uploadedFiles.map(file => {
             if (file.fileName === toUpdateFile.fileName) {
                 file.bafDocumentType = toUpdateFile.bafDocumentType;
+                postRequest.bafDocumentType = toUpdateFile.bafDocumentType;
             }
         });
-
+        documents.map(file => {
+            if(file.name === toUpdateFile.fileName) {
+                postRequest.url = file.serverRelativeUrl;
+            }
+        })
+        fileUpdate(postRequest).then();
         setUploadedFiles([...uploadedFiles]);
     }
 
@@ -190,6 +220,18 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
 
     const deleteUploadedFile = (index: number) => {
+        let deleteRequest: FileRequestDTO = {}
+        let documents : BafDocumentDTO[] | undefined = [];
+        if(id) {
+            documentsFetch(id).then(res => documents = res)
+        }
+        documents.map((el,i) => {
+            if (i === index) {
+                deleteRequest.serverRelativeURL = el.serverRelativeUrl;
+            }
+        })
+        deleteRequest.serverRelativeURL = id;
+        DocumentService.deleteFileForBAF(deleteRequest).then();
         uploadedFiles.splice(index, 1);
 
         setUploadedFiles([...uploadedFiles]);
