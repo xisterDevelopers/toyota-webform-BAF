@@ -20,6 +20,8 @@ import {SupplierManagementObject} from "../../models/SupplierManagementObject.mo
 import SupplierManagementDetail from "./SupplierManagementDetail/SupplierManagementDetail";
 import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
 import documentService from "../../api/document.service";
+import FormService from "../../api/form.service";
+import DocumentService from "../../api/document.service";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -42,35 +44,45 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
     const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
 
+    const fetchData = async() => {
+        if (id) {
+            await FormService.get(id).then(async (form) => {
+                if(form.supplierIdentification && form.supplierBankDetails) {
+                    setSupplierIdentificationDetail(form.supplierIdentification);
+                    setBankDetailsDetail(form.supplierBankDetails);
+                }
+            });
+            await DocumentService.getDocumentsByBAFId(id).then(async (documents) => {
+                if(documents.length > 0) {
+                    setUploadedFiles(documents)
+                }
+            });
+        } else {
+            navigate('/error');
+        }
+    }
+
     useLayoutEffect(() => {
         if (formState === 'supplier pending' ||
             formState === 'Supplier Pending - ERROR') {
             navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
         }
 
-        if(id) {
-            formService.get(id).then(model => {
-                if(model.supplierIdentification && model.supplierBankDetails) {
-                    setSupplierIdentificationDetail(model.supplierIdentification);
-                    setBankDetailsDetail(model.supplierBankDetails);
-                }
+        fetchData().then();
 
-            })
-        }
-        if(id) {
-            documentService.getDocumentsByBAFId(id).then(documents => {
-                setUploadedFiles(documents);
-            })
-        }
-             setRequiredFileTypes(db.requiredFileTypes);
-             setAcceptanceFiles(db.acceptanceFiles);
-             setIntegrativeFiles(db.integrativeFiles);
-             setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
-             setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
-             setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
+        setRequiredFileTypes(db.requiredFileTypes);
+        setAcceptanceFiles(db.acceptanceFiles);
+        setIntegrativeFiles(db.integrativeFiles);
+        setIntegrativeFilesHighRisk(db.integrativeFilesHighRisk);
+        setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
+        setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
 
         window.scrollTo(0, 0);
     }, [])
+
+    const filePost = async (updateFile : UpdateFileRequestDTO) => {
+        await DocumentService.uploadFileForBAF(updateFile);
+    }
 
     const preventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
@@ -84,10 +96,12 @@ const DetailBaf: FC<DetailBafProps> = () => {
             if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
                 const base64 = await convertBase64(event.dataTransfer.files[i])
                 uploadFiles.push({ fileName: event.dataTransfer.files[i].name, base64File: base64 });
+                filePost({ bafId: id, fileName: event.dataTransfer.files[i].name, base64File: base64, bafDocumentType: 'Ricevuta PEC' }).then();
             } else {
                 console.error('Dimensione massima superata');
             }
         }
+
 
         setUploadFiles([...uploadFiles]);
     }
@@ -100,6 +114,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
                     const base64 = await convertBase64(event.target.files[i])
                     uploadFiles.push({ fileName: event.target.files[i].name, base64File: base64 });
+                    filePost({ bafId: id, fileName: event.target.files[i].name, base64File: base64, bafDocumentType: 'Ricevuta PEC' }).then();
                 } else {
                     console.error('Dimensione massima superata');
                 }
