@@ -22,6 +22,8 @@ interface BankValidationRequired {
     isFactoryCompany: null | boolean;
     factoryReason: null | boolean;
     bankAccountNumber: null | boolean;
+    iban: null | boolean;
+    swift: null | boolean;
     // IBAN SWIFT SORT FIK GIRO (cca già importato)
 }
 
@@ -30,9 +32,9 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     const [date, setDate] = useState<string>(outputDetails.effectiveDate ?? '');
     const [isAccountDiffHolderName, setIsAccountDiffHolderName] = useState(outputDetails.isSupplierDifferentFromHolderName);
     const [isFactoryCompany, setIsFactoryCompany] = useState(outputDetails.isFactoryCompany);
-    const [ibanIsValid, setIbanIsValid] = useState(true);
-    const [swiftIsValid, setSwiftIsValid] = useState(true);
-    const [validationError, setValidationError] = useState({iban : false, swift: false})
+    //const [ibanIsValid, setIbanIsValid] = useState(outputDetails.ibanNumber !== undefined);
+    //const [swiftIsValid, setSwiftIsValid] = useState(outputDetails.swiftNumber !== undefined);
+/*    const [validationError, setValidationError] = useState()*/
     const [validationRequired, setValidationRequired] = useState<BankValidationRequired>({
         bankAccountCurrency: null,
         bankAccountHolderName: null,
@@ -42,7 +44,9 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         isFactoryCompany: null,
         isSupplierNameDifferent: null,
         reasonName: null,
-        bankName: null
+        bankName: null,
+        iban: null,
+        swift: null
     })
 
     const {setIsFormValidBank} = useGlobalContext()
@@ -58,13 +62,14 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
         if(outputDetails.effectiveDate !== undefined) {
             setDate(outputDetails.effectiveDate)
         }
-        if(outputDetails.ibanNumber !== undefined) {
-            ibanValidator(true)
-        }
-        if(outputDetails.swiftNumber !== undefined) {
-            swiftValidator(true)
-        }
-        bankFormValidator()
+        //if(outputDetails.ibanNumber !== undefined) {
+        //    ibanValidator(true)
+        //}
+        //if(outputDetails.swiftNumber !== undefined) {
+        //    swiftValidator(true)
+        //}
+        bankFormValidator();
+        
     }, [outputDetails.isFactoryCompany, outputDetails.isSupplierDifferentFromHolderName, outputDetails.effectiveDate, outputDetails.ibanNumber, outputDetails.swiftNumber])
 
     const requireValidator = (field : string) => {
@@ -105,41 +110,49 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 validationRequired.factoryReason =
                     outputDetails.factoryCompanyReason !== undefined && outputDetails.factoryCompanyReason.length > 0 ? validationRequired.factoryReason = true : false;
                 break;
+            case 'iban':
+                validationRequired.iban =
+                    outputDetails.ibanNumber !== undefined && outputDetails.ibanNumber.length > 0 ? validationRequired.iban = true : false;
+                break;
+            case 'swift':
+                validationRequired.swift =
+                    outputDetails.swiftNumber !== undefined && outputDetails.swiftNumber.length > 0 ? validationRequired.swift = true : false;
+                break;
         }
         setValidationRequired({...validationRequired})
         bankFormValidator()
     }
     const bankFormValidator = () => {
-        const booleanArray = [validationError.iban,validationError.swift, validationRequired.bankName, validationRequired.bankAccountCurrency,
+        const booleanArray = [validationRequired.iban, validationRequired.swift, validationRequired.bankName, validationRequired.bankAccountCurrency,
             validationRequired.effectiveDate,validationRequired.bankAccountHolderName,validationRequired.isSupplierNameDifferent,
             validationRequired.reasonName,validationRequired.isFactoryCompany,validationRequired.factoryReason,
             validationRequired.bankAccountNumber];
         setIsFormValidBank(booleanArray.every(bool => bool));
     }
 
-    const ibanValidator = (isActuallyValid : boolean) => {
-        let validation = IBAN.isValid(outputDetails.ibanNumber);
-        if (isActuallyValid) {
-            validationError.iban = validation;
-            setValidationError({...validationError})
-        } else {
-            setIbanIsValid(validation);
-        }
+    //const ibanValidator = (isActuallyValid : boolean) => {
+    //    let validation = IBAN.isValid(outputDetails.ibanNumber);
+    //    if (isActuallyValid) {
+    //        validationError.iban = validation;
+    //        setValidationError({...validationError})
+    //    } else {
+    //        setIbanIsValid(validation);
+    //    }
 
-    }
+    //}
 
-    const swiftValidator = (isActuallyValid : boolean) => {
-        if(outputDetails.swiftNumber !== undefined) {
-            let validation = bicValidator.isValid(outputDetails.swiftNumber)
-            if (isActuallyValid) {
-                validationError.swift = validation;
-                setValidationError({...validationError})
-            } else {
-                setSwiftIsValid(validation)
-            }
+    //const swiftValidator = (isActuallyValid : boolean) => {
+    //    if(outputDetails.swiftNumber !== undefined) {
+    //        let validation = bicValidator.isValid(outputDetails.swiftNumber)
+    //        if (isActuallyValid) {
+    //            validationError.swift = validation;
+    //            setValidationError({...validationError})
+    //        } else {
+    //            setSwiftIsValid(validation)
+    //        }
 
-        }
-    }
+    //    }
+    //}
 
     return(
         <div>
@@ -191,7 +204,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.effectiveDate && validationRequired.effectiveDate !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <input type="date" className="custom-input custom-date input-lg" onBlur={() => requireValidator('effectiveDate')}
-                               defaultValue={date} onChange={(event) => {
+                            defaultValue={date} onChange={(event) => {
                                     setDate(event.target.value)
                                     outputDetails.effectiveDate = event.target.value;
                                     requireValidator('effectiveDate');
@@ -219,23 +232,23 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         </label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
-                                <input type="radio" id="yesAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === true}
+                                <input type="radio" id="yesAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === "Yes"}
                                        onChange={() =>  {
                                            validationRequired.isSupplierNameDifferent = true;
                                            validationRequired.reasonName = false;
-                                           setIsAccountDiffHolderName(true)
-                                           outputDetails.isSupplierDifferentFromHolderName = true
+                                           setIsAccountDiffHolderName("Yes")
+                                           outputDetails.isSupplierDifferentFromHolderName = "Yes"
                                        }}/>
                                 <label htmlFor="yesAccount" className="custom-radio"></label>
                                 <label htmlFor="yesAccount">Yes</label>
                             </div>
                             <div className="d-flex gap-2">
-                                <input type="radio" id="noAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === false}
+                                <input type="radio" id="noAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === "No"}
                                        onChange={() => {
                                            validationRequired.isSupplierNameDifferent = true;
                                            validationRequired.reasonName = true;
-                                           setIsAccountDiffHolderName(false)
-                                           outputDetails.isSupplierDifferentFromHolderName = false
+                                           setIsAccountDiffHolderName("No")
+                                           outputDetails.isSupplierDifferentFromHolderName = "No"
                                        }}/>
                                 <label htmlFor="noAccount" className="custom-radio"></label>
                                 <label htmlFor="noAccount">No</label>
@@ -249,7 +262,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             Reason<span className="red">*</span>
                             {!validationRequired.reasonName && validationRequired.reasonName !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
-                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.isSupplierDifferentFromHolderName} onBlur={() => requireValidator('reasonName')}
+                        <input type="text" className="custom-input input-lg" disabled={outputDetails.isSupplierDifferentFromHolderName == "No"} onBlur={() => requireValidator('reasonName')}
                                defaultValue={outputDetails.supplierDifferentReason} onChange={(event) => {
                                     outputDetails.supplierDifferentReason = event.target.value;
                                     requireValidator('reasonName')
@@ -264,23 +277,23 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                         </label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
-                                <input type="radio" id="yesFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === true}
+                                <input type="radio" id="yesFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === "Yes"}
                                        onChange={() => {
                                            validationRequired.isFactoryCompany = true;
                                            validationRequired.factoryReason = false;
-                                           setIsFactoryCompany(true)
-                                           outputDetails.isFactoryCompany = true
+                                           setIsFactoryCompany("Yes")
+                                           outputDetails.isFactoryCompany = "Yes"
                                        }}/>
                                 <label htmlFor="yesFactory" className="custom-radio"></label>
                                 <label htmlFor="yesFactory">Yes</label>
                             </div>
                             <div className="d-flex gap-2">
-                                <input type="radio" id="noFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === false}
+                                <input type="radio" id="noFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === "No"}
                                        onChange={() => {
                                            validationRequired.isFactoryCompany = true;
                                            validationRequired.factoryReason = true;
-                                           setIsFactoryCompany(false)
-                                           outputDetails.isFactoryCompany = false
+                                           setIsFactoryCompany("No")
+                                           outputDetails.isFactoryCompany = "No"
                                        }}/>
                                 <label htmlFor="noFactory" className="custom-radio"></label>
                                 <label htmlFor="noFactory">No</label>
@@ -294,7 +307,7 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             Reason<span className="red">*</span>
                             {!validationRequired.factoryReason && validationRequired.factoryReason !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
-                        <input type="text" className="custom-input input-lg" disabled={!outputDetails.isFactoryCompany} onBlur={() => requireValidator('factoryReason')}
+                        <input type="text" className="custom-input input-lg" disabled={outputDetails.isFactoryCompany === "No"} onBlur={() => requireValidator('factoryReason')}
                                defaultValue={outputDetails.factoryCompanyReason} onChange={(event) => {
                                     outputDetails.factoryCompanyReason = event.target.value;
                                     requireValidator('factoryReason');
@@ -318,26 +331,24 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div className="d-flex flex-column">
                         <label className="font-input-label">
                             IBAN number<span className="red">*</span>
-                            {ibanIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                            {!validationRequired.iban && validationRequired.iban !== null ? <small> : <small className="red">Invalid</small></small> : ""}
                         </label>
-                        <input type="text" className={"custom-input input-lg " + (ibanIsValid ? "" : "red")} onBlur={() => ibanValidator(false)}
+                        <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('iban')}
                                defaultValue={outputDetails.ibanNumber} onChange={(event) => {
                             outputDetails.ibanNumber = event.target.value;
-                            ibanValidator(true);
-                            bankFormValidator();
+                                   requireValidator('iban')
                         }}/>
                     </div>
                     <div className="d-flex flex-column">
                         <label className="font-input-label">
                             SWIFT code<span className="red">*</span>
-                            {swiftIsValid ? "" : <small> : <small className="red">Invalid</small></small>}
+                            {!validationRequired.swift && validationRequired.swift !== null ? <small> : <small className="red">Invalid</small></small> : ""}
                         </label>
-                        <input type="text" className={"custom-input input-lg " + (swiftIsValid ? "" : "red")} onBlur={() => swiftValidator(false)}
-                               defaultValue={outputDetails.swiftNumber} onChange={(event) => {
-                            outputDetails.swiftNumber = event.target.value;
-                            swiftValidator(true);
-                            bankFormValidator();
-                        }}/>
+                        <input type="text" className="custom-input input-lg" onBlur={() => requireValidator('swift')}
+                            defaultValue={outputDetails.swiftNumber} onChange={(event) => {
+                                outputDetails.swiftNumber = event.target.value;
+                                requireValidator('swift')
+                            }} />
                     </div>
                     <div className="d-flex flex-column">
                         <label id="sortCodeLabel" className="d-flex font-input-label txt-nowrap">SORT code (UK) / FIK (Denmark) / GIRO (Sweden)<span className="red">*</span></label>

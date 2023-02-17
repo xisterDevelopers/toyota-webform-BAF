@@ -17,7 +17,7 @@ export interface SupplierIdentificationObject {
     isDifferentFromVATNumber?: boolean;
     taxId?: string;
     // vatRegime is boolean?
-    vatRegime?: string;
+    vatRegime?: boolean;
     registrationNumber?: string;
 
     // Not in BE schema

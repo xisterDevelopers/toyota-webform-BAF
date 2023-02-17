@@ -47,14 +47,14 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const fetchData = async() => {
         if (id) {
             await FormService.get(id).then(async (form) => {
-                if(form.supplierIdentification && form.supplierBankDetails) {
-                    setSupplierIdentificationDetail(form.supplierIdentification);
-                    setBankDetailsDetail(form.supplierBankDetails);
+                if(form.data.supplierIdentification && form.data.supplierBankDetails) {
+                    setSupplierIdentificationDetail(form.data.supplierIdentification);
+                    setBankDetailsDetail(form.data.supplierBankDetails);
                 }
             });
             await DocumentService.getDocumentsByBAFId(id).then(async (documents) => {
-                if(documents.length > 0) {
-                    setUploadedFiles(documents)
+                if(documents.data.length > 0) {
+                    setUploadedFiles(documents.data)
                 }
             });
         } else {
@@ -63,6 +63,10 @@ const DetailBaf: FC<DetailBafProps> = () => {
     }
 
     useLayoutEffect(() => {
+        if (id === undefined) {
+            navigate(`/error`);
+        }
+
         if (formState === 'supplier pending' ||
             formState === 'Supplier Pending - ERROR') {
             navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
@@ -131,8 +135,10 @@ const DetailBaf: FC<DetailBafProps> = () => {
                     <div>
                         <p className="mt-5 mb-4"><strong>Se hai bisogno di comunicare modifiche rispetto ai tuoi dati personali procedi modificando i campi nella form.</strong></p>
                         <Button color="bg-red" text="Edit form" textColor="white" btnWidth="151px" disabled={false} onClick={() => {
-                            setFormState('supplier pending');
-                            navigate(`/upsert-BAF/${id}`);
+                            FormService.returnBAFInSupplierPending(id ?? '').then(() => {
+                                setFormState('supplier pending');
+                                navigate(`/upsert-BAF/${id}`);
+                            });
                         }} />
                         <p className="my-5">oppure:</p>
                         <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
@@ -151,14 +157,16 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         } />
                         <p className="mt-5 mb-4"><strong>Scarica il documento compilato e allegalo alla PEC.</strong></p>
                         <div className="mb-5">
-                            <Button color="bg-red" text="Scarica" textColor="white" btnWidth="110px" disabled={false} />
+                            <Button color="bg-red" text="Scarica" textColor="white" btnWidth="110px" disabled={false} onClick={() => DocumentService.downloadFile({ bafId: id, serverRelativeURL: "" }) } />
                         </div>
                         <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e sottometti</strong></p>
                         <div className="mt-5 w-100 inline-flex">
                             <UploadFile handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
                         </div>
                         <div className="d-flex justify-end my-5">
-                            <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => setFormState('Check pending')} />
+                            <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => {
+                                FormService.submitBAFWithPEC({ bafId: id }).then(() => setFormState('Check pending'))
+                            }} />
                         </div>
                         <hr className="break-line mb-5 mt-6" />
                     </div> : ''

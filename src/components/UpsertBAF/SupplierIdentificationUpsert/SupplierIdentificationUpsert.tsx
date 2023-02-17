@@ -36,7 +36,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [establishmentCountry, setEstablishmentCountry] = useState(model.address2.country);
     const [governmentInstitution, setGovernmentInstitution] = useState(model.governementInstitution);
     const [vatNumber, setVatNumber] = useState(model.vatNumber);
-    const [vatRegimeBool, setVatRegimeBool] = useState<boolean>();
+    const [vatRegimeBool, setVatRegimeBool] = useState<boolean>(model.vatRegime ?? true);
     const [isValidEmail, setIsValidEmail] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
     const [tooltipCompanySize, setTooltipCompanySize] = useState(false);
@@ -60,11 +60,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const {setIsFormValidIdentification, setIsOnlyFirstApproval} = useGlobalContext()
     useLayoutEffect(() => {
         if(model.vatRegime) {
-            if(model.vatRegime == "Encaissement/Deferred") {
-                setVatRegimeBool(true)
-            } else if (model.vatRegime == "Debit/Non deferred") {
-                setVatRegimeBool(false)
-            }
+            setVatRegimeBool(model.vatRegime)
         }
         if(model.establishment !== undefined) {
             setEstablishment(model.establishment)
@@ -194,7 +190,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.supplierName && validationRequired.supplierName !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <input type="text" id="supplierName" className="custom-input input-lg" onBlur={() => requireValidator('supplierName')}
-                              defaultValue={model.supplierName} onChange={event => {
+                            value={model.supplierName} onChange={event => {
                                   model.supplierName = event.target.value;
                                   requireValidator('supplierName');
                       }}/>
@@ -506,7 +502,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <input type="radio" id="encaissement_deferred" name="vatRegime" value="Encaissement/Deferred" hidden
                                  checked={vatRegimeBool === true} onChange={(event) => {
                                      setVatRegimeBool(true)
-                                     model.vatRegime = event.target.value
+                                     model.vatRegime = event.target.value === "Encaissement/Deferred"
                           }}/>
                           <label htmlFor="encaissement_deferred" className="font-input-label custom-radio"></label>
                           <label htmlFor="encaissement_deferred" className="font-input-label">Encaissement/Deferred</label>
@@ -515,7 +511,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           <input type="radio" id="debit_non_deferred" name="vatRegime" value="Debit/Non deferred" hidden
                                  checked={vatRegimeBool === false} onChange={(event) => {
                                      setVatRegimeBool(false)
-                                     model.vatRegime = event.target.value
+                                     model.vatRegime = event.target.value === "Debit / Non deferred"
                           }}/>
                           <label htmlFor="debit_non_deferred" className="font-input-label custom-radio"></label>
                           <label htmlFor="debit_non_deferred" className="font-input-label">Debit/Non deferred</label>

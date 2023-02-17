@@ -4,27 +4,22 @@ import {FiTrash2} from "react-icons/fi";
 import db from "../../utils/db.json";
 import Button from "../Button/Button";
 import {UpdateFileRequestDTO} from "../../models/UpdateFileRequestDTO.model";
+import { BafDocumentDTO } from '../../models/BafDocumentDTO.model';
 
 interface UploadCardProps {
-    uploadedFile: UpdateFileRequestDTO;
+    uploadedFile: BafDocumentDTO;
     selectedTypology: string;
     status: string;
     spacing: string;
+    types: string[];
     typologySelectedEvent: (uploadedFiles: UpdateFileRequestDTO) => void;
     updateTypology: () => void;
     deleteFile: () => void;
 }
 
-const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, typologySelectedEvent, updateTypology, deleteFile}) => {
+const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, status, spacing, types, typologySelectedEvent, updateTypology, deleteFile}) => {
 
     const [type, setType] = useState<string>(uploadedFile.bafDocumentType !== undefined ? uploadedFile.bafDocumentType : "");
-    const types = [
-        ...db.requiredFileTypes,
-        ...db.integrativeFiles,
-        ...db.integrativeFilesHighRisk,
-        ...db.integrativeFilesLowRisk,
-        ...db.integrativeFilesHighLowRisk
-    ];
     const [showButtons, setShowButtons] = useState<boolean>(false);
 
     let selectRef: HTMLSelectElement | null = null;
@@ -34,7 +29,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
             <div className="d-flex justify-between">
                 <div className="d-flex gap-4 align-center overflow">
                     <div className="document-icon"></div>
-                    <p className="dark-grey overflow">{uploadedFile.fileName}</p>
+                    <p className="dark-grey overflow">{uploadedFile.name}</p>
                 </div>
                 <div className="d-flex align-center gap-3 dark-grey">
                     <FiTrash2 onClick={() => deleteFile()} cursor="pointer" />
@@ -48,7 +43,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                             onChange={event => {
                                 setType(event.target.value);
                                 typologySelectedEvent({
-                                    fileName: uploadedFile.fileName,
+                                    fileName: uploadedFile.name,
                                     bafDocumentType: event.target.value
                                 });
                                 setShowButtons(status !== "modal")
@@ -57,7 +52,7 @@ const  UploadCard: FC<UploadCardProps> = ({uploadedFile, selectedTypology, statu
                         {
                             types.map((selectableType, i) => {
                                 return (
-                                    <option key={i} value={selectableType.type}>{selectableType.type}</option>
+                                    <option key={i} value={selectableType}>{selectableType}</option>
                                 )
                             })
                         }

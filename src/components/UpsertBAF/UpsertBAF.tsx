@@ -29,54 +29,63 @@ import Spinner from "../../shared/Spinner/Spinner";
 import {ChangeCategoryRequestDTO} from "../../models/ChangeCategoryRequestDTO.model";
 import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
 import {FileRequestDTO} from "../../models/FileRequestDTO.model";
+import { BAFObjectDTO } from '../../models/BAFObjectDTO.model';
 
 const MAX_FILE_SIZE: number = 5E+6;
 
 const UpsertBaf: React.FunctionComponent = () => {
-    const [countries, setCountries] = useState<CountryObject[]>([ ]);
-    const [currencies, setCurrencies] = useState<CurrencyObject[]>([ ]);
+    const [countries, setCountries] = useState<CountryObject[]>([]);
+    const [currencies, setCurrencies] = useState<CurrencyObject[]>([]);
     const [supplierIdentification, setSupplierIdentification] = useState<SupplierIdentificationObject>({ address1: {}, address2: {}, companySize: 'small' });
     const [bankUpsertModel, setBankUpsertModel] = useState<SupplierBankDetailsObject>({ });
-    const [managementApproval, setManagementApproval] = useState<SupplierManagementObject>({ })
+    const [managementApproval, setManagementApproval] = useState<SupplierManagementObject>({})
     const [toUpdateFile, setToUpdateFile] = useState<UpdateFileRequestDTO>({ fileName: "", bafDocumentType: "" })
-    const [toUploadFiles, setToUploadFiles] = useState<UpdateFileRequestDTO[]>([ ]);
-    const [uploadedFiles, setUploadedFiles] = useState<UpdateFileRequestDTO[]>([ ]);
-    const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([ ]);
-    const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([ ]);
-    const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([ ]);
-    const [integrativeFilesHighRisk, setIntegrativeFilesHighRisk] = useState<FileTypeModel[]>([ ]);
-    const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
-    const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
+    const [toUploadFilesRequest, setToUploadFilesRequest] = useState<UpdateFileRequestDTO[]>([]);
+    const [toUploadFiles, setToUploadFiles] = useState<BafDocumentDTO[]>([]);
+    const [uploadedFiles, setUploadedFiles] = useState<BafDocumentDTO[]>([]);
+    const [requiredFileTypes, setRequiredFileTypes] = useState<FileTypeModel[]>([]);
+    const [acceptanceFiles, setAcceptanceFiles] = useState<FileTypeModel[]>([]);
+    const [integrativeFiles, setIntegrativeFiles] = useState<FileTypeModel[]>([]);
+    const [integrativeFilesHighRisk, setIntegrativeFilesHighRisk] = useState<FileTypeModel[]>([]);
+    const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([]);
+    const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([]);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [checkDisable, setCheckDisable] = useState<boolean>(true);
     const [isPopUpShow, setIsPopUpShow] = useState<boolean>(true);
     const [loader, setLoader] = useState<boolean>(true);
+    const [fileTypes, setFileTypes] = useState<string[]>([]);
+    const [form, setForm] = useState<BAFObjectDTO>({});
 
     const {formState, setFormState, isFormValidBank,
         isFormValidIdentification, isFormValidManagement} = useGlobalContext();
+
+    let navigate = useNavigate()
+    let { id } = useParams();
 
     const fetchData = async () => {
         await FormService.getD365Values().then(async (result) => {
 
             setCountries(result.data.countries ?? []);
             setCurrencies(result.data.currencies ?? []);
+            setFileTypes(result.data.bafDocumentTypes ?? []);
 
-            if (id) {
-                await FormService.get(id).then(async (form) => {
-                    if (form.supplierIdentification && form.supplierBankDetails) {
-                        setSupplierIdentification(form.supplierIdentification);
-                        setBankUpsertModel(form.supplierBankDetails);
+            if (id !== undefined) {
+                await FormService.get(id).then(form => {
+                    if (form.data.supplierIdentification !== undefined && form.data.supplierBankDetails !== undefined) {
+                        setForm(form.data);
+                        setSupplierIdentification(form.data.supplierIdentification);
+                        setBankUpsertModel(form.data.supplierBankDetails);
                     }
                 });
-                await DocumentService.getDocumentsByBAFId(id).then(async (documents) => {
-                    if(documents.length > 0) {
-                        setUploadedFiles(documents)
+                await DocumentService.getDocumentsByBAFId(id).then(documents => {
+                    if (documents.data.length > 0) {
+                        setUploadedFiles(documents.data)
                     }
                 });
             } else {
                 setSupplierIdentification({
-                    address1 : {country: result.data.countries?.at(0)?.countryName},
-                    address2 : {country: result.data.countries?.at(0)?.countryName},
+                    address1: { country: result.data.countries?.at(0)?.countryName },
+                    address2: { country: result.data.countries?.at(0)?.countryName },
                     idd: result.data.countries?.at(0)?.prefix,
                     cca2: result.data.countries?.at(0)?.prefixVatNumber,
                     establishment: true
@@ -85,10 +94,11 @@ const UpsertBaf: React.FunctionComponent = () => {
         });
     }
 
-    let navigate = useNavigate()
-    let {id} = useParams();
-
     useLayoutEffect(() => {
+        if (id === undefined) {
+            navigate(`/error`);
+        }
+
         if (formState === 'Check pending' || formState === 'registered') {
             navigate(id ? `/detail-BAF/${id}` : `/error`);
         }
@@ -100,7 +110,7 @@ const UpsertBaf: React.FunctionComponent = () => {
         setIntegrativeFilesLowRisk(db.integrativeFilesLowRisk);
         setIntegrativeFilesHighLowRisk(db.integrativeFilesHighLowRisk);
 
-        fetchData().then(r => setLoader(false));
+        fetchData().then().finally(() => setLoader(false));
     }, []);
 
     const overrideEventDefaults = (event: React.DragEvent<HTMLDivElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +124,8 @@ const UpsertBaf: React.FunctionComponent = () => {
         for (let i = 0; i < event.dataTransfer.files.length; i++) {
             if (event.dataTransfer.files[i].size < MAX_FILE_SIZE) {
                 const base64 = await convertBase64(event.dataTransfer.files[i]);
-                toUploadFiles.push({ fileName: event.dataTransfer.files[i].name, base64File: base64 });
+                toUploadFilesRequest.push({ fileName: event.dataTransfer.files[i].name, base64File: base64.split(',').at(1) });
+                toUploadFiles.push({ name: event.dataTransfer.files[i].name });
             } else {
                 //TODO: gestione validazione dimensione massima file
                 console.error('Dimensione massima superata');
@@ -133,7 +144,8 @@ const UpsertBaf: React.FunctionComponent = () => {
             for (let i = 0; i < event.target.files.length; i++) {
                 if (event.target.files[i].size < MAX_FILE_SIZE) {
                     const base64 = await convertBase64(event.target.files[i]);
-                    toUploadFiles.push({ fileName: event.target.files[i].name, base64File: base64 });
+                    toUploadFilesRequest.push({ fileName: event.target.files[i].name, base64File: base64.split(',').at(1) });
+                    toUploadFiles.push({ name: event.target.files[i].name });
                 } else {
                     console.error('Dimensione massima superata');
                 }
@@ -150,8 +162,10 @@ const UpsertBaf: React.FunctionComponent = () => {
     }
     const upload = () => {
         setUploadedFiles([...uploadedFiles, ...toUploadFiles]);
-        toUploadFiles.map(el => {
-            filePost(el).then();
+        toUploadFiles.map((el, index) => {
+            toUploadFilesRequest[index].bafDocumentType = el.bafDocumentType;
+            toUploadFilesRequest[index].bafId = id;
+            filePost(toUploadFilesRequest[index]).then();
         })
         setToUploadFiles([]);
         setShowModal(false);
@@ -169,28 +183,29 @@ const UpsertBaf: React.FunctionComponent = () => {
 
     const updateFileTypology = () => {
         let postRequest: ChangeCategoryRequestDTO = {}
-        let documents : BafDocumentDTO[] | undefined = [];
-        if(id) {
-            documentsFetch(id).then(res => documents = res)
+        if (id) {
+            setLoader(true)
+            documentsFetch(id).then(res => {
+                uploadedFiles.map(file => {
+                    if (file.name === toUpdateFile.fileName) {
+                        file.bafDocumentType = toUpdateFile.bafDocumentType;
+                        postRequest.bafDocumentType = toUpdateFile.bafDocumentType;
+                    }
+                });
+                res?.data.map(file => {
+                    if (file.name === toUpdateFile.fileName) {
+                        postRequest.url = file.serverRelativeUrl;
+                    }
+                })
+                fileUpdate(postRequest).then();
+                setUploadedFiles([...uploadedFiles]);
+            }).finally(() => setLoader(false))
         }
-        uploadedFiles.map(file => {
-            if (file.fileName === toUpdateFile.fileName) {
-                file.bafDocumentType = toUpdateFile.bafDocumentType;
-                postRequest.bafDocumentType = toUpdateFile.bafDocumentType;
-            }
-        });
-        documents.map(file => {
-            if(file.name === toUpdateFile.fileName) {
-                postRequest.url = file.serverRelativeUrl;
-            }
-        })
-        fileUpdate(postRequest).then();
-        setUploadedFiles([...uploadedFiles]);
     }
 
     const updateToUploadFileTypology = (updatedFile: UpdateFileRequestDTO) => {
         toUploadFiles.map(file => {
-            if (file.fileName === updatedFile.fileName) {
+            if (file.name === updatedFile.fileName) {
                 file.bafDocumentType = updatedFile.bafDocumentType;
             }
         });
@@ -220,20 +235,21 @@ const UpsertBaf: React.FunctionComponent = () => {
 
     const deleteUploadedFile = (index: number) => {
         let deleteRequest: FileRequestDTO = {}
-        let documents : BafDocumentDTO[] | undefined = [];
-        if(id) {
-            documentsFetch(id).then(res => documents = res)
+        if (id) {
+            setLoader(true);
+            documentsFetch(id).then(res => {
+                res?.data.map((el, i) => {
+                    if (i === index) {
+                        deleteRequest.serverRelativeURL = el.serverRelativeUrl;
+                        deleteRequest.bafId = id;
+                    }
+                })
+                DocumentService.deleteFileForBAF(deleteRequest).then(() => {
+                    uploadedFiles.splice(index, 1);
+                    setUploadedFiles([...uploadedFiles]);
+                });
+            }).finally(() => setLoader(false));
         }
-        documents.map((el,i) => {
-            if (i === index) {
-                deleteRequest.serverRelativeURL = el.serverRelativeUrl;
-            }
-        })
-        deleteRequest.serverRelativeURL = id;
-        DocumentService.deleteFileForBAF(deleteRequest).then();
-        uploadedFiles.splice(index, 1);
-
-        setUploadedFiles([...uploadedFiles]);
     }
 
     const popUpHandler = () => {
@@ -247,16 +263,16 @@ const UpsertBaf: React.FunctionComponent = () => {
     return(
         <div className="UpsertBAF">
             {
-                formState === 'Supplier Pending - ERROR' ?
+                form.comebackReason ?
                     <div className='d-flex flex-column gap-2 pop-up'>
                         {
                             isPopUpShow ?
                                 <div className='px-4 bg-white border-light-grey border-shadow-light radius-m'>
                                     <div className='d-flex justify-between align-center dark-grey'>
                                         <h4 className='red'>Attention!</h4>
-                                        <IoMdClose style={{fontSize: '24px', cursor: "pointer"}} onClick={popUpHandler} />
+                                        <IoMdClose style={{ fontSize: '24px', cursor: "pointer" }} onClick={popUpHandler} />
                                     </div>
-                                    <p className='font-p-little mb-4'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                                    <p className='font-p-little mb-4'>{form.comebackReason}</p>
                                 </div> : ''
                         }
                         <div className='d-flex justify-end'>
@@ -264,8 +280,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                                 <Icon icon='errorPopUp' />
                             </div>
                         </div>
-                    </div>
-                    : ''
+                    </div> : ''
             }
             <CustomModal show={showModal} btnColor={"bg-red"} btnText={"Upload"} btnTextColor={"white"}
                          btnWidth={"151px"} btnDisabled={checkDisable} onClose={() => {
@@ -280,7 +295,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                                             typologySelectedEvent={updateToUploadFileTypology}
                                             selectedTypology={uploadedFile.bafDocumentType !== undefined ? uploadedFile.bafDocumentType : ""}
                                             status="modal" spacing=" p-3 mx-3"
-                                            updateTypology={() => { }}
+                                            updateTypology={() => { }} types={fileTypes}
                                             deleteFile={() => deleteToUploadFile(index)}/>
                             )
                         })
@@ -288,18 +303,17 @@ const UpsertBaf: React.FunctionComponent = () => {
                 </div>
             </CustomModal>
             {
-                formState === 'Supplier Pending - ERROR' ?
+                form.comebackReason ?
                     <Banner
-                        stroke='border-red'
+                            stroke='border-red'
                         fill='bg-light-red'
                         content={
                             <p>
                                 <strong>Attenzione! </strong>
-                                Si sono verificati degli errori.
+                                {form.comebackReason}
                             </p>
                         }
-                        icon='error' />
-                    : ''
+                        icon='error' /> : ''
             }
             <SupplierIdentificationUpsert countries={countries} model={supplierIdentification} />
             <hr className="break-line mb-5 mt-6" />
@@ -441,7 +455,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                                     typologySelectedEvent={setToUpdateFile}
                                     selectedTypology={uploadedFile.bafDocumentType !== undefined ? uploadedFile.bafDocumentType : ""}
                                     status="form" spacing=" p-3 mt-5 mb-5"
-                                    updateTypology={updateFileTypology}
+                                    updateTypology={updateFileTypology} types={fileTypes}
                                     deleteFile={() => deleteUploadedFile(index)}/>
                     )
                 })
@@ -449,13 +463,27 @@ const UpsertBaf: React.FunctionComponent = () => {
 
             <div className="d-flex gap-3 justify-end pb-5">
                 <Button color="bg-ultra-light-grey" text="Save draft" textColor="dark-grey" btnWidth="151px" disabled={false}
-                onClick={() => {}}/>
+                    onClick={() => {
+                        setLoader(true)
+                        FormService.saveBAFDraft({
+                            bafId: id,
+                            supplierBankDetails: bankUpsertModel,
+                            supplierIdentification: supplierIdentification
+                        }).finally(() => setLoader(false));
+                    }} />
                 <Button color="bg-red"
-                        text="Confirm" textColor="white" btnWidth="151px"  onClick={() => {
-                    setFormState('waiting for supplier pec')
-                    navigate(id ? `/detail-BAF/${id}` : `/detail-BAF/1`);
+                    text="Confirm" textColor="white" btnWidth="151px" onClick={() => {
+                        setLoader(true)
+                        FormService.submitBAF({
+                            bafId: id,
+                            supplierBankDetails: bankUpsertModel,
+                            supplierIdentification: supplierIdentification
+                        }).then(r => {
+                            setFormState('waiting for supplier pec')
+                            navigate(`/detail-BAF/${id}`);
+                        }).finally(() => setLoader(false));
                 }
-                } disabled={!isFormValidIdentification || !isFormValidBank || !isFormValidManagement} />
+                } disabled={false} />
             </div>
         </div>
     );

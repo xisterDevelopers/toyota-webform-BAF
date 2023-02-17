@@ -30,7 +30,7 @@ function App() {
                   <Routes>
                       <Route path='/error' element={<ErrorPage />}/>
                       <Route path='/upsert-BAF/:id?' element={formState !== 'Revised' ? <UpsertBAF /> : <Navigate to='/error' replace/>}/>
-                      <Route path='/detail-BAF/:id' element={formState !== 'Revised' ? <DetailBAF /> :<Navigate to='/error' replace/>}/>
+                      <Route path='/detail-BAF/:id?' element={formState !== 'Revised' ? <DetailBAF /> :<Navigate to='/error' replace/>}/>
                       <Route path='*' element={formState !== 'Revised' ? <Navigate to='/upsert-BAF' replace/> : <Navigate to='/error' replace/> }/>
                   </Routes>
               </React.Suspense>
