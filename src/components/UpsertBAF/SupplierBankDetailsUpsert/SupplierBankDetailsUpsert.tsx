@@ -4,6 +4,7 @@ import bicValidator from 'bic-validator';
 import {useGlobalContext} from "../../../utils/AppContext";
 import {SupplierBankDetailsObject} from "../../../models/SupplierBankDetailsObject.model";
 import {CurrencyObject} from "../../../models/CurrencyObject.model";
+
 const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
@@ -36,17 +37,17 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     //const [swiftIsValid, setSwiftIsValid] = useState(outputDetails.swiftNumber !== undefined);
 /*    const [validationError, setValidationError] = useState()*/
     const [validationRequired, setValidationRequired] = useState<BankValidationRequired>({
-        bankAccountCurrency: null,
-        bankAccountHolderName: null,
-        bankAccountNumber: null,
-        effectiveDate: null,
-        factoryReason: null,
-        isFactoryCompany: null,
-        isSupplierNameDifferent: null,
-        reasonName: null,
-        bankName: null,
-        iban: null,
-        swift: null
+        bankAccountCurrency: outputDetails.bankAccountCurrency !== null && outputDetails.bankAccountCurrency !== undefined && outputDetails.bankAccountCurrency.length > 0 ? true : null,
+        bankAccountHolderName: outputDetails.bankAccountHolderName !== null && outputDetails.bankAccountHolderName !== undefined && outputDetails.bankAccountHolderName.length > 0 ? true : null,
+        bankAccountNumber: outputDetails.bankAccountNumber !== null && outputDetails.bankAccountNumber !== undefined && outputDetails.bankAccountNumber.length > 0 ? true : null,
+        effectiveDate: outputDetails.effectiveDate !== null && outputDetails.effectiveDate !== undefined && outputDetails.effectiveDate.length > 0 ? true : null,
+        factoryReason: outputDetails.factoryCompanyReason !== null && outputDetails.factoryCompanyReason !== undefined && outputDetails.factoryCompanyReason.length > 0 ? true : null,
+        isFactoryCompany: outputDetails.isFactoryCompany !== null && outputDetails.isFactoryCompany !== undefined ? true : null,
+        isSupplierNameDifferent: outputDetails.isSupplierDifferentFromHolderName !== null && outputDetails.isSupplierDifferentFromHolderName !== undefined  ? true : null,
+        reasonName: outputDetails.supplierDifferentReason !== null && outputDetails.supplierDifferentReason !== undefined && outputDetails.supplierDifferentReason.length > 0 ? true : null,
+        bankName: outputDetails.bankName !== null && outputDetails.bankName !== undefined && outputDetails.bankName.length > 0 ? true : null,
+        iban: outputDetails.ibanNumber !== null && outputDetails.ibanNumber !== undefined && outputDetails.ibanNumber.length > 0 ? true : null,
+        swift: outputDetails.swiftNumber !== null && outputDetails.swiftNumber !== undefined && outputDetails.swiftNumber.length > 0 ? true : null,
     })
 
     const {setIsFormValidBank} = useGlobalContext()
@@ -183,10 +184,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.bankAccountCurrency && validationRequired.bankAccountCurrency !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <select className="custom-select custom-input input-lg" onBlur={() => requireValidator('bankAccountCurrency')}
-                                value={outputDetails.bankAccountCurrency} onChange={(event) => {
+                                defaultValue={outputDetails.bankAccountCurrency} onChange={(event) => {
                                     setCurrency(outputDetails.bankAccountCurrency = event.target.value);
                                     requireValidator('bankAccountCurrency');
                         }} >
+                            <option value=""></option>
                             {
                                 currencies.map((currency, index) => {
                                     return (
