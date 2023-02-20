@@ -22,6 +22,8 @@ import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
 import documentService from "../../api/document.service";
 import FormService from "../../api/form.service";
 import DocumentService from "../../api/document.service";
+import TestButton from "../../utils/tester/TestButton";
+import {FiTrash2} from "react-icons/fi";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -43,6 +45,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [integrativeFilesHighRisk, setIntegrativeFilesHighRisk] = useState<FileTypeModel[]>([ ]);
     const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
     const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
+    const [showButtons, setShowButtons] = useState<boolean>(false);
 
     const fetchData = async() => {
         if (id) {
@@ -110,6 +113,10 @@ const DetailBaf: FC<DetailBafProps> = () => {
         setUploadFiles([...uploadFiles]);
     }
 
+    const deleteFile = () => {
+        setUploadFiles([])
+    }
+
     const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         preventDefaults(event);
 
@@ -130,6 +137,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
 
     return(
         <div className="DetailBAF">
+            <TestButton func={() => console.log(uploadFiles)}></TestButton>
             {
                 formState === 'waiting for supplier pec' ?
                     <div>
@@ -161,7 +169,25 @@ const DetailBaf: FC<DetailBafProps> = () => {
                         </div>
                         <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e sottometti</strong></p>
                         <div className="mt-5 w-100 inline-flex">
-                            <UploadFile handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
+                            {
+                                uploadFiles.length > 0 ?
+                                    uploadFiles.map((el, i) => {
+                                        return(
+                                            <div className="selected-type-upload-container p-3  w-100">
+                                                <div className="d-flex justify-between">
+                                                    <div className="d-flex gap-4 align-center overflow">
+                                                        <div className="document-icon"></div>
+                                                        <p className="dark-grey overflow">{el.fileName}</p>
+                                                    </div>
+                                                    <div className="d-flex align-center gap-3 dark-grey">
+                                                        <FiTrash2 onClick={() => deleteFile()} cursor="pointer" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }) :
+                                    <UploadFile mainText="Drag and drop your file here" isMultiple={false} handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
+                            }
                         </div>
                         <div className="d-flex justify-end my-5">
                             <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => {

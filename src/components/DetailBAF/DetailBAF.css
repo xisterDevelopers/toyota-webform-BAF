@@ -1,1 +1,20 @@
 .DetailBaf {}
+
+.UploadCard {}
+
+.upload-container {
+    border: 2px solid #D7D7D7;
+    border-radius: 4px;
+}
+
+.selected-type-upload-container {
+    border: 2px solid #26BC00;
+    border-radius: 4px;
+}
+
+.document-icon {
+    background-image: url("../../assets/svg/document-icon.svg");
+    background-repeat: no-repeat;
+    min-width: 30px;
+    height: 35px;
+}
