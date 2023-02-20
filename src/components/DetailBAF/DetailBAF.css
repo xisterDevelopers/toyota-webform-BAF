@@ -1,1 +1,10 @@
 .DetailBaf {}
+
+.refresh {
+    width: 26px;
+    height: 24px;
+}
+
+.clickable {
+    cursor: pointer;
+}
