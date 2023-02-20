@@ -19,7 +19,6 @@ interface RequiredFields {
     postalCode: null | boolean,
     country: null | boolean,
     governmentInstitution: null | boolean,
-    companySize: null | boolean,
     phoneNumber: null | boolean,
     vatNumber: null | boolean,
     taxResidenceCountry: null | boolean
@@ -51,7 +50,6 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         postalCode: model.address1.postalCode !== null && model.address1.postalCode !== undefined && model.address1.postalCode.length > 0 ? true : null,
         country: model.address1.country !== null && model.address1.country !== undefined && model.address1.country.length > 0 ? true : null,
         governmentInstitution: model.governementInstitution !== null && model.governementInstitution !== undefined ? true : null,
-        companySize: model.companySize !== null && model.companySize !== undefined && model.companySize.length > 0 ? true : null,
         phoneNumber: model.phoneNumber !== null && model.phoneNumber !== undefined && model.phoneNumber.length > 0 ? true : null,
         vatNumber: model.vatNumber !== null && model.vatNumber !== undefined && model.vatNumber.length > 0 ? true : null,
         taxResidenceCountry: model.taxResidenceCountry !== null && model.taxResidenceCountry !== undefined && model.taxResidenceCountry.length > 0 ? true : null
@@ -97,7 +95,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         const booleanArray = [validationError.email, validationRequired.supplierName,
             validationRequired.personName, validationRequired.personSurname, validationRequired.address,validationRequired.city,
             validationRequired.postalCode,validationRequired.country, validationRequired.governmentInstitution,
-            validationRequired.companySize,validationRequired.phoneNumber,validationRequired.vatNumber, validationRequired.taxResidenceCountry];
+            validationRequired.phoneNumber,validationRequired.vatNumber, validationRequired.taxResidenceCountry];
         setIsFormValidIdentification(booleanArray.every(bool => bool));
     }
 
@@ -134,10 +132,6 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
             case 'governmentInstitution':
                 validationRequired.governmentInstitution =
                     model.governementInstitution !== null && model.governementInstitution !== undefined ? validationRequired.governmentInstitution = true : false;
-                break;
-            case 'companySize':
-                validationRequired.companySize =
-                    model.companySize !== null && model.companySize !== undefined && model.companySize.length > 0 ? validationRequired.companySize = true : false;
                 break;
             case 'phoneNumber':
                 validationRequired.phoneNumber =
@@ -397,9 +391,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="numberPrefix" className="font-input-label">
                           Company Size<span className="red">*</span>
-                          {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
-                          <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
+                          <select id="companySize" className="custom-input custom-select input-lg"
                                   defaultValue={model.companySize} onChange={event => {
                               setCompanySize(event.target.value);
                               model.companySize = event.target.value;
