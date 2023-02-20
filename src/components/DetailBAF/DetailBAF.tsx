@@ -22,7 +22,6 @@ import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
 import documentService from "../../api/document.service";
 import FormService from "../../api/form.service";
 import DocumentService from "../../api/document.service";
-import TestButton from "../../utils/tester/TestButton";
 import {FiTrash2} from "react-icons/fi";
 
 const MAX_FILE_SIZE: number = 5E+6;
@@ -137,7 +136,6 @@ const DetailBaf: FC<DetailBafProps> = () => {
 
     return(
         <div className="DetailBAF">
-            <TestButton func={() => console.log(uploadFiles)}></TestButton>
             {
                 formState === 'waiting for supplier pec' ?
                     <div>
