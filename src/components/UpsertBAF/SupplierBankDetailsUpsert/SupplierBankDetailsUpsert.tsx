@@ -4,6 +4,7 @@ import bicValidator from 'bic-validator';
 import {useGlobalContext} from "../../../utils/AppContext";
 import {SupplierBankDetailsObject} from "../../../models/SupplierBankDetailsObject.model";
 import {CurrencyObject} from "../../../models/CurrencyObject.model";
+
 const IBAN = require('iban');
 
 interface SupplierBankDetailsUpsertProps {
@@ -17,9 +18,7 @@ interface BankValidationRequired {
     bankAccountCurrency: null | boolean;
     effectiveDate: null | boolean;
     bankAccountHolderName: null | boolean;
-    isSupplierNameDifferent: null | boolean;
     reasonName: null | boolean;
-    isFactoryCompany: null | boolean;
     factoryReason: null | boolean;
     bankAccountNumber: null | boolean;
     iban: null | boolean;
@@ -36,17 +35,15 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     //const [swiftIsValid, setSwiftIsValid] = useState(outputDetails.swiftNumber !== undefined);
 /*    const [validationError, setValidationError] = useState()*/
     const [validationRequired, setValidationRequired] = useState<BankValidationRequired>({
-        bankAccountCurrency: null,
-        bankAccountHolderName: null,
-        bankAccountNumber: null,
-        effectiveDate: null,
-        factoryReason: null,
-        isFactoryCompany: null,
-        isSupplierNameDifferent: null,
-        reasonName: null,
-        bankName: null,
-        iban: null,
-        swift: null
+        bankAccountCurrency: outputDetails.bankAccountCurrency !== null && outputDetails.bankAccountCurrency !== undefined && outputDetails.bankAccountCurrency.length > 0 ? true : null,
+        bankAccountHolderName: outputDetails.bankAccountHolderName !== null && outputDetails.bankAccountHolderName !== undefined && outputDetails.bankAccountHolderName.length > 0 ? true : null,
+        bankAccountNumber: outputDetails.bankAccountNumber !== null && outputDetails.bankAccountNumber !== undefined && outputDetails.bankAccountNumber.length > 0 ? true : null,
+        effectiveDate: outputDetails.effectiveDate !== null && outputDetails.effectiveDate !== undefined && outputDetails.effectiveDate.length > 0 ? true : null,
+        factoryReason: outputDetails.factoryCompanyReason !== null && outputDetails.factoryCompanyReason !== undefined && outputDetails.factoryCompanyReason.length > 0 ? true : null,
+        reasonName: outputDetails.supplierDifferentReason !== null && outputDetails.supplierDifferentReason !== undefined && outputDetails.supplierDifferentReason.length > 0 ? true : null,
+        bankName: outputDetails.bankName !== null && outputDetails.bankName !== undefined && outputDetails.bankName.length > 0 ? true : null,
+        iban: outputDetails.ibanNumber !== null && outputDetails.ibanNumber !== undefined && outputDetails.ibanNumber.length > 0 ? true : null,
+        swift: outputDetails.swiftNumber !== null && outputDetails.swiftNumber !== undefined && outputDetails.swiftNumber.length > 0 ? true : null,
     })
 
     const {setIsFormValidBank} = useGlobalContext()
@@ -55,12 +52,24 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     useLayoutEffect(() => {
         if(outputDetails.isFactoryCompany !== undefined) {
             setIsFactoryCompany(outputDetails.isFactoryCompany)
+            if(outputDetails.isFactoryCompany === null) {
+                setIsFactoryCompany(outputDetails.isFactoryCompany = 'No');
+                validationRequired.factoryReason = true;
+            }
         }
         if(outputDetails.isSupplierDifferentFromHolderName !== undefined) {
             setIsAccountDiffHolderName(outputDetails.isSupplierDifferentFromHolderName)
+            if(outputDetails.isSupplierDifferentFromHolderName === null) {
+                setIsFactoryCompany(outputDetails.isSupplierDifferentFromHolderName = 'No');
+                validationRequired.reasonName = true;
+            }
         }
         if(outputDetails.effectiveDate !== undefined) {
             setDate(outputDetails.effectiveDate)
+        }
+        if(outputDetails.bankAccountCurrency === null) {
+            setCurrency(outputDetails.bankAccountCurrency = 'Euro')
+            validationRequired.bankAccountCurrency = true
         }
         //if(outputDetails.ibanNumber !== undefined) {
         //    ibanValidator(true)
@@ -90,14 +99,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                 validationRequired.bankAccountNumber =
                     outputDetails.bankAccountNumber !== undefined && outputDetails.bankAccountNumber.length > 0 ? validationRequired.bankAccountNumber = true : false;
                 break;
-            case 'isSupplierNameDifferent':
-                validationRequired.isSupplierNameDifferent =
-                    outputDetails.isSupplierDifferentFromHolderName !== null ? validationRequired.isSupplierNameDifferent = true : false;
-                break;
-            case 'isFactoryCompany':
-                validationRequired.isFactoryCompany =
-                    outputDetails.isFactoryCompany !== null ? validationRequired.isFactoryCompany = true : false;
-                break;
             case 'bankAccountHolderName':
                 validationRequired.bankAccountHolderName =
                     outputDetails.bankAccountHolderName !== undefined && outputDetails.bankAccountHolderName.length > 0 ? validationRequired.bankAccountHolderName = true : false;
@@ -124,8 +125,8 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
     }
     const bankFormValidator = () => {
         const booleanArray = [validationRequired.iban, validationRequired.swift, validationRequired.bankName, validationRequired.bankAccountCurrency,
-            validationRequired.effectiveDate,validationRequired.bankAccountHolderName,validationRequired.isSupplierNameDifferent,
-            validationRequired.reasonName,validationRequired.isFactoryCompany,validationRequired.factoryReason,
+            validationRequired.effectiveDate,validationRequired.bankAccountHolderName,
+            validationRequired.reasonName,validationRequired.factoryReason,
             validationRequired.bankAccountNumber];
         setIsFormValidBank(booleanArray.every(bool => bool));
     }
@@ -183,10 +184,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             {!validationRequired.bankAccountCurrency && validationRequired.bankAccountCurrency !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <select className="custom-select custom-input input-lg" onBlur={() => requireValidator('bankAccountCurrency')}
-                                value={outputDetails.bankAccountCurrency} onChange={(event) => {
+                                defaultValue={outputDetails.bankAccountCurrency !== null ? outputDetails.bankAccountCurrency : 'Euro'} onChange={(event) => {
                                     setCurrency(outputDetails.bankAccountCurrency = event.target.value);
                                     requireValidator('bankAccountCurrency');
                         }} >
+                            <option value=""></option>
                             {
                                 currencies.map((currency, index) => {
                                     return (
@@ -228,13 +230,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div id="accountHolderName" className="d-flex flex-column">
                         <label htmlFor="accountHolderName" className="font-input-label">
                             Supplier name is different from bank account holder name?<span className="red">*</span>
-                            {!validationRequired.isSupplierNameDifferent && validationRequired.isSupplierNameDifferent !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
                                 <input type="radio" id="yesAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === "Yes"}
                                        onChange={() =>  {
-                                           validationRequired.isSupplierNameDifferent = true;
                                            validationRequired.reasonName = false;
                                            setIsAccountDiffHolderName("Yes")
                                            outputDetails.isSupplierDifferentFromHolderName = "Yes"
@@ -245,7 +245,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             <div className="d-flex gap-2">
                                 <input type="radio" id="noAccount" name="accountHolderName" hidden={true} checked={isAccountDiffHolderName === "No"}
                                        onChange={() => {
-                                           validationRequired.isSupplierNameDifferent = true;
                                            validationRequired.reasonName = true;
                                            setIsAccountDiffHolderName("No")
                                            outputDetails.isSupplierDifferentFromHolderName = "No"
@@ -273,13 +272,11 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                     <div id="factoryCompany" className="d-flex flex-column">
                         <label htmlFor="factoryCompany" className="font-input-label">
                             Factory company?<span className="red">*</span>
-                            {!validationRequired.isFactoryCompany && validationRequired.isFactoryCompany !== null ? <small> : <small className="red">Required</small></small> : ""}
                         </label>
                         <div className="d-flex gap-6">
                             <div className="d-flex gap-2">
                                 <input type="radio" id="yesFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === "Yes"}
                                        onChange={() => {
-                                           validationRequired.isFactoryCompany = true;
                                            validationRequired.factoryReason = false;
                                            setIsFactoryCompany("Yes")
                                            outputDetails.isFactoryCompany = "Yes"
@@ -290,7 +287,6 @@ const SupplierBankDetailsUpsert: FC<SupplierBankDetailsUpsertProps> = ({outputDe
                             <div className="d-flex gap-2">
                                 <input type="radio" id="noFactory" name="factoryCompany" hidden={true} checked={isFactoryCompany === "No"}
                                        onChange={() => {
-                                           validationRequired.isFactoryCompany = true;
                                            validationRequired.factoryReason = true;
                                            setIsFactoryCompany("No")
                                            outputDetails.isFactoryCompany = "No"

@@ -483,7 +483,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                             navigate(`/detail-BAF/${id}`);
                         }).finally(() => setLoader(false));
                 }
-                } disabled={false} />
+                } disabled={!isFormValidIdentification || !isFormValidManagement || !isFormValidBank} />
             </div>
         </div>
     );

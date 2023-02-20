@@ -19,7 +19,6 @@ interface RequiredFields {
     postalCode: null | boolean,
     country: null | boolean,
     governmentInstitution: null | boolean,
-    companySize: null | boolean,
     phoneNumber: null | boolean,
     vatNumber: null | boolean,
     taxResidenceCountry: null | boolean
@@ -32,7 +31,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [idd, setIdd] = useState(model.idd);
     const [country, setCountry] = useState(model.address1.country);
     const [establishment, setEstablishment] = useState(model.establishment);
-    const [companySize, setCompanySize] = useState(model.companySize);
+    const [companySize, setCompanySize] = useState('small');
     const [establishmentCountry, setEstablishmentCountry] = useState(model.address2.country);
     const [governmentInstitution, setGovernmentInstitution] = useState(model.governementInstitution);
     const [vatNumber, setVatNumber] = useState(model.vatNumber);
@@ -43,18 +42,17 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
     const [tooltipGovernment, setTooltipGovernment] = useState(false);
     const [validationError, setValidationError] = useState({email: false, phoneNumber: false, vatNumber: false});
     const [validationRequired, setValidationRequired] = useState<RequiredFields>({
-        supplierName: null,
-        personName: null,
-        personSurname: null,
-        address: null,
-        city: null,
-        postalCode: null,
-        country: null,
-        governmentInstitution: null,
-        companySize: null,
-        phoneNumber: null,
-        vatNumber: null,
-        taxResidenceCountry: null
+        supplierName: model.supplierName !== null && model.supplierName !== undefined && model.supplierName.length > 0 ? true : null,
+        personName: model.personName !== null && model.personName !== undefined && model.personName.length > 0 ? true : null,
+        personSurname: model.personSurname !== null && model.personSurname !== undefined && model.personSurname.length > 0 ? true : null,
+        address: model.address1.address !== null && model.address1.address !== undefined && model.address1.address.length > 0 ? true : null,
+        city: model.address1.city !== null && model.address1.city !== undefined && model.address1.city.length > 0 ? true : null,
+        postalCode: model.address1.postalCode !== null && model.address1.postalCode !== undefined && model.address1.postalCode.length > 0 ? true : null,
+        country: model.address1.country !== null && model.address1.country !== undefined && model.address1.country.length > 0 ? true : null,
+        governmentInstitution: model.governementInstitution !== null && model.governementInstitution !== undefined ? true : null,
+        phoneNumber: model.phoneNumber !== null && model.phoneNumber !== undefined && model.phoneNumber.length > 0 ? true : null,
+        vatNumber: model.vatNumber !== null && model.vatNumber !== undefined && model.vatNumber.length > 0 ? true : null,
+        taxResidenceCountry: model.taxResidenceCountry !== null && model.taxResidenceCountry !== undefined && model.taxResidenceCountry.length > 0 ? true : null
     })
 
     const {setIsFormValidIdentification, setIsOnlyFirstApproval} = useGlobalContext()
@@ -69,7 +67,8 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
             setGovernmentInstitution(model.governementInstitution)
         }
         if(model.companySize !== undefined) {
-            setCompanySize(model.companySize)
+            model.companySize = companySize === null ? "small" : model.companySize
+            model.companySize === null ? setCompanySize('small') : setCompanySize(model.companySize)
         }
         if(model.address1.country !== undefined) {
             setCountry(model.address1.country)
@@ -96,7 +95,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
         const booleanArray = [validationError.email, validationRequired.supplierName,
             validationRequired.personName, validationRequired.personSurname, validationRequired.address,validationRequired.city,
             validationRequired.postalCode,validationRequired.country, validationRequired.governmentInstitution,
-            validationRequired.companySize,validationRequired.phoneNumber,validationRequired.vatNumber, validationRequired.taxResidenceCountry];
+            validationRequired.phoneNumber,validationRequired.vatNumber, validationRequired.taxResidenceCountry];
         setIsFormValidIdentification(booleanArray.every(bool => bool));
     }
 
@@ -132,11 +131,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                 break;
             case 'governmentInstitution':
                 validationRequired.governmentInstitution =
-                    model.governementInstitution !== undefined ? validationRequired.governmentInstitution = true : false;
-                break;
-            case 'companySize':
-                validationRequired.companySize =
-                    model.companySize !== undefined && model.companySize.length > 0 ? validationRequired.companySize = true : false;
+                    model.governementInstitution !== null && model.governementInstitution !== undefined ? validationRequired.governmentInstitution = true : false;
                 break;
             case 'phoneNumber':
                 validationRequired.phoneNumber =
@@ -148,7 +143,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                 break;
             case 'taxResidenceCountry':
                 validationRequired.taxResidenceCountry =
-                    model.taxResidenceCountry !== undefined && model.taxResidenceCountry.length > 0 ? validationRequired.taxResidenceCountry = true : false;
+                    model.taxResidenceCountry !== null && model.taxResidenceCountry !== undefined && model.taxResidenceCountry.length > 0 ? validationRequired.taxResidenceCountry = true : false;
                 break;
         }
         setValidationRequired({...validationRequired})
@@ -276,12 +271,13 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.country && validationRequired.country !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <select id="country" className="custom-input custom-select input-lg" onBlur={() => requireValidator('country')}
-                              value={model.address1.country === undefined ? "Italy" : model.address1.country}
+                              defaultValue={model.address1.country === undefined ? "Italy" : model.address1.country}
                               onChange={(event) => {
                                   setCca2(model.cca2 = countries?.find(c => c.countryName === event.target.value)?.prefixVatNumber);
                                   setIdd(model.idd = countries?.find(c => c.countryName === event.target.value)?.prefix);
                                   setCountry(model.address1.country = event.target.value);
                               }}>
+                          <option value=""></option>
                           {
                               countries?.map((country,i) =>
                                   (
@@ -328,8 +324,10 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="country" className="font-input-label">Country</label>
                           <select id="country" className="custom-input custom-select input-lg"
-                                  value={model.address2.country} disabled={!establishment}
+                                  disabled={!establishment}
+                                  defaultValue={model.address2.country}
                                   onChange={(event) =>  setEstablishmentCountry(model.address2.country = event.target.value)}>
+                              <option value=""></option>
                               {
                                   countries?.map((country,i) =>
                                       (
@@ -393,10 +391,9 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                   <div className="d-flex flex-column container-lg">
                       <label htmlFor="numberPrefix" className="font-input-label">
                           Company Size<span className="red">*</span>
-                          {!validationRequired.companySize && validationRequired.companySize !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
-                          <select id="companySize" className="custom-input custom-select input-lg" onBlur={() => requireValidator('companySize')}
-                                  value={companySize} onChange={event => {
+                          <select id="companySize" className="custom-input custom-select input-lg"
+                                  defaultValue={model.companySize} onChange={event => {
                               setCompanySize(event.target.value);
                               model.companySize = event.target.value;
                               event.target.value === 'small' ? setIsOnlyFirstApproval(true) : setIsOnlyFirstApproval(null)
@@ -428,7 +425,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.phoneNumber && validationRequired.phoneNumber !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <div className="d-flex input-lg gap-2">
-                          <select id="phonePrefix" className="custom-input custom-select input-md" value={model.idd}
+                          <select id="phonePrefix" className="custom-input custom-select input-md" defaultValue={model.idd}
                                   onChange={(event => setIdd(model.idd = event.target.value))}>
                               {
                                   countries?.map((country, i) =>
@@ -452,7 +449,7 @@ const SupplierIdentificationUpsert: FC<SupplierIdentificationUpsertProps> = ({mo
                           {!validationRequired.vatNumber && validationRequired.vatNumber !== null ? <small> : <small className="red">Required</small></small> : ""}
                       </label>
                       <div className="d-flex input-lg gap-2">
-                          <select id="vatPrefix" className="custom-input custom-select input-sm" value={model.cca2}
+                          <select id="vatPrefix" className="custom-input custom-select input-sm" defaultValue={model.cca2}
                                   onChange={(event => setCca2(model.cca2 = event.target.value))}>
                               {
                                   countries?.map((country,i) =>

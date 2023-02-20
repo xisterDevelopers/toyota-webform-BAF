@@ -25,20 +25,19 @@ const [isValidEmail2, setIsValidEmail2] = useState(true);
 const [isCompanySmall, setIsCompanySmall] = useState<boolean | null>(true);
 const [validationError, setValidationError] = useState({email: false, email2: true});
 const [validationRequired, setValidationRequired] = useState<RequireFields>({
-    name: null,
-    name2: isCompanySmall,
-    phoneNumber: null,
-    phoneNumber2: isCompanySmall,
-    position: null,
-    position2: isCompanySmall,
-    surname: null,
-    surname2: isCompanySmall
+    name: model.name !== null && model.name !== undefined && model.name.length > 0 ? true : null,
+    name2: isCompanySmall ? true : model.name2 !== null && model.name2 !== undefined && model.name2.length > 0 ? true : null,
+    phoneNumber: model.phoneNumber !== null && model.phoneNumber !== undefined && model.phoneNumber.length > 0 ? true : null,
+    phoneNumber2: isCompanySmall ? true : model.phoneNumber2 !== null && model.phoneNumber2 !== undefined && model.phoneNumber2.length > 0 ? true : null,
+    position: model.position !== null && model.position !== undefined && model.position.length > 0 ? true : null,
+    position2: isCompanySmall ? true : model.position2 !== null && model.position2 !== undefined && model.position2.length > 0 ? true : null,
+    surname: model.surname !== null && model.surname !== undefined && model.surname.length > 0 ? true : null,
+    surname2: isCompanySmall ? true : model.surname2 !== null && model.surname2 !== undefined && model.surname2.length > 0 ? true : null
 });
 
 const {isOnlyFirstApproval, setIsFormValidManagement} = useGlobalContext();
 
 useLayoutEffect(() => {
-    setValidationRequired({name: validationRequired.name, name2: isCompanySmall, phoneNumber: validationRequired.phoneNumber, phoneNumber2: isCompanySmall, position: validationRequired.position, position2: isCompanySmall, surname: validationRequired.surname, surname2: isCompanySmall})
     if(!isCompanySmall) {
         setValidationError({email: validationError.email, email2: false})
     }
@@ -254,7 +253,7 @@ useLayoutEffect(() => {
                                 }}/>
                             </div>
                         </div>
-                        <div className="d-flex">
+                        <div className="d-flex mt-4">
                             <div className="d-flex flex-column container-lg">
                                 <label htmlFor="positionApproval2" className="font-input-label">
                                     Position <span className="red">*</span>
@@ -267,7 +266,7 @@ useLayoutEffect(() => {
                                 }}/>
                             </div>
                         </div>
-                        <div className="d-flex">
+                        <div className="d-flex mt-4">
                             <div className="d-flex flex-column container-lg">
                                 <label htmlFor="phoneNumberApproval2" className="font-input-label">
                                     Phone Number <span className="red">*</span>
@@ -291,7 +290,7 @@ useLayoutEffect(() => {
                                 </div>
                             </div>
                         </div>
-                        <div className="d-flex">
+                        <div className="d-flex mt-4">
                             <div className="d-flex flex-column container-lg">
                                 <label htmlFor="emailAddressApproval2" className="font-input-label">
                                     Email Address <span className="red">*</span>
