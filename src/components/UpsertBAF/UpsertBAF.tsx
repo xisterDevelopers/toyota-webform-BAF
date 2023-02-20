@@ -442,7 +442,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                 }
             </div>
             <div className="mt-5 w-100 inline-flex">
-                <UploadFile handleDrop={handleDrop} upload={handleUpload} overrideEventDefaults={overrideEventDefaults} />
+                <UploadFile mainText="Drag and drop your files here" handleDrop={handleDrop} upload={handleUpload} overrideEventDefaults={overrideEventDefaults} isMultiple={true} />
             </div>
             <div className="mt-6 info-upload-container">
                 <h2 className="font-w-light">Uploaded Files</h2>
@@ -483,7 +483,7 @@ const UpsertBaf: React.FunctionComponent = () => {
                             navigate(`/detail-BAF/${id}`);
                         }).finally(() => setLoader(false));
                 }
-                } disabled={false} />
+                } disabled={!isFormValidIdentification || !isFormValidManagement || !isFormValidBank} />
             </div>
         </div>
     );

@@ -8,7 +8,7 @@ const UpsertBAF = React.lazy(() => import('./components/UpsertBAF/UpsertBAF'));
 const DetailBAF = React.lazy(() => import('./components/DetailBAF/DetailBAF'));
 
 function App() {
-    const [formState, setFormState] = useState<string>('supplier pending');
+    const [formState, setFormState] = useState<string>('waiting for supplier pec');
     const [isFormValidIdentification, setIsFormValidIdentification] = useState<boolean>(false);
     const [isFormValidBank, setIsFormValidBank] = useState<boolean>(false);
     const [isFormValidManagement, setIsFormValidManagement] = useState<boolean>(false);

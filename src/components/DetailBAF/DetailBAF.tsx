@@ -22,6 +22,7 @@ import {BafDocumentDTO} from "../../models/BafDocumentDTO.model";
 import documentService from "../../api/document.service";
 import FormService from "../../api/form.service";
 import DocumentService from "../../api/document.service";
+import {FiTrash2} from "react-icons/fi";
 
 const MAX_FILE_SIZE: number = 5E+6;
 
@@ -44,6 +45,7 @@ const DetailBaf: FC<DetailBafProps> = () => {
     const [integrativeFilesLowRisk, setIntegrativeFilesLowRisk] = useState<FileTypeModel[]>([ ]);
     const [integrativeFilesHighLowRisk, setIntegrativeFilesHighLowRisk] = useState<FileTypeModel[]>([ ]);
     const [download, setDownload] = useState<boolean>(false);
+    const [showButtons, setShowButtons] = useState<boolean>(false);
 
     const fetchData = async() => {
         if (id) {
@@ -65,16 +67,16 @@ const DetailBaf: FC<DetailBafProps> = () => {
     }
 
     useLayoutEffect(() => {
-        // if (id === undefined) {
-        //     navigate(`/error`);
-        // }
-        //
-        // if (formState === 'supplier pending' ||
-        //     formState === 'Supplier Pending - ERROR') {
-        //     navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
-        // }
-        //
-        // fetchData().then();
+        if (id === undefined) {
+            navigate(`/error`);
+        }
+
+        if (formState === 'supplier pending' ||
+            formState === 'Supplier Pending - ERROR') {
+            navigate(id ? `/upsert-BAF/${id}` : `/upsert-BAF`);
+        }
+
+        fetchData().then();
 
         setRequiredFileTypes(db.requiredFileTypes);
         setAcceptanceFiles(db.acceptanceFiles);
@@ -112,6 +114,10 @@ const DetailBaf: FC<DetailBafProps> = () => {
         setUploadFiles([...uploadFiles]);
     }
 
+    const deleteFile = () => {
+        setUploadFiles([])
+    }
+
     const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         preventDefaults(event);
 
@@ -136,112 +142,98 @@ const DetailBaf: FC<DetailBafProps> = () => {
 
     return(
         <div className="DetailBAF">
-            <div>
-                <p className="mt-5 mb-4"><strong>Se hai bisogno di comunicare modifiche rispetto ai tuoi dati personali procedi modificando i campi nella form.</strong></p>
-                <Button color="bg-red" text="Edit form" textColor="white" btnWidth="151px" disabled={false} onClick={() => {
-                    FormService.returnBAFInSupplierPending(id ?? '').then(() => {
-                        setFormState('supplier pending');
-                        navigate(`/upsert-BAF/${id}`);
-                    });
-                }} />
-                <p className="my-5">oppure:</p>
-                <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
-                    <div id="warningBanner" className="d-flex flex-column">
-                        <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>
-                        <>Procedi eseguendo i seguenti passaggi:</>
-                        <ul>
-                            <li className="banner-list">Scarica il form compilato</li>
-                            <li className="banner-list">
-                                Raccogli tutti i documenti allegati al form
-                            </li>
-                            <li className="banner-list">Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> i documenti richiesti e il form compilato</li>
-                            <li className="banner-list">Carica le ricevute di conferma dell’invio della PEC e sottometti il form.</li>
-                        </ul>
-                    </div>
-                } />
-                <p className="mt-5 mb-4"><strong>Scarica il documento compilato e allegalo alla PEC.</strong></p>
-                <div className="mb-5 d-flex align-center">
-                    <Button color="bg-red" text="Scarica" textColor="white" btnWidth="110px" disabled={!download} onClick={() => DocumentService.downloadFile({ bafId: id, serverRelativeURL: "" }) } />
-                    <div className="d-flex align-center clickable" onClick={() => refresh()}>
-                        <div className="ml-3 refresh">
-                            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M784.512 230.272v-50.56a32 32 0 1 1 64 0v149.056a32 32 0 0 1-32 32H667.52a32 32 0 1 1 0-64h92.992A320 320 0 1 0 524.8 833.152a320 320 0 0 0 320-320h64a384 384 0 0 1-384 384 384 384 0 0 1-384-384 384 384 0 0 1 643.712-282.88z"/></svg>
+            {
+                formState === 'waiting for supplier pec' ?
+                    <div>
+                        <p className="mt-5 mb-4"><strong>Se hai bisogno di comunicare modifiche rispetto ai tuoi dati personali procedi modificando i campi nella form.</strong></p>
+                        <Button color="bg-red" text="Edit form" textColor="white" btnWidth="151px" disabled={false} onClick={() => {
+                            FormService.returnBAFInSupplierPending(id ?? '').then(() => {
+                                setFormState('supplier pending');
+                                navigate(`/upsert-BAF/${id}`);
+                            });
+                        }} />
+                        <p className="my-5">oppure:</p>
+                        <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={
+                            <div id="warningBanner" className="d-flex flex-column">
+                                <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>
+                                <>Procedi eseguendo i seguenti passaggi:</>
+                                <ul>
+                                    <li className="banner-list">Scarica il form compilato</li>
+                                    <li className="banner-list">
+                                        Raccogli tutti i documenti allegati al form
+                                    </li>
+                                    <li className="banner-list">Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> i documenti richiesti e il form compilato</li>
+                                    <li className="banner-list">Carica le ricevute di conferma dell’invio della PEC e sottometti il form.</li>
+                                </ul>
+                            </div>
+                        } />
+                        <p className="mt-5 mb-0"><strong>Scarica il documento compilato e allegalo alla PEC.</strong></p>
+                        <p className="mb-4 mt-0">
+                            {
+                                !download ? 'Il documento sarà disponibile tra qualche minuto.' : ''
+                            }
+                        </p>
+                        <div className="mb-5 d-flex align-center">
+                            <Button color="bg-red" text="Scarica" textColor="white" btnWidth="110px" disabled={!download} onClick={() => DocumentService.downloadFile({ bafId: id, serverRelativeURL: "" }) } />
+                            {
+                                !download ? <div className="d-flex align-center clickable" onClick={() => refresh()}>
+                                    <div className="ml-3 refresh">
+                                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M784.512 230.272v-50.56a32 32 0 1 1 64 0v149.056a32 32 0 0 1-32 32H667.52a32 32 0 1 1 0-64h92.992A320 320 0 1 0 524.8 833.152a320 320 0 0 0 320-320h64a384 384 0 0 1-384 384 384 384 0 0 1-384-384 384 384 0 0 1 643.712-282.88z"/></svg>
+                                    </div>
+                                    <p>Ricarica</p>
+                                </div> : ''
+                            }
                         </div>
-                        <p>Ricarica</p>
-                    </div>
-                </div>
-                <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e sottometti</strong></p>
-                <div className="mt-5 w-100 inline-flex">
-                    <UploadFile handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
-                </div>
-                <div className="d-flex justify-end my-5">
-                    <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => {
-                        FormService.submitBAFWithPEC({ bafId: id }).then(() => setFormState('Check pending'))
-                    }} />
-                </div>
-                <hr className="break-line mb-5 mt-6" />
-            </div>
-            {/*{*/}
-            {/*    formState === 'waiting for supplier pec' ?*/}
-            {/*        <div>*/}
-            {/*            <p className="mt-5 mb-4"><strong>Se hai bisogno di comunicare modifiche rispetto ai tuoi dati personali procedi modificando i campi nella form.</strong></p>*/}
-            {/*            <Button color="bg-red" text="Edit form" textColor="white" btnWidth="151px" disabled={false} onClick={() => {*/}
-            {/*                FormService.returnBAFInSupplierPending(id ?? '').then(() => {*/}
-            {/*                    setFormState('supplier pending');*/}
-            {/*                    navigate(`/upsert-BAF/${id}`);*/}
-            {/*                });*/}
-            {/*            }} />*/}
-            {/*            <p className="my-5">oppure:</p>*/}
-            {/*            <Banner stroke="border-orange" fill="bg-light-orange" icon="warning" content={*/}
-            {/*                <div id="warningBanner" className="d-flex flex-column">*/}
-            {/*                    <p><strong>Attenzione! Per completare la registrazione dovrai inviare una PEC allegando i documenti richiesti.</strong></p>*/}
-            {/*                    <>Procedi eseguendo i seguenti passaggi:</>*/}
-            {/*                    <ul>*/}
-            {/*                        <li className="banner-list">Scarica il form compilato</li>*/}
-            {/*                        <li className="banner-list">*/}
-            {/*                            Raccogli tutti i documenti allegati al form*/}
-            {/*                        </li>*/}
-            {/*                        <li className="banner-list">Invia tramite PEC all’indirizzo <strong>toyotamotoritalia@legalmail.it</strong> i documenti richiesti e il form compilato</li>*/}
-            {/*                        <li className="banner-list">Carica le ricevute di conferma dell’invio della PEC e sottometti il form.</li>*/}
-            {/*                    </ul>*/}
-            {/*                </div>*/}
-            {/*            } />*/}
-            {/*            <p className="mt-5 mb-4"><strong>Scarica il documento compilato e allegalo alla PEC.</strong></p>*/}
-            {/*            <div className="mb-5">*/}
-            {/*                <Button color="bg-red" text="Scarica" textColor="white" btnWidth="110px" disabled={false} onClick={() => DocumentService.downloadFile({ bafId: id, serverRelativeURL: "" }) } />*/}
-            {/*                <img src="../../assets/svg/refresh.svg"  alt="reload"/>*/}
-            {/*            </div>*/}
-            {/*            <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e sottometti</strong></p>*/}
-            {/*            <div className="mt-5 w-100 inline-flex">*/}
-            {/*                <UploadFile handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />*/}
-            {/*            </div>*/}
-            {/*            <div className="d-flex justify-end my-5">*/}
-            {/*                <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => {*/}
-            {/*                    FormService.submitBAFWithPEC({ bafId: id }).then(() => setFormState('Check pending'))*/}
-            {/*                }} />*/}
-            {/*            </div>*/}
-            {/*            <hr className="break-line mb-5 mt-6" />*/}
-            {/*        </div> : ''*/}
-            {/*}*/}
-            {/*{*/}
-            {/*    formState === 'Check pending' ?*/}
-            {/*        <div>*/}
-            {/*            <Banner stroke="border-grey" fill="bg-light-grey" icon="clock" content={*/}
-            {/*                <div>*/}
-            {/*                    <p><strong>I tuoi dati sono in attesa di verifica.</strong> Al momento le informazioni non possono essere modificate.</p>*/}
-            {/*                </div>*/}
-            {/*            } />*/}
-            {/*        </div> : ''*/}
-            {/*}*/}
-            {/*{*/}
-            {/*    formState === 'registered' ?*/}
-            {/*        <div>*/}
-            {/*            <Banner stroke="border-green" fill="bg-light-green" icon="done" content={*/}
-            {/*                <div>*/}
-            {/*                    <p><strong>Grazie!</strong> Abbiamo acquisito i tuoi dati. La richiesta è in corso di valutazione.</p>*/}
-            {/*                </div>*/}
-            {/*            } />*/}
-            {/*        </div> : ''*/}
-            {/*}*/}
+                        <p className="inline-flex"><strong>Carica qui la ricevuta della PEC e sottometti</strong></p>
+                        <div className="mt-5 w-100 inline-flex">
+                            {
+                                uploadFiles.length > 0 ?
+                                    uploadFiles.map((el, i) => {
+                                        return(
+                                            <div className="selected-type-upload-container p-3  w-100">
+                                                <div className="d-flex justify-between">
+                                                    <div className="d-flex gap-4 align-center overflow">
+                                                        <div className="document-icon"></div>
+                                                        <p className="dark-grey overflow">{el.fileName}</p>
+                                                    </div>
+                                                    <div className="d-flex align-center gap-3 dark-grey">
+                                                        <FiTrash2 onClick={() => deleteFile()} cursor="pointer" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    }) :
+                                    <UploadFile mainText="Drag and drop your file here" isMultiple={false} handleDrop={event => handleDrop(event)} upload={event => handleUpload(event)} overrideEventDefaults={event => preventDefaults(event)} />
+                            }
+                        </div>
+                        <div className="d-flex justify-end my-5">
+                            <Button color="bg-red" text="Submit" textColor="white" btnWidth="133px" disabled={!(uploadFiles.length > 0)} onClick={() => {
+                                FormService.submitBAFWithPEC({ bafId: id }).then(() => setFormState('Check pending'))
+                            }} />
+                        </div>
+                        <hr className="break-line mb-5 mt-6" />
+                    </div> : ''
+            }
+            {
+                formState === 'Check pending' ?
+                    <div>
+                        <Banner stroke="border-grey" fill="bg-light-grey" icon="clock" content={
+                            <div>
+                                <p><strong>I tuoi dati sono in attesa di verifica.</strong> Al momento le informazioni non possono essere modificate.</p>
+                            </div>
+                        } />
+                    </div> : ''
+            }
+            {
+                formState === 'registered' ?
+                    <div>
+                        <Banner stroke="border-green" fill="bg-light-green" icon="done" content={
+                            <div>
+                                <p><strong>Grazie!</strong> Abbiamo acquisito i tuoi dati. La richiesta è in corso di valutazione.</p>
+                            </div>
+                        } />
+                    </div> : ''
+            }
             <SupplierIdentificationDetail model={supplierIdentificationDetail} />
             <hr className="break-line mb-5 mt-6" />
             <SupplierBankDetailsDetail model={bankDetailsDetail} />
